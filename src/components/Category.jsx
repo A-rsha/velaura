@@ -2,9 +2,9 @@
 import React from 'react'
 
 import jewelryImg from '../assets/jewelry.jpeg'
-import watchImg from '../assets/Watches.jpeg'
+import watchImg from '../assets/watches.jpeg'
 import bagImg from '../assets/bags.jpeg'
-import sunglassImg from '../assets/Sunglasess.jpeg'
+import sunglassImg from '../assets/sunglasess.jpeg'
 import walletImg from '../assets/wallets.jpeg'
 import hairimg from '../assets/Hair Accessories.jpeg'
 import beautyImg from '../assets/beauty access.jpeg'
