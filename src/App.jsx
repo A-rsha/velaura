@@ -11,6 +11,9 @@ import CartPage from './pages/CartPage'
 import AdminDashboard from './pages/AdminDashboard'
 import Payments from './pages/Payments'
 import Wishlist from './pages/Wishlist'
+import FeaturedProducts from './components/FeaturedProducts'
+import Orders from './pages/Orders'
+import MyOrder from './pages/MyOrder'
 
 
 
@@ -36,6 +39,9 @@ function App() {
       <Route path='/adminDashboard' element={<AdminDashboard/>}/>
       <Route path='/payment' element={<Payments/>}/>
 <Route path='/wishlist' element={<Wishlist/>}/>
+<Route path='/featuredProduct' element={<FeaturedProducts/>}/>
+<Route path='/order' element={<Orders/>}/>
+<Route path='/myOrder' element={<MyOrder/>}/>
     </Routes>
    
    </BrowserRouter>

@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react'
 
 import Footer from '../components/Footer'
 import { getWishlist, addWishlist, removeWishlist } from '../services/api'
 
-import { FiHeart } from 'react-icons/fi'
+import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
@@ -13,7 +12,9 @@ function Wishlist() {
 
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
+
     const navigate = useNavigate()
+
 
     useEffect(() => {
 
@@ -67,7 +68,6 @@ function Wishlist() {
 
             } else {
 
-
                 await addWishlist(productId)
 
             }
@@ -85,32 +85,76 @@ function Wishlist() {
 
 
     return (
-        <div>
-<Navbar/>
-            <div className='min-h-screen bg-white pt-28 pb-20 px-4 md:px-8'>
+        <div className="bg-white text-[#2B2926]">
 
-                <div className='max-w-7xl mx-auto'>
+            <Navbar />
 
 
-                    <div className="mb-10">
+            <main className="min-h-screen pt-24 sm:pt-28 pb-16">
 
-                        <h1 className="text-3xl md:text-4xl font-bold text-black">
+                <div
+                    className="
+                        mx-auto
+                        max-w-7xl
+                        px-5
+                        sm:px-8
+                        md:px-10
+                        lg:px-12
+                    "
+                >
+
+                    {/* Heading */}
+
+                    <div className="mb-10 sm:mb-12">
+
+                        <p
+                            className="
+                                mb-2
+                                text-[10px]
+                                sm:text-xs
+                                uppercase
+                                tracking-[3px]
+                                text-gray-500
+                            "
+                        >
+                            YOUR SAVED PIECES
+                        </p>
+
+                        <h1
+                            className="
+                                font-serif
+                                text-3xl
+                                sm:text-4xl
+                                md:text-5xl
+                                font-medium
+                            "
+                        >
                             My Wishlist
                         </h1>
 
-                        <p className="text-gray-500 mt-2">
-                            Your favorite products saved in one place.
+                        <p
+                            className="
+                                mt-3
+                                max-w-md
+                                text-sm
+                                sm:text-base
+                                leading-relaxed
+                                text-gray-500
+                            "
+                        >
+                            Your favorite pieces, saved in one place.
                         </p>
 
                     </div>
 
 
+                    {/* Loading */}
 
                     {loading && (
 
-                        <div className="flex justify-center items-center py-20">
+                        <div className="flex justify-center py-20">
 
-                            <p className="text-gray-500">
+                            <p className="text-sm text-gray-500">
                                 Loading wishlist...
                             </p>
 
@@ -119,47 +163,110 @@ function Wishlist() {
                     )}
 
 
+                    {/* Empty Wishlist */}
+
                     {!loading && products.length === 0 && (
 
-                        <div className="text-center py-20">
+                        <div
+                            className="
+                                border
+                                border-[#DED5C8]
+                                bg-[#F5F0E8]
+                                px-6
+                                py-20
+                                text-center
+                            "
+                        >
 
-                            <p className="text-gray-500 text-lg">
-                                Your wishlist is empty.
+                            <FiHeart
+                                size={28}
+                                strokeWidth={1}
+                                className="mx-auto text-gray-500"
+                            />
+
+                            <h2
+                                className="
+                                    mt-5
+                                    font-serif
+                                    text-xl
+                                    sm:text-2xl
+                                "
+                            >
+                                Your wishlist is empty
+                            </h2>
+
+                            <p
+                                className="
+                                    mt-2
+                                    text-sm
+                                    text-gray-500
+                                "
+                            >
+                                Save your favorite accessories here.
                             </p>
+
+                            <button
+                                onClick={() => navigate('/shop')}
+                                className="
+                                    mt-6
+                                    border
+                                    border-[#2B2926]
+                                    px-6
+                                    py-2.5
+                                    text-sm
+                                    font-medium
+                                    transition
+                                    duration-300
+                                    hover:bg-[#2B2926]
+                                    hover:text-white
+                                "
+                            >
+                                Explore Collection
+                            </button>
 
                         </div>
 
                     )}
 
 
+                    {/* Wishlist Products */}
 
                     {!loading && products.length > 0 && (
 
-                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+                        <div
+                            className="
+                                grid
+                                grid-cols-2
+                                sm:grid-cols-2
+                                md:grid-cols-3
+                                lg:grid-cols-4
+                                gap-x-4
+                                sm:gap-x-5
+                                md:gap-x-6
+                                gap-y-10
+                                sm:gap-y-12
+                            "
+                        >
 
                             {products.map((product) => (
 
                                 <div
                                     key={product._id}
-                                    className="
-                                    group
-                                    bg-white
-                                    rounded-[28px]
-                                    overflow-hidden
-                                    border
-                                    border-gray-200
-                                    hover:border-black
-                                    shadow-sm
-                                    hover:shadow-xl
-                                    transition-all
-                                    duration-300
-                                    flex
-                                    flex-col
-                                "
+                                    className="group"
                                 >
 
+                                    {/* Product Image */}
 
-                                    <div className='relative overflow-hidden h-56'>
+                                    <div
+                                        className="
+                                            relative
+                                            aspect-[4/5]
+                                            overflow-hidden
+                                            border
+                                            border-[#DED5C8]
+                                            bg-[#F5F0E8]
+                                        "
+                                    >
 
                                         {product.image ? (
 
@@ -167,55 +274,63 @@ function Wishlist() {
                                                 src={product.image}
                                                 alt={product.title}
                                                 className="
-                                                w-full
-                                                h-full
-                                                object-cover
-                                                group-hover:scale-105
-                                                transition
-                                                duration-500
-                                            "
+                                                    h-full
+                                                    w-full
+                                                    object-cover
+                                                    transition
+                                                    duration-500
+                                                    group-hover:scale-105
+                                                "
                                             />
 
                                         ) : (
 
-                                            <div className="
-                                            w-full
-                                            h-full
-                                            bg-gray-200
-                                            flex
-                                            items-center
-                                            justify-center
-                                            text-gray-500
-                                        ">
+                                            <div
+                                                className="
+                                                    flex
+                                                    h-full
+                                                    items-center
+                                                    justify-center
+                                                    text-sm
+                                                    text-gray-400
+                                                "
+                                            >
                                                 No Image
                                             </div>
 
                                         )}
 
 
+                                        {/* Wishlist Button */}
+
                                         <button
                                             onClick={() =>
                                                 handleWishlist(product._id)
                                             }
                                             className="
-                                            absolute
-                                            top-3
-                                            right-3
-                                            bg-white
-                                            rounded-full
-                                            p-2
-                                            shadow-md
-                                            hover:scale-110
-                                            transition
-                                        "
+                                                absolute
+                                                right-3
+                                                top-3
+                                                flex
+                                                h-9
+                                                w-9
+                                                items-center
+                                                justify-center
+                                                rounded-full
+                                                bg-white/95
+                                                transition
+                                                duration-300
+                                                hover:scale-105
+                                            "
                                         >
 
                                             <FiHeart
-                                                size={22}
+                                                size={18}
+                                                strokeWidth={1.5}
                                                 className="
-                                                text-red-500
-                                                fill-red-500
-                                            "
+                                                    fill-red-500
+                                                    text-red-500
+                                                "
                                             />
 
                                         </button>
@@ -223,51 +338,96 @@ function Wishlist() {
                                     </div>
 
 
+                                    {/* Product Details */}
 
-                                    <div className='p-6 flex flex-col grow'>
+                                    <div
+                                        className="
+                                            border-x
+                                            border-b
+                                            border-[#DED5C8]
+                                            p-4
+                                            sm:p-5
+                                        "
+                                    >
 
-                                        <h2 className="
-                                        text-2xl
-                                        font-bold
-                                        text-black
-                                        line-clamp-1
-                                    ">
+                                        <h2
+                                            className="
+                                                line-clamp-1
+                                                text-sm
+                                                sm:text-base
+                                                font-medium
+                                                text-[#2B2926]
+                                            "
+                                        >
                                             {product.title}
                                         </h2>
 
 
-                                        <p className="
-                                        text-gray-500
-                                        text-sm
-                                        leading-relaxed
-                                        mt-3
-                                        line-clamp-2
-                                    ">
+                                        <p
+                                            className="
+                                                mt-1.5
+                                                line-clamp-2
+                                                text-xs
+                                                sm:text-sm
+                                                leading-relaxed
+                                                text-gray-500
+                                            "
+                                        >
                                             {product.description}
                                         </p>
 
 
-                                        <p className="
-                                        text-lg
-                                        font-bold
-                                        text-black
-                                        mt-3
-                                    ">
-                                            ₹{product.price}
-                                        </p>
-                                        <button onClick={() => navigate(`/product/${product._id}`)} className="
-                        flex
-                        items-center
-                        gap-2
-                        bg-white
-                        hover:bg-pink-200
-                      
-                        px-2
-                        py-3
-                        rounded-2xl
-                        font-medium
-                        transition
-                        " >View</button>
+                                        {/* Price + View */}
+
+                                        <div
+                                            className="
+                                                mt-4
+                                                flex
+                                                items-center
+                                                justify-between
+                                                gap-2
+                                            "
+                                        >
+
+                                            <p
+                                                className="
+                                                    text-sm
+                                                    sm:text-base
+                                                    font-medium
+                                                    text-[#2B2926]
+                                                "
+                                            >
+                                                ₹{product.price}
+                                            </p>
+
+
+                                            <button
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/product/${product._id}`
+                                                    )
+                                                }
+                                                className="
+                                                    flex
+                                                    items-center
+                                                    gap-1
+                                                    border-b
+                                                    border-[#2B2926]
+                                                    pb-0.5
+                                                    text-xs
+                                                    sm:text-sm
+                                                    font-medium
+                                                    text-[#2B2926]
+                                                    transition
+                                                    duration-300
+                                                    hover:opacity-60
+                                                "
+                                            >
+                                                View
+                                                <FiArrowUpRight size={14} />
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
@@ -281,12 +441,12 @@ function Wishlist() {
 
                 </div>
 
+            </main>
 
-                <Footer />
 
-            </div>
+            <Footer />
+
         </div>
-
     )
 }
 

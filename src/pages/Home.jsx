@@ -3,7 +3,8 @@ import Navbar from '../components/Navbar'
 import Banner from '../components/Banner'
 import Category from '../components/Category'
 import Footer from '../components/Footer'
-import ImageCarousal from '../components/ImageCarousal'
+import FeaturedProducts from '../components/FeaturedProducts'
+
 
 
 function Home() {
@@ -12,7 +13,8 @@ function Home() {
         <Navbar/>
         <Banner/>
         <Category/>
-        <ImageCarousal/>
+        <FeaturedProducts/>
+        
         <Footer/>
     </div>
   )

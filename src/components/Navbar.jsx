@@ -1,134 +1,572 @@
-
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import {
+  FiHeart,
+  FiShoppingBag,
+  FiMenu,
+  FiX
+} from 'react-icons/fi'
+
+import { Link, NavLink } from 'react-router-dom'
+
 
 function Navbar({ cartCount }) {
 
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const userName = localStorage.getItem("userName")
+
+
+  // Get first 2 letters from user's name
+  const userInitials = userName
+    ? userName
+        .trim()
+        .slice(0, 2)
+        .toUpperCase()
+    : ""
+
+
+  // Common navigation style
+  const navClass = ({ isActive }) =>
+    `
+      relative
+      pb-1
+      text-sm
+      font-medium
+      transition
+      duration-300
+      hover:text-gray-500
+      ${
+        isActive
+          ? "after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-[1px] after:bg-[#2B2926]"
+          : ""
+      }
+    `
+
+
   return (
-    <nav className="px-4 sm:px-6 md:px-8 lg:px-10 py-4">
 
-      <div className="flex items-center justify-between">
+    <nav
+      className="
+        sticky
+        top-0
+        z-50
+        border-b
+        border-[#E5DED4]
+        bg-[#F5F0E8]/95
+        backdrop-blur-sm
+      "
+    >
 
-       
-        <div className="text-lg sm:text-xl md:text-2xl font-bold">
-          <Link to="/">
-            VELAURA.
+      <div
+        className="
+          mx-auto
+          flex
+          h-[68px]
+          max-w-7xl
+          items-center
+          justify-between
+          px-4
+          sm:px-6
+          lg:px-10
+        "
+      >
+
+        {/* ================= MOBILE MENU BUTTON ================= */}
+
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="
+            flex
+            items-center
+            justify-center
+            text-[#2B2926]
+            md:hidden
+          "
+          aria-label="Toggle menu"
+        >
+
+          {menuOpen ? (
+            <FiX size={22} strokeWidth={1.5} />
+          ) : (
+            <FiMenu size={22} strokeWidth={1.5} />
+          )}
+
+        </button>
+
+
+        {/* ================= LOGO ================= */}
+
+        <div
+          className="
+            md:absolute
+            md:left-1/2
+            md:-translate-x-1/2
+          "
+        >
+
+          <Link
+            to="/"
+            className="
+              flex
+              flex-col
+              items-center
+              leading-none
+            "
+          >
+
+            <span
+              className="
+                font-serif
+                text-xl
+                font-medium
+                tracking-[3px]
+                text-[#2B2926]
+                sm:text-2xl
+              "
+            >
+              VELAURA
+            </span>
+
+            <span
+              className="
+                mt-1
+                text-[7px]
+                font-normal
+                tracking-[3px]
+                text-[#2B2926]
+                sm:text-[8px]
+              "
+            >
+              ACCESSORIES
+            </span>
+
           </Link>
+
         </div>
 
 
-      
-        <div className="hidden md:flex items-center gap-4 lg:gap-7 text-sm lg:text-base">
+        {/* ================= DESKTOP NAVIGATION ================= */}
 
-          <Link to="/">
+        <div
+          className="
+            hidden
+            items-center
+            gap-6
+            text-[#2B2926]
+            md:flex
+            lg:gap-8
+          "
+        >
+
+          <NavLink
+            to="/"
+            className={navClass}
+          >
             Home
-          </Link>
+          </NavLink>
 
-          <Link to="/shop">
+
+          <NavLink
+            to="/shop"
+            className={navClass}
+          >
             Shop
-          </Link>
+          </NavLink>
 
-          <Link to="/about">
+
+          <NavLink
+            to="/about"
+            className={navClass}
+          >
             About
+          </NavLink>
+
+
+          {/* My Orders */}
+
+          <NavLink
+            to="/myOrder"
+            className={navClass}
+          >
+            My Orders
+          </NavLink>
+
+        </div>
+
+
+        {/* ================= DESKTOP ICONS ================= */}
+
+        <div
+          className="
+            hidden
+            items-center
+            gap-5
+            text-[#2B2926]
+            md:flex
+          "
+        >
+
+          {/* Wishlist */}
+
+          <Link
+            to="/wishlist"
+            className="
+              transition
+              duration-300
+              hover:opacity-50
+            "
+            aria-label="Wishlist"
+          >
+
+            <FiHeart
+              size={19}
+              strokeWidth={1.4}
+            />
+
           </Link>
 
-          <Link to="/cart" className="flex items-center">
-            Cart
+
+          {/* Cart */}
+
+          <Link
+            to="/cart"
+            className="
+              relative
+              transition
+              duration-300
+              hover:opacity-50
+            "
+            aria-label="Cart"
+          >
+
+            <FiShoppingBag
+              size={19}
+              strokeWidth={1.4}
+            />
 
             {cartCount > 0 && (
-              <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+
+              <span
+                className="
+                  absolute
+                  -right-2.5
+                  -top-2.5
+                  flex
+                  h-4
+                  min-w-4
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[#2B2926]
+                  px-1
+                  text-[9px]
+                  font-medium
+                  text-white
+                "
+              >
                 {cartCount}
               </span>
+
             )}
+
+          </Link>
+
+
+          {/* Account / User Initials */}
+
+          <Link
+            to="/login"
+            className="
+              flex
+              items-center
+              justify-center
+              transition
+              duration-300
+              hover:opacity-70
+            "
+            aria-label="Account"
+          >
+
+            {userName ? (
+
+              <span
+                className="
+                  flex
+                  h-8
+                  w-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-[#2B2926]
+                  bg-[#E8DFD2]
+                  text-[11px]
+                  font-medium
+                  tracking-wide
+                  text-[#2B2926]
+                "
+              >
+                {userInitials}
+              </span>
+
+            ) : (
+
+              <span
+                className="
+                  flex
+                  h-8
+                  w-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-[#2B2926]
+                "
+              >
+                <span className="text-xs">
+                  ?
+                </span>
+              </span>
+
+            )}
+
           </Link>
 
         </div>
 
 
-        <div className="hidden md:flex items-center gap-4 lg:gap-6 text-sm lg:text-base">
+        {/* ================= MOBILE RIGHT ICONS ================= */}
 
-          <Link to="/wishlist">
-            Wishlist
-          </Link>
-
-          <Link to="/login">
-            Login
-          </Link>
-
-        </div>
-
-
-        
-        <button
-          className="md:hidden text-2xl"
-          onClick={() => setMenuOpen(!menuOpen)}
+        <div
+          className="
+            flex
+            items-center
+            gap-3
+            text-[#2B2926]
+            sm:gap-4
+            md:hidden
+          "
         >
-          ☰
-        </button>
+
+          {/* Wishlist */}
+
+          <Link
+            to="/wishlist"
+            aria-label="Wishlist"
+            className="relative"
+          >
+
+            <FiHeart
+              size={19}
+              strokeWidth={1.4}
+            />
+
+          </Link>
+
+
+          {/* Cart */}
+
+          <Link
+            to="/cart"
+            aria-label="Cart"
+            className="relative"
+          >
+
+            <FiShoppingBag
+              size={19}
+              strokeWidth={1.4}
+            />
+
+            {cartCount > 0 && (
+
+              <span
+                className="
+                  absolute
+                  -right-2
+                  -top-2
+                  flex
+                  h-4
+                  min-w-4
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[#2B2926]
+                  px-1
+                  text-[9px]
+                  text-white
+                "
+              >
+                {cartCount}
+              </span>
+
+            )}
+
+          </Link>
+
+        </div>
 
       </div>
 
 
-     
+      {/* ================= MOBILE MENU ================= */}
+
       {menuOpen && (
-        <div className="md:hidden flex flex-col items-center gap-4 pt-5 text-sm">
 
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
+        <div
+          className="
+            border-t
+            border-[#E5DED4]
+            bg-[#F5F0E8]
+            px-5
+            py-6
+            md:hidden
+          "
+        >
+
+          <div
+            className="
+              flex
+              flex-col
+              items-center
+              gap-5
+              text-sm
+              text-[#2B2926]
+            "
           >
-            Home
-          </Link>
 
-          <Link
-            to="/shop"
-            onClick={() => setMenuOpen(false)}
-          >
-            Shop
-          </Link>
+            {/* User */}
 
-          <Link
-            to="/about"
-            onClick={() => setMenuOpen(false)}
-          >
-            About
-          </Link>
+            {userName && (
 
-          <Link
-            to="/cart"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center"
-          >
-            Cart
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="
+                  mb-1
+                  flex
+                  items-center
+                  gap-3
+                "
+              >
 
-            {cartCount > 0 && (
-              <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">
-                {cartCount}
-              </span>
+                <span
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-[#2B2926]
+                    bg-[#E8DFD2]
+                    text-[11px]
+                    font-medium
+                    tracking-wide
+                  "
+                >
+                  {userInitials}
+                </span>
+
+                <span className="text-sm">
+                  {userName}
+                </span>
+
+              </Link>
+
             )}
-          </Link>
 
-          <Link
-            to="/wishlist"
-            onClick={() => setMenuOpen(false)}
-          >
-            Wishlist
-          </Link>
 
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-          >
-            Login
-          </Link>
+            {/* Home */}
+
+            <NavLink
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              Home
+            </NavLink>
+
+
+            {/* Shop */}
+
+            <NavLink
+              to="/shop"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              Shop
+            </NavLink>
+
+
+            {/* About */}
+
+            <NavLink
+              to="/about"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              About
+            </NavLink>
+
+
+            {/* My Orders */}
+
+            <NavLink
+              to="/myOrder"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              My Orders
+            </NavLink>
+
+
+            {/* Wishlist */}
+
+            <NavLink
+              to="/wishlist"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              Wishlist
+            </NavLink>
+
+
+            {/* Cart */}
+
+            <NavLink
+              to="/cart"
+              onClick={() => setMenuOpen(false)}
+              className={navClass}
+            >
+              Cart
+            </NavLink>
+
+
+            {/* Login only when user is not logged in */}
+
+            {!userName && (
+
+              <NavLink
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className={navClass}
+              >
+                Login
+              </NavLink>
+
+            )}
+
+          </div>
 
         </div>
+
       )}
 
     </nav>
+
   )
 }
+
 
 export default Navbar

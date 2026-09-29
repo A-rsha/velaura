@@ -1,71 +1,84 @@
-
 import React from 'react'
 
 function Footer() {
   return (
-    <footer className="bg-orange-100 text-black px-5 sm:px-8 md:px-10 lg:px-12 py-10 sm:py-12 mt-9">
+    <footer className="bg-[#F5F0E8] text-[#2B2926] px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-14 mt-12">
 
       {/* Footer Content */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12">
 
         {/* Brand */}
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">
-            VELAURA. Accessories
+          <h1 className=" font-serif text-2xl sm:text-3xl font-medium tracking-wide">
+            VELAURA
           </h1>
+
+          <p className="mt-1 text-[9px] tracking-[3px] text-gray-600">
+            ACCESSORIES
+          </p>
+
+          <p className="mt-5 max-w-[240px] text-sm leading-relaxed text-gray-600">
+            Thoughtfully chosen accessories to complete your everyday style.
+          </p>
         </div>
 
 
         {/* Shop */}
-        <div className="text-base sm:text-lg font-semibold text-gray-900">
-          <h1 className="mb-3">
+        <div>
+          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
             SHOP
-          </h1>
+          </h2>
 
-          <p>Jewelry</p>
-          <p>Watches</p>
-          <p>Bags</p>
-          <p>Sunglasses</p>
-          <p>Wallets</p>
-          <p>Hair Accessories</p>
-          <p>Beauty Accessories</p>
+          <div className="space-y-2.5 text-sm text-gray-600">
+            <p>Jewelry</p>
+            <p>Watches</p>
+            <p>Bags</p>
+            <p>Sunglasses</p>
+            <p>Wallets</p>
+            <p>Hair Accessories</p>
+            <p>Beauty Accessories</p>
+          </div>
         </div>
 
 
         {/* Quick Links */}
-        <div className="text-base sm:text-lg font-semibold text-gray-900">
-          <h1 className="mb-3">
+        <div>
+          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
             QUICK LINKS
-          </h1>
+          </h2>
 
-          <p>Home</p>
-          <p>Shop</p>
-          <p>About</p>
-          <p>Wishlist</p>
-          <p>Cart</p>
+          <div className="space-y-2.5 text-sm text-gray-600">
+            <p>Home</p>
+            <p>Shop</p>
+            <p>About</p>
+            <p>Wishlist</p>
+            <p>Cart</p>
+          </div>
         </div>
 
 
-        {/* Help */}
-        <div className="text-base sm:text-lg font-semibold text-gray-900">
-          <h1 className="mb-3">
+        
+        <div>
+          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
             HELP
-          </h1>
+          </h2>
 
-          <p>Contact</p>
-          <p>FAQ</p>
-          <p>Shipping</p>
-          <p>Returns</p>
+          <div className="space-y-2.5 text-sm text-gray-600">
+            <p>Contact</p>
+            <p>FAQ</p>
+            <p>Shipping</p>
+            <p>Returns</p>
+          </div>
         </div>
 
       </div>
 
 
-      {/* Copyright */}
-      <div className="border-t border-orange-200 mt-8 pt-5">
-        <h2 className="text-center text-sm sm:text-base">
+      
+      <div className="border-t border-[#DCCFBE] mt-10 pt-6">
+        <p className="text-center text-xs sm:text-sm text-gray-500">
           © 2026 VELAURA. All rights reserved.
-        </h2>
+        </p>
       </div>
 
     </footer>
@@ -73,4 +86,3 @@ function Footer() {
 }
 
 export default Footer
-

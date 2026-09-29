@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import API from '../services/axios'
 import { useNavigate } from 'react-router-dom'
-import { FiHeart } from 'react-icons/fi'
-import { addWishlist,getWishlist, removeWishlist } from '../services/api'
+import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
+import { addWishlist, getWishlist, removeWishlist } from '../services/api'
 
 function Products({ selectedCategory }) {
+
   const navigate = useNavigate()
 
   const [products, setProducts] = useState([])
   const [wishlist, setWishlist] = useState([])
 
+
+  // Fetch Products
   useEffect(() => {
+
     const fetchProducts = async () => {
       try {
+
         const res = await API.get('/product/getProducts')
 
         console.log("PRODUCT RESPONSE:", res.data)
@@ -20,35 +25,58 @@ function Products({ selectedCategory }) {
         setProducts(res.data.data || [])
 
       } catch (error) {
+
         console.error(
           "Error fetching Products:",
           error.response?.data || error
         )
+
       }
     }
 
     fetchProducts()
-  }, [])
- 
 
-  useEffect(()=>{
-    const fetchWishlist =async()=>{
-      try { const res = await getWishlist()
-         console.log("WISHLIST RESPONSE:", res.data)
-         
-         const wishlistProducts = res.wishlist || [] 
-         const wishlistIds = wishlistProducts.map(
-           (product) =>  product._id )
-          setWishlist(wishlistIds)
+  }, [])
+
+
+  // Fetch Wishlist
+  useEffect(() => {
+
+    const fetchWishlist = async () => {
+
+      try {
+
+        const res = await getWishlist()
+
+        console.log("WISHLIST RESPONSE:", res.data)
+
+        const wishlistProducts = res.data?.wishlist || res.wishlist || []
+
+        const wishlistIds = wishlistProducts.map((item) => {
+
+        return item.productId?._id || item.productId || item._id
+
+      })
+
+        setWishlist(wishlistIds)
+
       } catch (error) {
+
         console.error(
           "wishlist error:",
           error.response?.data || error.message
         )
+
       }
+
     }
+
     fetchWishlist()
-  },[])
+
+  }, [])
+
+
+  // Filter Products
 
   const filteredProducts =
     selectedCategory === "All"
@@ -59,89 +87,241 @@ function Products({ selectedCategory }) {
           selectedCategory.toLowerCase()
       )
 
-  const handleWishlist = async(productId) => {
+
+  // Wishlist
+  const handleWishlist = async (productId) => {
+
     try {
-      if(wishlist.includes(productId)){
-      await removeWishlist(productId)
-      setWishlist((prev)=>prev.filter((id)=> id !== productId))
-        
-      }else{
+
+      if (wishlist.includes(productId)) {
+
+        await removeWishlist(productId)
+
+        setWishlist((prev) =>
+          prev.filter((id) => id !== productId)
+        )
+
+      } else {
+
         await addWishlist(productId)
-        setWishlist((prev)=>[
+
+        setWishlist((prev) => [
           ...prev,
           productId
         ])
+
       }
+
     } catch (error) {
+
       console.error(
         "wishlist error:",
         error.response?.data || error.message
       )
+
     }
+
   }
 
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2">
+
+    <div
+      className="
+        grid
+        grid-cols-2
+        sm:grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-4
+        gap-x-4
+        sm:gap-x-5
+        md:gap-x-6
+        gap-y-10
+        sm:gap-y-12 
+      "
+    >
 
       {filteredProducts.map((product) => (
 
         <div
           key={product._id}
-          className="bg-white rounded-md overflow-hidden border border-gray-200 shadow-sm flex flex-col"
+          className="
+            group
+            flex
+            flex-col
+          "
         >
 
+          {/* Product Image */}
 
-          <div className="relative overflow-hidden ">
+          <div
+            className="
+  relative
+  overflow-hidden
+  bg-[#F5F0E8]
+  aspect-[4/5]
+  
+"
+          >
 
             {product.image ? (
+
               <img
                 src={product.image}
                 alt={product.title}
-                className="w-full h-[350px] object-cover hover:scale-105 transition duration-500"
-
+                className="
+                  h-full
+                  w-full
+                  object-cover
+                  transition
+                  duration-500
+                  group-hover:scale-105
+                "
               />
+
             ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+
+              <div
+                className="
+                  flex
+                  h-full
+                  items-center
+                  justify-center
+                  text-sm
+                  text-gray-400
+                "
+              >
                 No Image
               </div>
+
             )}
 
-            <button onClick={() => handleWishlist(product._id)} className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md hover:scale-110 transition">
-              <FiHeart size={20} className={wishlist.includes(product._id) ? "text-red-500 fill-red-500" : "text-gray-500"} />
+
+            {/* Wishlist */}
+
+            <button
+              onClick={() => handleWishlist(product._id)}
+              className="
+                absolute
+                right-3
+                top-3
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-full
+                bg-white/90
+                transition
+                duration-300
+                hover:bg-white
+                hover:scale-105
+              "
+            >
+
+              <FiHeart
+                size={18}
+                strokeWidth={1.5}
+                className={
+                  wishlist.includes(product._id)
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-700"
+                }
+              />
+
             </button>
 
           </div>
 
 
-          <div className="p-5 flex flex-col grow">
+          {/* Product Details */}
 
-            <h2 className="text-xl font-bold text-black line-clamp-1">
-              {product.title}
-            </h2>
+          <div className="  border-x
+                                            border-b
+                                            border-[#DED5C8]
+                                         border-t-0 p-4 sm:p-5">
 
-            <p className="text-gray-500 text-sm leading-relaxed mt-2 line-clamp-2">
-              {product.description}
-            </p>
-            <div className='flex flex-col'>
+            <div className="flex items-start justify-between gap-2 ">
 
-              <p className="text-xl font-bold text-black mt-3">
-                ₹{product.price}
-              </p>
-              <button onClick={() => navigate(`/product/${product._id}`)} className="
-                        flex
-                        items-center
-                        gap-2
-                        bg-white
-                        hover:bg-pink-200
-                      
-                        px-2
-                        py-3
-                        rounded-2xl
-                        font-medium
-                        transition
-                        " >View</button>
+              <h2
+                className="
+                  line-clamp-1
+                  text-sm
+                  sm:text-base
+                  font-medium
+                  text-[#2B2926]
+                "
+              >
+                {product.title}
+              </h2>
+
             </div>
 
+
+            <p
+              className="
+                mt-1.5
+                line-clamp-2
+                text-xs
+                sm:text-sm
+                leading-relaxed
+                text-gray-500
+              "
+            >
+              {product.description}
+            </p>
+
+
+            {/* Price + View */}
+
+            <div
+              className="
+                mt-4
+                flex
+                items-center
+                justify-between
+                gap-2
+              "
+            >
+
+              <p
+                className="
+                  text-sm
+                  sm:text-base
+                  font-medium
+                  text-[#2B2926]
+                "
+              >
+                ₹{product.price}
+              </p>
+
+
+              <button
+                onClick={() =>
+                  navigate(`/product/${product._id}`)
+                }
+                className="
+                  flex
+                  items-center
+                  gap-1
+                  border-b
+                  border-[#2B2926]
+                  pb-0.5
+                  text-xs
+                  sm:text-sm
+                  font-medium
+                  text-[#2B2926]
+                  transition
+                  duration-300
+                  hover:opacity-60
+                "
+              >
+                View
+                <FiArrowUpRight size={14} />
+
+              </button>
+
+            </div>
 
           </div>
 
@@ -150,15 +330,44 @@ function Products({ selectedCategory }) {
       ))}
 
 
+      {/* No Products */}
+
       {filteredProducts.length === 0 && (
-        <div className="col-span-full text-center py-10">
-          <p className="text-gray-500 text-lg">
-            No products found in this category.
+
+        <div
+          className="
+            col-span-full
+            py-16
+            text-center
+          "
+        >
+
+          <p
+            className="
+              font-serif
+              text-xl
+              text-[#2B2926]
+            "
+          >
+            No products found
           </p>
+
+          <p
+            className="
+              mt-2
+              text-sm
+              text-gray-500
+            "
+          >
+            Try selecting another category.
+          </p>
+
         </div>
+
       )}
 
     </div>
+
   )
 }
 

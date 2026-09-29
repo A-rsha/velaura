@@ -69,65 +69,259 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
     if (!product) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p>Loading product...</p>
+                <p className="text-sm text-gray-500">
+                    Loading product...
+                </p>
             </div>
         )
     }
 
 
     return (
-        <div>
+        <div className="bg-[#F5F0E8] text-[#2B2926]">
 
             <Navbar cartCount={cartCount} />
 
-            <div className="max-w-5xl mx-auto mt-10 border bg-white shadow-lg rounded-2xl p-6 md:p-10">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <main
+                className="
+                    min-h-screen
+                    px-5
+                    sm:px-8
+                    md:px-10
+                    lg:px-16
+                    pt-24
+                    sm:pt-28
+                    pb-16
+                "
+            >
 
-                    {/* Product Image */}
+                <div
+                    className="
+                        max-w-6xl
+                        mx-auto
+                    "
+                >
 
-                    <div>
-                        <img
-                            src={product.image}
-                            alt={product.title}
-                            className="w-full h-[450px] object-cover rounded-2xl"
-                        />
-                    </div>
+                    {/* Breadcrumb */}
 
-
-                    {/* Product Details */}
-
-                    <div className="flex flex-col gap-5">
-
-                        <h1 className="text-3xl font-bold">
-                            {product.title}
-                        </h1>
-
-                        <p className="text-gray-600 leading-relaxed">
-                            {product.description}
-                        </p>
-
-                        <p className="text-2xl font-bold">
-                            ₹{product.price}
-                        </p>
-
-                        <p className="text-sm text-gray-500">
-                            Category: {product.category}
-                        </p>
+                    <p
+                        className="
+                            mb-6
+                            text-xs
+                            sm:text-sm
+                            text-gray-500
+                        "
+                    >
+                        Home / Shop / {product.title}
+                    </p>
 
 
-                        <button
-                            onClick={handleAddToCart}
-                            className="w-full md:w-48 bg-orange-100 hover:bg-orange-200 py-3 rounded-lg font-medium"
+                    {/* Product Section */}
+
+                    <div
+                        className="
+                            grid
+                            grid-cols-1
+                            md:grid-cols-2
+                            gap-8
+                            md:gap-12
+                            lg:gap-16
+                            items-start
+                        "
+                    >
+
+                        {/* Product Image */}
+
+                        <div
+                            className="
+                                border
+                                border-[#DED5C8]
+                                bg-[#F5F0E8]
+                                overflow-hidden
+                            "
                         >
-                            Add to Cart
-                        </button>
+
+                            <img
+                                src={product.image}
+                                alt={product.title}
+                                className="
+                                    w-full
+                                    aspect-[4/5]
+                                    object-cover
+                                    transition
+                                    duration-500
+                                    hover:scale-105
+                                "
+                            />
+
+                        </div>
+
+
+                        {/* Product Details */}
+
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                justify-center
+                                py-2
+                                md:py-8
+                            "
+                        >
+
+                            {/* Category */}
+
+                            <p
+                                className="
+                                    text-[10px]
+                                    sm:text-xs
+                                    uppercase
+                                    tracking-[3px]
+                                    text-gray-500
+                                "
+                            >
+                                {product.category}
+                            </p>
+
+
+                            {/* Title */}
+
+                            <h1
+                                className="
+                                    mt-3
+                                    font-serif
+                                    text-3xl
+                                    sm:text-4xl
+                                    md:text-5xl
+                                    font-medium
+                                    leading-tight
+                                    text-[#2B2926]
+                                "
+                            >
+                                {product.title}
+                            </h1>
+
+
+                            {/* Price */}
+
+                            <p
+                                className="
+                                    mt-5
+                                    text-xl
+                                    sm:text-2xl
+                                    font-medium
+                                    text-[#2B2926]
+                                "
+                            >
+                                ₹{product.price}
+                            </p>
+
+
+                            {/* Divider */}
+
+                            <div
+                                className="
+                                    mt-6
+                                    border-t
+                                    border-[#DED5C8]
+                                "
+                            ></div>
+
+
+                            {/* Description */}
+
+                            <p
+                                className="
+                                    mt-6
+                                    text-sm
+                                    sm:text-base
+                                    leading-7
+                                    text-gray-600
+                                    max-w-lg
+                                "
+                            >
+                                {product.description}
+                            </p>
+
+
+                            {/* Product Info */}
+
+                            <div
+                                className="
+                                    mt-6
+                                    border-y
+                                    border-[#DED5C8]
+                                    py-4
+                                "
+                            >
+
+                                <p
+                                    className="
+                                        text-xs
+                                        uppercase
+                                        tracking-[2px]
+                                        text-gray-500
+                                    "
+                                >
+                                    Category
+                                </p>
+
+                                <p
+                                    className="
+                                        mt-1
+                                        text-sm
+                                        text-[#2B2926]
+                                    "
+                                >
+                                    {product.category}
+                                </p>
+
+                            </div>
+
+
+                            {/* Add To Cart */}
+
+                            <button
+                                onClick={handleAddToCart}
+                                className="
+                                    mt-7
+                                    w-full
+                                    bg-[#2B2926]
+                                    py-3.5
+                                    text-sm
+                                    font-medium
+                                    text-white
+                                    transition
+                                    duration-300
+                                    hover:bg-black
+                                "
+                            >
+                                Add to Cart
+                            </button>
+
+
+                            {/* Small Note */}
+
+                            <p
+                                className="
+                                    mt-3
+                                    text-center
+                                    text-xs
+                                    text-gray-500
+                                "
+                            >
+                                Add this piece to your collection.
+                            </p>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+            </main>
+
 
             <Footer />
 

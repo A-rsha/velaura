@@ -2,7 +2,7 @@
 import RazorpayCheckout from "@razorpay/razorpay-js/checkout";
 import API from "../services/axios";
 
-const PaymentButton = () => {
+const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
     const handlePayment = async () => {
 
@@ -18,7 +18,7 @@ const PaymentButton = () => {
             }
 
             const order = res.data.order;
-console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
+            console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
 
             const checkout = await RazorpayCheckout({
 
@@ -33,9 +33,9 @@ console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
                 description: "VELAURA Accessories",
 
                 order_id: order.id,
-                
 
-               
+
+
                 handler: async function (paymentResponse) {
 
                     console.log(
@@ -45,10 +45,14 @@ console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
 
                     try {
 
-                    
+
                         const verifyRes = await API.post(
                             "/payment/verify",
-                            paymentResponse
+                            {
+                                ...paymentResponse,
+                                shippingAddress: shippingAddress,
+                                paymentMethod: selectedMethod
+                            }
                         );
 
                         console.log(
@@ -83,7 +87,7 @@ console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
                 },
 
 
-                
+
                 prefill: {
                     name: "Test User",
                     email: "test@example.com",

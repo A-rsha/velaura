@@ -6,7 +6,7 @@ import Footer from '../components/Footer'
 
 function About() {
     return (
-        <div>
+        <div className='bg-[#F5F0E8]'>
             <Navbar />
             <div className='bg-orange-50 max-w-2xl mx-auto mt-10 p-8 border rounded-2xl  shadow-md '>
                 <h1 className='text-6xl font-extrabold text-red-300 text-center mb-4 '>About Us</h1>

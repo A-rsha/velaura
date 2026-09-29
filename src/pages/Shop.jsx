@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -21,8 +20,19 @@ function Shop() {
         }
     }
 
+    const categories = [
+        "All",
+        "Jewelry",
+        "Watches",
+        "Bags",
+        "Sunglasses",
+        "Wallets",
+        "Hair Accessories",
+        "Beauty Accessories"
+    ]
+
     return (
-        <div>
+        <div className="bg-[#F5F0E8] text-[#2B2926]">
 
             <Navbar />
 
@@ -30,154 +40,133 @@ function Shop() {
 
 
             {/* Category Tabs */}
-            <div className="
-                grid
-                grid-cols-4
-                sm:grid-cols-4
-                md:grid-cols-4
-                lg:grid-cols-8
-                gap-2
-                sm:gap-3
-                md:gap-4
-                mt-6
-                px-3
-                sm:px-5
-                md:px-7
-                lg:px-10
-                text-center
-                text-sm
-                sm:text-base
-                font-extrabold
-                font-serif
-                
-            ">
+            <section className="mt-8 sm:mt-10">
 
-                <button
-                    onClick={() => handleCategoryChange("All")}
-                    className={
-                        selectedCategory === "All"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
+                <div
+                    className="
+                        flex
+                        gap-6
+                        sm:gap-8
+                        lg:gap-10
+                        overflow-x-auto
+                        px-5
+                        sm:px-8
+                        lg:justify-center
+                        lg:overflow-visible
+                        scrollbar-hide
+                    "
                 >
-                    All
-                </button>
+
+                    {categories.map((category) => (
+
+                        <button
+                            key={category}
+                            onClick={() => handleCategoryChange(category)}
+                            className={`
+                                shrink-0
+                                pb-2
+                                text-xs
+                                sm:text-sm
+                                tracking-wide
+                                font-medium
+                                transition
+                                duration-300
+                                ${
+                                    selectedCategory === category
+                                        ? "border-b border-black text-black"
+                                        : "border-b border-transparent text-gray-500 hover:text-black"
+                                }
+                            `}
+                        >
+                            {category}
+                        </button>
+
+                    ))}
+
+                </div>
+
+            </section>
 
 
-                <button
-                    onClick={() => handleCategoryChange("Jewelry")}
-                    className={
-                        selectedCategory === "Jewelry"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Jewelry
-                </button>
+            {/* Collection Heading */}
+            <section
+                className="
+                    mt-12
+                    sm:mt-14
+                    md:mt-16
+                    px-5
+                    sm:px-8
+                    md:px-12
+                    lg:px-16
+                "
+            >
 
+                <div className="max-w-2xl">
 
-                <button
-                    onClick={() => handleCategoryChange("Watches")}
-                    className={
-                        selectedCategory === "Watches"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Watches
-                </button>
+                    <p
+                        className="
+                            text-[10px]
+                            sm:text-xs
+                            uppercase
+                            tracking-[3px]
+                            text-gray-500
+                            mb-2
+                        "
+                    >
+                        VELAURA COLLECTION
+                    </p>
 
+                    <h2
+                        className="
+                            text-2xl
+                            sm:text-3xl
+                            md:text-4xl
+                            font-serif
+                            font-medium
+                            tracking-tight
+                        "
+                    >
+                        {selectedCategory === "All"
+                            ? "All Collection"
+                            : `${selectedCategory} Collection`
+                        }
+                    </h2>
 
-                <button
-                    onClick={() => handleCategoryChange("Bags")}
-                    className={
-                        selectedCategory === "Bags"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Bags
-                </button>
+                    <p
+                        className="
+                            mt-3
+                            max-w-lg
+                            text-sm
+                            sm:text-base
+                            leading-relaxed
+                            text-gray-500
+                        "
+                    >
+                        Discover carefully selected pieces designed
+                        to add a refined touch to your everyday style.
+                    </p>
 
+                </div>
 
-                <button
-                    onClick={() => handleCategoryChange("Sunglasses")}
-                    className={
-                        selectedCategory === "Sunglasses"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Sunglasses
-                </button>
-
-
-                <button
-                    onClick={() => handleCategoryChange("Wallets")}
-                    className={
-                        selectedCategory === "Wallets"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Wallets
-                </button>
-
-
-                <button
-                    onClick={() => handleCategoryChange("Hair Accessories")}
-                    className={
-                        selectedCategory === "Hair Accessories"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Hair Accessories
-                </button>
-
-
-                <button
-                    onClick={() => handleCategoryChange("Beauty Accessories")}
-                    className={
-                        selectedCategory === "Beauty Accessories"
-                            ? "border-b-2 border-black pb-2"
-                            : "pb-2"
-                    }
-                >
-                    Beauty Accessories
-                </button>
-
-            </div>
-
-
-            {/* Collection Title */}
-            <div className="
-                mt-8
-                sm:mt-10
-                px-4
-                sm:px-6
-                md:px-8
-                lg:px-10
-            ">
-
-                <h2 className="
-                    text-xl
-                    sm:text-2xl
-                    md:text-3xl
-                    font-bold
-                    font-serif
-                ">
-                    {selectedCategory === "All"
-                        ? "All Collection"
-                        : `${selectedCategory} Collection`
-                    }
-                </h2>
-
-            </div>
+            </section>
 
 
             {/* Products */}
-            <Products selectedCategory={selectedCategory} />
+            <section
+                className="
+                    mt-8
+                    sm:mt-10
+                    px-5
+                    sm:px-8
+                    md:px-12
+                    lg:px-16
+                    pb-14
+                "
+            >
+
+                <Products selectedCategory={selectedCategory} />
+
+            </section>
 
 
             <Footer />
@@ -187,4 +176,3 @@ function Shop() {
 }
 
 export default Shop
-

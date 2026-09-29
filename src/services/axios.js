@@ -1,6 +1,6 @@
 import axios from "axios";
 const API=axios.create({
-    baseURL:"https://velaura-backend-1.onrender.com/api"
+   baseURL: "http://localhost:4000/api"
 })
 
 API.interceptors.request.use((req)=>{
