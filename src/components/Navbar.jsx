@@ -3,7 +3,8 @@ import {
   FiHeart,
   FiShoppingBag,
   FiMenu,
-  FiX
+  FiX,
+  FiUser
 } from 'react-icons/fi'
 
 import { Link, NavLink } from 'react-router-dom'
@@ -324,7 +325,7 @@ function Navbar({ cartCount }) {
                 "
               >
                 <span className="text-xs">
-                  ?
+                  <FiUser/>
                 </span>
               </span>
 
