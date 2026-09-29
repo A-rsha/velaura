@@ -89,39 +89,64 @@ function Products({ selectedCategory }) {
 
 
   // Wishlist
-  const handleWishlist = async (productId) => {
+const handleWishlist = async (productId) => {
 
-    try {
+    const isWishlisted = wishlist.includes(productId)
 
-      if (wishlist.includes(productId)) {
-
-        await removeWishlist(productId)
+    // Update UI immediately
+    if (isWishlisted) {
 
         setWishlist((prev) =>
-          prev.filter((id) => id !== productId)
+            prev.filter((id) => id !== productId)
         )
 
-      } else {
-
-        await addWishlist(productId)
+    } else {
 
         setWishlist((prev) => [
-          ...prev,
-          productId
+            ...prev,
+            productId
         ])
-
-      }
-
-    } catch (error) {
-
-      console.error(
-        "wishlist error:",
-        error.response?.data || error.message
-      )
 
     }
 
-  }
+    try {
+
+        // Backend update in background
+        if (isWishlisted) {
+
+            await removeWishlist(productId)
+
+        } else {
+
+            await addWishlist(productId)
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "wishlist error:",
+            error.response?.data || error.message
+        )
+
+        // Rollback if API fails
+        if (isWishlisted) {
+
+            setWishlist((prev) => [
+                ...prev,
+                productId
+            ])
+
+        } else {
+
+            setWishlist((prev) =>
+                prev.filter((id) => id !== productId)
+            )
+
+        }
+
+    }
+}
 
 
   return (

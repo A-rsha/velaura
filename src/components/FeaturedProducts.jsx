@@ -362,6 +362,32 @@ function FeaturedProducts() {
                                     >
                                         (124)
                                     </span>
+                                    
+                                    
+                                                  <button
+                                                    onClick={() =>
+                                                      navigate(`/product/${product._id}`)
+                                                    }
+                                                    className="
+                                                      flex
+                                                      items-center
+                                                      gap-1
+                                                      border-b
+                                                      border-[#2B2926]
+                                                      pb-0.5
+                                                      text-xs
+                                                      sm:text-sm
+                                                      font-medium
+                                                      text-[#2B2926]
+                                                      transition
+                                                      duration-300
+                                                      hover:opacity-60
+                                                    "
+                                                  >
+                                                    View
+                                                    <FiArrowUpRight size={14} />
+                                    
+                                                  </button>
 
                                 </div>
 

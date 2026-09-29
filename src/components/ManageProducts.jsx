@@ -30,13 +30,16 @@ function ManageProducts() {
   const handleDelete = async (id) => {
     try {
 
-      await API.delete(`/product/deleteproduct/${id}`)
+      await API.delete(`/product/deleteProduct/${id}`)
 
       fetchProducts()
 
     } catch (error) {
 
-      console.log(error)
+      console.log(
+        "Delete error:",
+        error.response?.data || error
+      )
 
     }
   }
@@ -48,9 +51,21 @@ function ManageProducts() {
 
     try {
 
+      const formData = new FormData()
+
+      formData.append("title", editProduct.title)
+      formData.append("description", editProduct.description)
+      formData.append("category", editProduct.category)
+      formData.append("price", editProduct.price)
+
+      
+      if (editProduct.image instanceof File) {
+        formData.append("image", editProduct.image)
+      }
+
       await API.put(
         `/product/updateProduct/${editProduct._id}`,
-        editProduct
+        formData
       )
 
       alert("Product updated successfully")
@@ -82,7 +97,6 @@ function ManageProducts() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* PRODUCTS LIST */}
 
           <div className="lg:col-span-2 space-y-4">
 
@@ -239,6 +253,29 @@ function ManageProducts() {
                   </option>
 
                 </select>
+
+
+                {/* IMAGE */}
+
+                <div className="mb-4">
+
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Change Image
+                  </label>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      setEditProduct({
+                        ...editProduct,
+                        image: e.target.files[0]
+                      })
+                    }
+                    className="border p-2 w-full rounded-md"
+                  />
+
+                </div>
 
 
                 {/* PRICE */}

@@ -3,7 +3,6 @@ import {
   FiGrid,
   FiPackage,
   FiShoppingBag,
-  FiLogOut,
   FiPlus,
   FiImage,
   FiHome
@@ -217,7 +216,7 @@ function AdminDashboard() {
           </button>
 
 
-          <button onClick={() => navigate('/shop')}
+          <button onClick={() => navigate('/manageProduct')}
             className="
               mt-1
               flex
@@ -279,35 +278,14 @@ function AdminDashboard() {
           "
         >
 
-          <button
-            className="
-              flex
-              w-full
-              items-center
-              gap-3
-              rounded-lg
-              px-4
-              py-3
-              text-sm
-              text-gray-500
-              transition
-              hover:bg-gray-100
-              hover:text-red-600
-            "
-          >
-
-            <FiLogOut size={17} />
-
-            Logout
-
-          </button>
+      
 
         </div>
 
       </aside>
 
 
-      {/* ================= MAIN ================= */}
+     
 
       <main className="lg:ml-64">
 
@@ -403,7 +381,6 @@ function AdminDashboard() {
         >
 
 
-          {/* ================= OVERVIEW ================= */}
 
           <div className="mb-8">
 

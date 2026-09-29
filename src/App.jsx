@@ -14,6 +14,9 @@ import Wishlist from './pages/Wishlist'
 import FeaturedProducts from './components/FeaturedProducts'
 import Orders from './pages/Orders'
 import MyOrder from './pages/MyOrder'
+import ManageProducts from './components/ManageProducts'
+import AdminLogin from './pages/AdminLogin'
+import AdminProtectedRoute from './components/AdminProtectedRoute'
 
 
 
@@ -36,7 +39,9 @@ function App() {
       setCartItems={setCartItems}/>}/>
       <Route path='/cart' element={<CartPage cartItems={cartItems}
       setCartItems={setCartItems}/>}/>
-      <Route path='/adminDashboard' element={<AdminDashboard/>}/>
+      <Route path='/adminLogin' element={<AdminLogin/>}/>
+      <Route path='/adminDashboard' element={<AdminProtectedRoute><AdminDashboard/></AdminProtectedRoute>}/>
+      <Route path='/manageProduct' element={<ManageProducts/>}/>
       <Route path='/payment' element={<Payments/>}/>
 <Route path='/wishlist' element={<Wishlist/>}/>
 <Route path='/featuredProduct' element={<FeaturedProducts/>}/>

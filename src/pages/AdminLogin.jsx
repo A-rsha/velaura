@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
 
-function LoginPage() {
+function AdminLogin() {
 
     const navigate = useNavigate()
 
@@ -13,14 +13,12 @@ function LoginPage() {
 
     const [loading, setLoading] = useState(false)
 
-
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
         })
     }
-
 
     const handleSubmit = async (e) => {
 
@@ -32,19 +30,30 @@ function LoginPage() {
 
             const res = await API.post("/auth/login", formData)
 
-            console.log("LOGIN RESPONSE:", res.data)
+            console.log("ADMIN LOGIN RESPONSE:", res.data)
+
+            if (res.data.user.role !== "admin") {
+                alert("You are not authorized as an admin")
+                return
+            }
 
             localStorage.setItem("token", res.data.token)
             localStorage.setItem("role", res.data.user.role)
-            localStorage.setItem("userName",res.data.user.name)
+            localStorage.setItem("userName", res.data.user.name)
 
-           
-                navigate("/")
-            
+            navigate("/adminDashboard")
 
         } catch (error) {
 
-            alert("Invalid email and password")
+            console.log(
+                "ADMIN LOGIN ERROR:",
+                error.response?.data || error
+            )
+
+            alert(
+                error.response?.data?.message ||
+                "Invalid admin email or password"
+            )
 
         } finally {
 
@@ -53,7 +62,6 @@ function LoginPage() {
         }
 
     }
-
 
     return (
 
@@ -134,7 +142,7 @@ function LoginPage() {
                             mb-2
                         "
                     >
-                        WELCOME BACK
+                        ADMIN PORTAL
                     </p>
 
                     <h1
@@ -146,7 +154,7 @@ function LoginPage() {
                             text-[#2B2926]
                         "
                     >
-                        Login to your Account
+                        Admin Login
                     </h1>
 
                     <p
@@ -156,7 +164,7 @@ function LoginPage() {
                             text-gray-500
                         "
                     >
-                        Sign in to continue shopping with VELAURA.
+                        Sign in to access the VELAURA admin dashboard.
                     </p>
 
                 </div>
@@ -185,7 +193,7 @@ function LoginPage() {
                                 text-[#2B2926]
                             "
                         >
-                            Email
+                            Admin Email
                         </label>
 
                         <input
@@ -195,7 +203,7 @@ function LoginPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            placeholder="Enter your email"
+                            placeholder="Enter admin email"
                             className="
                                 w-full
                                 h-12
@@ -242,7 +250,7 @@ function LoginPage() {
                             value={formData.password}
                             onChange={handleChange}
                             required
-                            placeholder="Enter your password"
+                            placeholder="Enter admin password"
                             className="
                                 w-full
                                 h-12
@@ -282,14 +290,13 @@ function LoginPage() {
                             disabled:opacity-60
                         "
                     >
-                        {loading ? "Logging in..." : "Login"}
+                        {loading ? "Logging in..." : "Admin Login"}
                     </button>
-
 
                 </form>
 
 
-                {/* Register */}
+                {/* Back to User Login */}
 
                 <div
                     className="
@@ -303,10 +310,10 @@ function LoginPage() {
 
                     <p className="text-sm text-gray-500">
 
-                        Don't have an account?{" "}
+                        User login?{" "}
 
                         <Link
-                            to="/register"
+                            to="/login"
                             className="
                                 font-medium
                                 text-[#2B2926]
@@ -317,13 +324,12 @@ function LoginPage() {
                                 hover:opacity-60
                             "
                         >
-                            Create an account
+                            Login here
                         </Link>
 
                     </p>
 
                 </div>
-
 
             </div>
 
@@ -331,4 +337,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default AdminLogin
