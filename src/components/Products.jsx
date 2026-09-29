@@ -12,7 +12,6 @@ function Products({ selectedCategory }) {
   const [wishlist, setWishlist] = useState([])
 
 
-  // Fetch Products
   useEffect(() => {
 
     const fetchProducts = async () => {
