@@ -1,4 +1,3 @@
-
 import RazorpayCheckout from "@razorpay/razorpay-js/checkout";
 import API from "../services/axios";
 
@@ -18,7 +17,11 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
             }
 
             const order = res.data.order;
-            console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
+
+            console.log(
+                "RAZORPAY KEY:",
+                import.meta.env.VITE_RAZORPAY_KEY_ID
+            );
 
             const checkout = await RazorpayCheckout({
 
@@ -34,8 +37,6 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
                 order_id: order.id,
 
-
-
                 handler: async function (paymentResponse) {
 
                     console.log(
@@ -45,15 +46,28 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
                     try {
 
+                        
+                        const paymentMethod =
+                            selectedMethod === "Card"
+                                ? "CARD"
+                                : selectedMethod;
+
+                        console.log(
+                            "SELECTED METHOD:",
+                            selectedMethod
+                        );
+
+                        console.log(
+                            "METHOD SENT TO BACKEND:",
+                            paymentMethod
+                        );
 
                         const verifyRes = await API.post(
                             "/payment/verify",
                             {
                                 ...paymentResponse,
                                 shippingAddress: shippingAddress,
-                                paymentMethod: selectedMethod === "card"
-                                ? "CARD"
-                                :selectedMethod
+                                paymentMethod: paymentMethod
                             }
                         );
 
@@ -79,6 +93,11 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
                             error
                         );
 
+                        console.log(
+                            "VERIFY ERROR RESPONSE:",
+                            error.response?.data
+                        );
+
                         alert(
                             error.response?.data?.message ||
                             "Payment verification failed"
@@ -88,21 +107,17 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
                 },
 
-
-
                 prefill: {
                     name: "Test User",
                     email: "test@example.com",
                     contact: "9999999999",
                 },
 
-
                 theme: {
                     color: "#000000",
                 },
 
             });
-
 
             checkout.on(
                 "payment.failed",
@@ -117,7 +132,6 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
                 }
             );
-
 
             checkout.open();
 
@@ -152,4 +166,3 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 };
 
 export default PaymentButton;
-
