@@ -1,5 +1,5 @@
 import React from 'react'
-import banner1 from '../assets/banner1.jpeg'
+import banner1 from '../assets/HeroImg.png'
 import { useNavigate } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 
