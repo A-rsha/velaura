@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import API from '../services/axios'
+import AdminSidebar from '../components/AdminSidebar'
 
 function Orders() {
 
@@ -57,7 +58,7 @@ function Orders() {
     return (
 
         <div className="p-4 md:p-8 bg-[#F5F0E8] min-h-screen">
-
+<AdminSidebar/>
             <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6">
 
                 <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-600">

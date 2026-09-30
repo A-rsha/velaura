@@ -1,9 +1,9 @@
 import React from 'react'
 import { FiGrid, FiPackage, FiShoppingBag } from 'react-icons/fi'
-FiGrid,
-FiPackage,
-FiShoppingBag
+import { useNavigate } from 'react-router-dom'
+
 function AdminSidebar() {
+    const navigate=useNavigate()
   return (
     <div className='min-h-screen bg-[#F7F7F5]'>
         
@@ -67,7 +67,7 @@ function AdminSidebar() {
                 <div className="px-4 py-6">
         
         
-                  <button
+                  <button onClick={()=> navigate('/adminDashboard')}
                     className="
                       flex
                       w-full
