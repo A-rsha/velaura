@@ -20,7 +20,7 @@ function Banner() {
       "
     >
 
-      {/* Background Image */}
+
 
       <img
         src={banner1}

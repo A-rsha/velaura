@@ -17,6 +17,7 @@ import MyOrder from './pages/MyOrder'
 import ManageProducts from './components/ManageProducts'
 import AdminLogin from './pages/AdminLogin'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
+import AdminSidebar from './components/AdminSidebar'
 
 
 
@@ -41,6 +42,7 @@ function App() {
       setCartItems={setCartItems}/>}/>
       <Route path='/adminLogin' element={<AdminLogin/>}/>
       <Route path='/adminDashboard' element={<AdminProtectedRoute><AdminDashboard/></AdminProtectedRoute>}/>
+      <Route path='/adminSidebar' element={<AdminSidebar/>}/>
       <Route path='/manageProduct' element={<ManageProducts/>}/>
       <Route path='/payment' element={<Payments/>}/>
 <Route path='/wishlist' element={<Wishlist/>}/>
