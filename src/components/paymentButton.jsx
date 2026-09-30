@@ -51,7 +51,9 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
                             {
                                 ...paymentResponse,
                                 shippingAddress: shippingAddress,
-                                paymentMethod: selectedMethod
+                                paymentMethod: selectedMethod === "card"
+                                ? "CARD"
+                                :selectedMethod
                             }
                         );
 
