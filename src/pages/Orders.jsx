@@ -59,7 +59,7 @@ function Orders() {
 
         <div className="p-4 md:p-8 bg-[#F5F0E8] min-h-screen">
 <AdminSidebar/>
-            <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+            <div className="lg:ml-64 bg-white rounded-2xl shadow-lg p-4 md:p-8">
 
                 <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-600">
                     All Orders

@@ -1,9 +1,10 @@
 import React from 'react'
 import { FiGrid, FiPackage, FiShoppingBag } from 'react-icons/fi'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function AdminSidebar() {
     const navigate=useNavigate()
+    const location =useLocation()
   return (
     <div className='min-h-screen bg-[#F7F7F5]'>
         
@@ -67,24 +68,31 @@ function AdminSidebar() {
                 <div className="px-4 py-6">
         
         
-                  <button onClick={()=> navigate('/adminDashboard')}
-                    className="
-                      flex
-                      w-full
-                      items-center
-                      gap-3
-                      rounded-lg
-                      bg-[#2B2926]
-                      px-4
-                      py-3
-                      text-sm
-                      font-medium
-                      text-white
-                    "
-                  >
-                    <FiGrid size={17} />
-                    Dashboard
-                  </button>
+<button
+  onClick={() => navigate('/adminDashboard')}
+  className={`
+    flex
+    w-full
+    items-center
+    gap-3
+    rounded-lg
+    px-4
+    py-3
+    text-sm
+    font-medium
+    transition
+    ${
+      location.pathname === '/adminDashboard'
+        ? 'bg-[#2B2926] text-white'
+        : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+    }
+  `}
+>
+  <FiGrid size={17} />
+  Dashboard
+</button>
+
+
         
         
                   <button onClick={() => navigate('/manageProduct')}
