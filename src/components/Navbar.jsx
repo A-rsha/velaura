@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import {
   FiHeart,
@@ -33,7 +34,7 @@ function Navbar({ cartCount }) {
     : ""
 
 
-  // ================= GET PROFILE =================
+
 
   useEffect(() => {
 
@@ -67,7 +68,7 @@ function Navbar({ cartCount }) {
   }, [])
 
 
-  // ================= LOGOUT =================
+ 
 
   const handleLogout = () => {
 
@@ -106,7 +107,6 @@ function Navbar({ cartCount }) {
 
     <>
 
-      {/* ================= NAVBAR ================= */}
 
       <nav
         className="
@@ -134,7 +134,6 @@ function Navbar({ cartCount }) {
           "
         >
 
-          {/* ================= MOBILE MENU BUTTON ================= */}
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -157,7 +156,6 @@ function Navbar({ cartCount }) {
           </button>
 
 
-          {/* ================= LOGO ================= */}
 
           <div
             className="
@@ -208,7 +206,7 @@ function Navbar({ cartCount }) {
           </div>
 
 
-          {/* ================= DESKTOP NAVIGATION ================= */}
+
 
           <div
             className="
@@ -255,7 +253,7 @@ function Navbar({ cartCount }) {
           </div>
 
 
-          {/* ================= DESKTOP ICONS ================= */}
+          
 
           <div
             className="
@@ -336,7 +334,15 @@ function Navbar({ cartCount }) {
             {/* Account / User Initials */}
 
             <button
-              onClick={() => setProfileOpen(true)}
+              onClick={() => {
+
+                if (userName) {
+                  setProfileOpen(true)
+                } else {
+                  navigate("/login")
+                }
+
+              }}
               className="
                 flex
                 items-center
@@ -396,7 +402,7 @@ function Navbar({ cartCount }) {
           </div>
 
 
-          {/* ================= MOBILE RIGHT ICONS ================= */}
+
 
           <div
             className="
@@ -888,3 +894,4 @@ function Navbar({ cartCount }) {
 
 
 export default Navbar
+
