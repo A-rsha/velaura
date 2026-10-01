@@ -92,7 +92,6 @@ const handleWishlist = async (productId) => {
 
     const isWishlisted = wishlist.includes(productId)
 
-    // Update UI immediately
     if (isWishlisted) {
 
         setWishlist((prev) =>
