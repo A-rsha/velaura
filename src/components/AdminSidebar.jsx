@@ -3,16 +3,16 @@ import { FiGrid, FiPackage, FiShoppingBag } from 'react-icons/fi'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function AdminSidebar() {
-    const navigate=useNavigate()
-    const location =useLocation()
-  return (
-    <div className='min-h-screen bg-[#F7F7F5]'>
-        
-              <aside
-                className="
+    const navigate = useNavigate()
+    const location = useLocation()
+    return (
+
+        <aside
+            className="
                   fixed
                   left-0
                   top-0
+                  z-40
                   hidden
                   h-screen
                   w-64
@@ -21,12 +21,12 @@ function AdminSidebar() {
                   bg-white
                   lg:block
                 "
-              >
-        
-                {/* Logo */}
-        
-                <div
-                  className="
+        >
+
+            {/* Logo */}
+
+            <div
+                className="
                     flex
                     h-20
                     flex-col
@@ -35,9 +35,9 @@ function AdminSidebar() {
                     border-gray-200
                     px-7
                   "
-                >
-        
-                  <h1
+            >
+
+                <h1
                     className="
                       font-serif
                       text-2xl
@@ -45,32 +45,32 @@ function AdminSidebar() {
                       tracking-[3px]
                       text-[#2B2926]
                     "
-                  >
+                >
                     VELAURA
-                  </h1>
-        
-                  <p
+                </h1>
+
+                <p
                     className="
                       mt-1
                       text-[8px]
                       tracking-[3px]
                       text-gray-500
                     "
-                  >
+                >
                     ADMIN PANEL
-                  </p>
-        
-                </div>
-        
-        
-                {/* Navigation */}
-        
-                <div className="px-4 py-6">
-        
-        
-<button
-  onClick={() => navigate('/adminDashboard')}
-  className={`
+                </p>
+
+            </div>
+
+
+            {/* Navigation */}
+
+            <div className="px-4 py-6">
+
+
+                <button
+                    onClick={() => navigate('/adminDashboard')}
+                    className={`
     flex
     w-full
     items-center
@@ -81,45 +81,45 @@ function AdminSidebar() {
     text-sm
     font-medium
     transition
-    ${
-      location.pathname === '/adminDashboard'
-        ? 'bg-[#2B2926] text-white'
-        : 'text-gray-600 hover:bg-gray-100 hover:text-black'
-    }
+    ${location.pathname === '/adminDashboard'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }
   `}
->
-  <FiGrid size={17} />
-  Dashboard
-</button>
+                >
+                    <FiGrid size={17} />
+                    Dashboard
+                </button>
 
 
-        
-        
-                  <button onClick={() => navigate('/manageProduct')}
-                    className="
-                      mt-1
-                      flex
-                      w-full
-                      items-center
-                      gap-3
-                      rounded-lg
-                      px-4
-                      py-3
-                      text-sm
-                      text-gray-600
-                      transition
-                      hover:bg-gray-100
-                      hover:text-black
-                    "
-                  >
+
+
+                <button onClick={() => navigate('/manageProduct')}
+                    className={`
+                        mt-1
+                        flex
+                        w-full
+                        items-center
+                        gap-3
+                        rounded-lg
+                        px-4
+                        py-3
+                        text-sm
+                        font-medium
+                        transition
+                        ${location.pathname === '/manageProduct'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
+                >
                     <FiPackage size={17} />
                     Products
-                  </button>
-        
-        
-                  <button onClick={() => navigate('/order')}
-                    className="
-                      mt-1
+                </button>
+
+
+                <button onClick={() => navigate('/order')}
+                    className={`
+                          mt-1
                       flex
                       w-full
                       items-center
@@ -128,25 +128,28 @@ function AdminSidebar() {
                       px-4
                       py-3
                       text-sm
-                      text-gray-600
+                      font-medium
                       transition
-                      hover:bg-gray-100
-                      hover:text-black
-                    "
-                  >
+                      ${location.pathname === '/order'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
+
+
+                >
                     <FiShoppingBag size={17} />
                     Orders
-                  </button>
-        
-        
-        
-                </div>
-        
-        
-                {/* Bottom */}
-        
-                <div
-                  className="
+                </button>
+
+
+
+            </div>
+
+
+            {/* Bottom */}
+
+            <div
+                className="
                     absolute
                     bottom-0
                     left-0
@@ -155,15 +158,15 @@ function AdminSidebar() {
                     border-gray-200
                     p-4
                   "
-                >
-        
-              
-        
-                </div>
-        
-              </aside>
-    </div>
-  )
+            >
+
+
+
+            </div>
+
+        </aside>
+
+    )
 }
 
 export default AdminSidebar
