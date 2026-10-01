@@ -1,5 +1,5 @@
 import React from 'react'
-import shopBanner from '../assets/shopBanner.jpeg'
+import shopBanner from '../assets/shopimg.png'
 
 function ShopBanner() {
   return (
