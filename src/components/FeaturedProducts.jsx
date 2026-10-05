@@ -16,7 +16,7 @@ function FeaturedProducts() {
 
     const [products, setProducts] = useState([])
     const [wishlist, setWishlist] = useState([])
-
+console.log(products,"product console")
 
     // Fetch products
     useEffect(() => {
