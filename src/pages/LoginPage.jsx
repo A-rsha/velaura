@@ -35,7 +35,7 @@ function LoginPage() {
             console.log("LOGIN RESPONSE:", res.data)
 
             localStorage.setItem("token", res.data.token)
-            localStorage.setItem("refreshToken", res.data.refreshToken)
+          localStorage.setItem("refreshToken", res.data.refreshToken);
             localStorage.setItem("role", res.data.user.role)
             localStorage.setItem("userName",res.data.user.name)
 
