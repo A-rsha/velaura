@@ -87,7 +87,6 @@ function Products({ selectedCategory }) {
       )
 
 
-  // Wishlist
 const handleWishlist = async (productId) => {
 
     const isWishlisted = wishlist.includes(productId)
@@ -109,7 +108,7 @@ const handleWishlist = async (productId) => {
 
     try {
 
-        // Backend update in background
+        
         if (isWishlisted) {
 
             await removeWishlist(productId)
