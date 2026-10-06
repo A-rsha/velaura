@@ -100,6 +100,11 @@ function Products({ selectedCategory }) {
 
   // Wishlist
   const handleWishlist = async (productId) => {
+     const token =localStorage.getItem("token")
+        if(!token){
+            alert("please login to add products to your wishlist")
+            return
+        }
 
     const isWishlisted = wishlistStatus[productId] || false
 
