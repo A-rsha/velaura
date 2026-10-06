@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import API from '../services/axios'
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +10,7 @@ function Products({ selectedCategory }) {
   const navigate = useNavigate()
 
   const [products, setProducts] = useState([])
-  const [wishlist, setWishlist] = useState([])
+  const [wishlistStatus, setWishlistStatus] = useState({})
 
 
   useEffect(() => {
@@ -49,15 +50,25 @@ function Products({ selectedCategory }) {
 
         console.log("WISHLIST RESPONSE:", res.data)
 
-        const wishlistProducts = res.data?.wishlist || res.wishlist || []
+        const wishlistProducts =
+          res.data?.wishlist || res.wishlist || []
 
-        const wishlistIds = wishlistProducts.map((item) => {
+        const status = {}
 
-        return item.productId?._id || item.productId || item._id
+        wishlistProducts.forEach((item) => {
 
-      })
+          const productId =
+            item.productId?._id ||
+            item.productId ||
+            item._id
 
-        setWishlist(wishlistIds)
+          if (productId) {
+            status[productId] = true
+          }
+
+        })
+
+        setWishlistStatus(status)
 
       } catch (error) {
 
@@ -87,63 +98,45 @@ function Products({ selectedCategory }) {
       )
 
 
-const handleWishlist = async (productId) => {
+  // Wishlist
+  const handleWishlist = async (productId) => {
 
-    const isWishlisted = wishlist.includes(productId)
+    const isWishlisted = wishlistStatus[productId] || false
 
-    if (isWishlisted) {
-
-        setWishlist((prev) =>
-            prev.filter((id) => id !== productId)
-        )
-
-    } else {
-
-        setWishlist((prev) => [
-            ...prev,
-            productId
-        ])
-
-    }
+    // Immediate UI update
+    setWishlistStatus((prev) => ({
+      ...prev,
+      [productId]: !isWishlisted
+    }))
 
     try {
 
-        
-        if (isWishlisted) {
+      if (isWishlisted) {
 
-            await removeWishlist(productId)
+        await removeWishlist(productId)
 
-        } else {
+      } else {
 
-            await addWishlist(productId)
+        await addWishlist(productId)
 
-        }
+      }
 
     } catch (error) {
 
-        console.error(
-            "wishlist error:",
-            error.response?.data || error.message
-        )
+      console.error(
+        "wishlist error:",
+        error.response?.data || error.message
+      )
 
-        // Rollback if API fails
-        if (isWishlisted) {
-
-            setWishlist((prev) => [
-                ...prev,
-                productId
-            ])
-
-        } else {
-
-            setWishlist((prev) =>
-                prev.filter((id) => id !== productId)
-            )
-
-        }
+      // Rollback if API fails
+      setWishlistStatus((prev) => ({
+        ...prev,
+        [productId]: isWishlisted
+      }))
 
     }
-}
+
+  }
 
 
   return (
@@ -159,7 +152,7 @@ const handleWishlist = async (productId) => {
         sm:gap-x-5
         md:gap-x-6
         gap-y-10
-        sm:gap-y-12 
+        sm:gap-y-12
       "
     >
 
@@ -178,12 +171,11 @@ const handleWishlist = async (productId) => {
 
           <div
             className="
-  relative
-  overflow-hidden
-  bg-[#F5F0E8]
-  aspect-[4/5]
-  
-"
+              relative
+              overflow-hidden
+              bg-[#F5F0E8]
+              aspect-[4/5]
+            "
           >
 
             {product.image ? (
@@ -245,7 +237,7 @@ const handleWishlist = async (productId) => {
                 size={18}
                 strokeWidth={1.5}
                 className={
-                  wishlist.includes(product._id)
+                  wishlistStatus[product._id]
                     ? "fill-red-500 text-red-500"
                     : "text-gray-700"
                 }
@@ -258,12 +250,16 @@ const handleWishlist = async (productId) => {
 
           {/* Product Details */}
 
-          <div className="  border-x
-                                            border-b
-                                            border-[#DED5C8]
-                                         border-t-0 p-4 sm:p-5">
+          <div className="
+            border-x
+            border-b
+            border-[#DED5C8]
+            border-t-0
+            p-4
+            sm:p-5
+          ">
 
-            <div className="flex items-start justify-between gap-2 ">
+            <div className="flex items-start justify-between gap-2">
 
               <h2
                 className="
@@ -394,3 +390,4 @@ const handleWishlist = async (productId) => {
 }
 
 export default Products
+

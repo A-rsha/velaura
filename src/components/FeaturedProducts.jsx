@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
@@ -15,11 +16,10 @@ function FeaturedProducts() {
     const navigate = useNavigate()
 
     const [products, setProducts] = useState([])
-    const [wishlist, setWishlist] = useState([])
-console.log(products,"product console")
-console.log(wishlist,"wishlist console")
+    const [wishlistStatus, setWishlistStatus] = useState({})
 
-    // Fetch products
+
+    
     useEffect(() => {
 
         const fetchProducts = async () => {
@@ -32,7 +32,6 @@ console.log(wishlist,"wishlist console")
 
                 const productData = res.data.data || []
 
-                // Show only first 4 products
                 setProducts(productData.slice(0, 4))
 
             } catch (error) {
@@ -51,7 +50,6 @@ console.log(wishlist,"wishlist console")
     }, [])
 
 
-    // Fetch wishlist
     useEffect(() => {
 
         const fetchWishlist = async () => {
@@ -60,13 +58,25 @@ console.log(wishlist,"wishlist console")
 
                 const res = await getWishlist()
 
-                const wishlistProducts = res.data?.wishlist || []
+                const wishlistProducts =
+                    res.data?.wishlist || []
 
-                const wishlistIds = wishlistProducts.map(
-                    (product) => product._id
-                )
+                const status = {}
 
-                setWishlist(wishlistIds)
+                wishlistProducts.forEach((item) => {
+
+                    const productId =
+                        item.productId?._id ||
+                        item.productId ||
+                        item._id
+
+                    if (productId) {
+                        status[productId] = true
+                    }
+
+                })
+
+                setWishlistStatus(status)
 
             } catch (error) {
 
@@ -84,27 +94,35 @@ console.log(wishlist,"wishlist console")
     }, [])
 
 
-    // Wishlist
+    
     const handleWishlist = async (productId) => {
+
+        const token =localStorage.getItem("token")
+        if(!token){
+            alert("please login to add products to your wishlist")
+            return
+        }
+
+        const isWishlisted =
+            wishlistStatus[productId] || false
+
+
+        
+        setWishlistStatus((prev) => ({
+            ...prev,
+            [productId]: !isWishlisted
+        }))
+
 
         try {
 
-            if (wishlist.includes(productId)) {
+            if (isWishlisted) {
 
                 await removeWishlist(productId)
-
-                setWishlist((prev) =>
-                    prev.filter((id) => id !== productId)
-                )
 
             } else {
 
                 await addWishlist(productId)
-
-                setWishlist((prev) => [
-                    ...prev,
-                    productId
-                ])
 
             }
 
@@ -114,6 +132,13 @@ console.log(wishlist,"wishlist console")
                 "WISHLIST ERROR:",
                 error.response?.data || error
             )
+
+
+        
+            setWishlistStatus((prev) => ({
+                ...prev,
+                [productId]: isWishlisted
+            }))
 
         }
 
@@ -283,7 +308,7 @@ console.log(wishlist,"wishlist console")
                                         size={16}
                                         strokeWidth={1.5}
                                         className={
-                                            wishlist.includes(product._id)
+                                            wishlistStatus[product._id]
                                                 ? "fill-red-500 text-red-500"
                                                 : "text-[#2B2926]"
                                         }
@@ -363,32 +388,32 @@ console.log(wishlist,"wishlist console")
                                     >
                                         (124)
                                     </span>
-                                    
-                                    
-                                                  <button
-                                                    onClick={() =>
-                                                      navigate(`/product/${product._id}`)
-                                                    }
-                                                    className="
-                                                      flex
-                                                      items-center
-                                                      gap-1
-                                                      border-b
-                                                      border-[#2B2926]
-                                                      pb-0.5
-                                                      text-xs
-                                                      sm:text-sm
-                                                      font-medium
-                                                      text-[#2B2926]
-                                                      transition
-                                                      duration-300
-                                                      hover:opacity-60
-                                                    "
-                                                  >
-                                                    View
-                                                    <FiArrowUpRight size={14} />
-                                    
-                                                  </button>
+
+
+                                    <button
+                                        onClick={() =>
+                                            navigate(`/product/${product._id}`)
+                                        }
+                                        className="
+                                            flex
+                                            items-center
+                                            gap-1
+                                            border-b
+                                            border-[#2B2926]
+                                            pb-0.5
+                                            text-xs
+                                            sm:text-sm
+                                            font-medium
+                                            text-[#2B2926]
+                                            transition
+                                            duration-300
+                                            hover:opacity-60
+                                        "
+                                    >
+                                        View
+                                        <FiArrowUpRight size={14} />
+
+                                    </button>
 
                                 </div>
 

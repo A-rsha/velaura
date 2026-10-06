@@ -11,6 +11,7 @@ import Navbar from '../components/Navbar'
 function Wishlist() {
 
     const [products, setProducts] = useState([])
+    const [wishlistStatus, setWishlistStatus] =useState({})
     const [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
@@ -25,9 +26,22 @@ function Wishlist() {
                 const res = await getWishlist()
 
                 console.log("WISHLIST RESPONSE:", res.data)
+                const wishlistProducts =
+                    res.data?.wishlist || []
+                setProducts(wishlistProducts)
 
-                setProducts(res.data.wishlist || [])
+                const status = {}
+                wishlistProducts.forEach((product) => {
+                    const productId =
+                        product.productId?._id ||
+                        product.productId ||
+                        product._id
 
+                    if (productId) {
+                        status[productId] = true
+                    }
+                })
+                setWishlistStatus(status)
             } catch (error) {
 
                 console.error(
@@ -50,34 +64,48 @@ function Wishlist() {
 
     const handleWishlist = async (productId) => {
 
+        const isWishlisted =
+        wishlistStatus[productId]|| false
+
+        setWishlistStatus((prev)=>({
+            ...prev,
+            [productId]:false
+        }))
+
+        setProducts((prev)=>
+        prev.filter(
+            (product)=> product._id !== productId
+        ))
+
         try {
-
-            const exists = products.some(
-                (product) => product._id === productId
-            )
-
-            if (exists) {
-
+            if(isWishlisted){
                 await removeWishlist(productId)
-
-                setProducts((prev) =>
-                    prev.filter(
-                        (product) => product._id !== productId
-                    )
-                )
-
-            } else {
-
-                await addWishlist(productId)
-
             }
-
+               
         } catch (error) {
 
             console.error(
                 "Wishlist Error:",
                 error.response?.data || error.message
             )
+
+            setWishlistStatus((prev)=>({
+                ...prev,
+                [productId]:true
+            }))
+
+            try {
+                const res =await getWishlist()
+                setProducts(
+                    res.data?.wishlist || []
+                )
+            } catch (error) {
+                console.error(
+                    "Wishlist Restore Error:",
+                    fetchError.response?.data ||
+                    fetchError.message
+                )
+            }
 
         }
 
@@ -327,10 +355,11 @@ function Wishlist() {
                                             <FiHeart
                                                 size={18}
                                                 strokeWidth={1.5}
-                                                className="
-                                                    fill-red-500
-                                                    text-red-500
-                                                "
+                                                className={
+                                                    wishlistStatus[product._id]
+                                                    ? "fill-red-500 text-red-500"
+                                                    :" text-[#2B2926]"
+                                                }
                                             />
 
                                         </button>

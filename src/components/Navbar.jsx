@@ -73,6 +73,7 @@ function Navbar({ cartCount }) {
   const handleLogout = () => {
 
     localStorage.removeItem("token")
+    localStorage.removeItem("refreshToken")
     localStorage.removeItem("userName")
     localStorage.removeItem("role")
 
