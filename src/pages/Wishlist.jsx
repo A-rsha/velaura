@@ -69,13 +69,8 @@ function Wishlist() {
 
         setWishlistStatus((prev)=>({
             ...prev,
-            [productId]:false
+            [productId]:!isWishlisted
         }))
-
-        setProducts((prev)=>
-        prev.filter(
-            (product)=> product._id !== productId
-        ))
 
         try {
             if(isWishlisted){
@@ -91,7 +86,7 @@ function Wishlist() {
 
             setWishlistStatus((prev)=>({
                 ...prev,
-                [productId]:true
+                [productId]:isWishlisted
             }))
 
             try {

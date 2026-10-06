@@ -108,7 +108,7 @@ function Products({ selectedCategory }) {
 
     const isWishlisted = wishlistStatus[productId] || false
 
-    // Immediate UI update
+   
     setWishlistStatus((prev) => ({
       ...prev,
       [productId]: !isWishlisted
