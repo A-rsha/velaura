@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import Footer from '../components/Footer'
-import { getWishlist, addWishlist, removeWishlist } from '../services/api'
+import { getWishlist , removeWishlist } from '../services/api'
 
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
