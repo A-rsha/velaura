@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import Footer from '../components/Footer'
-import { getWishlist , removeWishlist } from '../services/api'
+import { getWishlist, removeWishlist } from '../services/api'
 
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
@@ -69,8 +69,13 @@ function Wishlist() {
 
         setWishlistStatus((prev)=>({
             ...prev,
-            [productId]:!isWishlisted
+            [productId]:false
         }))
+
+        setProducts((prev)=>
+        prev.filter(
+            (product)=> product._id !== productId
+        ))
 
         try {
             if(isWishlisted){
@@ -86,7 +91,7 @@ function Wishlist() {
 
             setWishlistStatus((prev)=>({
                 ...prev,
-                [productId]:isWishlisted
+                [productId]:true
             }))
 
             try {
