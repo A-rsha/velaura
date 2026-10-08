@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://localhost:4000/api"
+    baseURL: "https://velaura-backend-1.onrender.com/api"
 });
 
 API.interceptors.request.use((req) => {
@@ -37,7 +37,7 @@ API.interceptors.response.use(
 
             try {
                 const res = await axios.post(
-                    "http://localhost:4000/api/auth/refresh",
+                    "https://velaura-backend-1.onrender.com/api/auth/refresh",
                     {
                         refreshToken: refreshToken
                     }
