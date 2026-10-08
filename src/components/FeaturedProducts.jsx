@@ -346,17 +346,22 @@ function FeaturedProducts() {
                                 </h3>
 
 
-                                <p
-                                    className="
-                                        mt-1
-                                        text-sm
-                                        sm:text-base
-                                        font-medium
-                                        text-[#2B2926]
-                                    "
-                                >
-                                    ₹{product.price}
-                                </p>
+                                <div>
+              {product.isOffer ? (
+                <>
+                <p className='text-sm text-gray-600 line-through'>
+                  ₹{product.price}
+                </p>
+                <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+                  ₹{product.offerPrice}
+                </p>
+                </>
+              ):(
+                <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+                  ₹{product.price}
+                </p>
+              )}
+             </div>
 
 
                                 {/* Rating */}
