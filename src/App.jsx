@@ -18,7 +18,7 @@ import ManageProducts from './components/ManageProducts'
 import AdminLogin from './pages/AdminLogin'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import AdminSidebar from './components/AdminSidebar'
-
+import AddCategory from './pages/AddCategory'
 
 
 function App() {
@@ -49,6 +49,7 @@ function App() {
 <Route path='/featuredProduct' element={<FeaturedProducts/>}/>
 <Route path='/order' element={<Orders/>}/>
 <Route path='/myOrder' element={<MyOrder/>}/>
+<Route path='/addCategory' element={<AddCategory/>}/>
     </Routes>
    
    </BrowserRouter>

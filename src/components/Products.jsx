@@ -215,6 +215,12 @@ function Products({ selectedCategory }) {
 
             )}
 
+            {product.isOffer && (
+              <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font medium text-white'>
+                {product.offerPercentage}% OFF
+              </span>
+            )}
+
 
             {/* Wishlist */}
 
@@ -307,16 +313,22 @@ function Products({ selectedCategory }) {
               "
             >
 
-              <p
-                className="
-                  text-sm
-                  sm:text-base
-                  font-medium
-                  text-[#2B2926]
-                "
-              >
-                ₹{product.price}
-              </p>
+             <div>
+              {product.isOffer ? (
+                <>
+                <p className='text-sm text-gray-600 line-through'>
+                  ₹{product.price}
+                </p>
+                <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+                  ₹{product.offerPrice}
+                </p>
+                </>
+              ):(
+                <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+                  ₹{product.price}
+                </p>
+              )}
+             </div>
 
 
               <button

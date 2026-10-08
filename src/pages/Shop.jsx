@@ -5,10 +5,15 @@ import Navbar from '../components/Navbar'
 import ShopBanner from '../components/ShopBanner'
 import Footer from '../components/Footer'
 import Products from '../components/Products'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import API from '../services/axios'
+
 
 function Shop() {
 
     const [searchParams, setSearchParams] = useSearchParams()
+    const [categories, setCategories] = useState([])
 
     const selectedCategory = searchParams.get("category") || "All"
 
@@ -19,17 +24,20 @@ function Shop() {
             setSearchParams({ category })
         }
     }
-
-    const categories = [
-        "All",
-        "Jewelry",
-        "Watches",
-        "Bags",
-        "Sunglasses",
-        "Wallets",
-        "Hair Accessories",
-        "Beauty Accessories"
-    ]
+    const fetchCategories = async () => {
+        try {
+            const res = await API.get('/category/getCategories')
+            setCategories([
+                "All",...res.data.data.map((category)=>category.name)
+            ])
+        } catch (error) {
+            console.log("CATEGORY ERROR:", error)
+        }
+    }
+    useEffect(() => {
+        fetchCategories()
+    }, [])
+   
 
     return (
         <div className="bg-[#F5F0E8] text-[#2B2926]">
@@ -71,10 +79,9 @@ function Shop() {
                                 font-medium
                                 transition
                                 duration-300
-                                ${
-                                    selectedCategory === category
-                                        ? "border-b border-black text-black"
-                                        : "border-b border-transparent text-gray-500 hover:text-black"
+                                ${selectedCategory === category
+                                    ? "border-b border-black text-black"
+                                    : "border-b border-transparent text-gray-500 hover:text-black"
                                 }
                             `}
                         >

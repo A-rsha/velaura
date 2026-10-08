@@ -55,12 +55,18 @@ function Payments() {
                 console.log("CART RESPONSE:", res.data)
 
                 const cartData = res.data.cart
+                console.log("PAYMENT CART ITEMS:", cartData.items)
 
                 setCart(cartData)
 
                 const total = cartData.items.reduce(
-                    (total, item) =>
-                        total + item.price * item.quantity,
+                    (total, item) => {
+                        const price = item.productId?.isOffer
+                            ? item.productId?.offerPrice
+                            : item.price
+
+                        return total + price * item.quantity
+                    },
                     0
                 )
 

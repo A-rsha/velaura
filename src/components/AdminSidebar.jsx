@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiGrid, FiPackage, FiShoppingBag } from 'react-icons/fi'
+import { FiGrid, FiPackage, FiPlus, FiShoppingBag } from 'react-icons/fi'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function AdminSidebar() {
@@ -140,7 +140,30 @@ function AdminSidebar() {
                     <FiShoppingBag size={17} />
                     Orders
                 </button>
+                
+                  <button onClick={() => navigate('/addCategory')}
+                    className={`
+                          mt-1
+                      flex
+                      w-full
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      transition
+                      ${location.pathname === '/addCategory'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
 
+
+                >
+                    <FiPlus size={17} />
+                    Category
+                </button>
 
 
             </div>

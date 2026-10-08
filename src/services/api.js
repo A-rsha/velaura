@@ -30,5 +30,11 @@ export const addWishlist =(productId)=>API.post(`/wishlist/add/${productId}`)
 export const getWishlist=()=>API.get('/wishlist/get')
 export const removeWishlist=(productId)=>API.delete(`/wishlist/remove/${productId}`)
 
+export const createCategory=(data)=>API.post('/category/create',data)
+export const getCategory=()=>API.get('/category/getCategories')
+export const getOneCategory=(id)=>API.get(`/category/getOneCategory/${id}`)
+export const updateCategory=(id,data)=>API.put(`/category/updateCategory/${id}`,data)
+export const deleteCategory=(id)=>API.delete(`/category/deleteCategory/${id}`)
+
 export const razorpay =()=>API.post('/payment/createOrder')
 export const verify=(paymentResponse)=>API.post('/payment/verify',paymentResponse)

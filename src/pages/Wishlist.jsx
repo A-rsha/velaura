@@ -11,7 +11,7 @@ import Navbar from '../components/Navbar'
 function Wishlist() {
 
     const [products, setProducts] = useState([])
-    const [wishlistStatus, setWishlistStatus] =useState({})
+    const [wishlistStatus, setWishlistStatus] = useState({})
     const [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
@@ -65,23 +65,23 @@ function Wishlist() {
     const handleWishlist = async (productId) => {
 
         const isWishlisted =
-        wishlistStatus[productId]|| false
+            wishlistStatus[productId] || false
 
-        setWishlistStatus((prev)=>({
+        setWishlistStatus((prev) => ({
             ...prev,
-            [productId]:false
+            [productId]: false
         }))
 
-        setProducts((prev)=>
-        prev.filter(
-            (product)=> product._id !== productId
-        ))
+        setProducts((prev) =>
+            prev.filter(
+                (product) => product._id !== productId
+            ))
 
         try {
-            if(isWishlisted){
+            if (isWishlisted) {
                 await removeWishlist(productId)
             }
-               
+
         } catch (error) {
 
             console.error(
@@ -89,13 +89,13 @@ function Wishlist() {
                 error.response?.data || error.message
             )
 
-            setWishlistStatus((prev)=>({
+            setWishlistStatus((prev) => ({
                 ...prev,
-                [productId]:true
+                [productId]: true
             }))
 
             try {
-                const res =await getWishlist()
+                const res = await getWishlist()
                 setProducts(
                     res.data?.wishlist || []
                 )
@@ -327,6 +327,11 @@ function Wishlist() {
                                             </div>
 
                                         )}
+                                        {product.isOffer && (
+                                            <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font medium text-white'>
+                                                {product.offerPercentage}% OFF
+                                            </span>
+                                        )}
 
 
                                         {/* Wishlist Button */}
@@ -357,8 +362,8 @@ function Wishlist() {
                                                 strokeWidth={1.5}
                                                 className={
                                                     wishlistStatus[product._id]
-                                                    ? "fill-red-500 text-red-500"
-                                                    :" text-[#2B2926]"
+                                                        ? "fill-red-500 text-red-500"
+                                                        : " text-[#2B2926]"
                                                 }
                                             />
 
@@ -416,18 +421,26 @@ function Wishlist() {
                                                 justify-between
                                                 gap-2
                                             "
-                                        >
+                                        > <div>
+                                                {product.isOffer ? (
+                                                    <>
+                                                        <p className='text-sm text-gray-600 line-through'>
+                                                            ₹{product.price}
+                                                        </p>
+                                                        <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+                                                            ₹{product.offerPrice}
+                                                        </p>
+                                                    </>
 
-                                            <p
-                                                className="
-                                                    text-sm
-                                                    sm:text-base
-                                                    font-medium
-                                                    text-[#2B2926]
-                                                "
-                                            >
-                                                ₹{product.price}
-                                            </p>
+                                                ) : (
+                                                    <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+                                                        ₹{product.price}
+                                                    </p>
+                                                )}
+                                            </div>
+
+
+
 
 
                                             <button

@@ -135,6 +135,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
                         <div
                             className="
+                            relative
                                 border
                                 border-[#DED5C8]
                                 bg-[#F5F0E8]
@@ -154,6 +155,12 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                                     hover:scale-105
                                 "
                             />
+
+                            {product.isOffer && (
+                                <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font-medium text-white'>
+                                    {product.offerPercentage}% OFF
+                                </span>
+                            )}
 
                         </div>
 
@@ -205,17 +212,22 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
                             {/* Price */}
 
-                            <p
-                                className="
-                                    mt-5
-                                    text-xl
-                                    sm:text-2xl
-                                    font-medium
-                                    text-[#2B2926]
-                                "
-                            >
-                                ₹{product.price}
-                            </p>
+                            <div>
+                                {product.isOffer ? (
+                                    <>
+                                        <p className='text-sm  text-gray-600 line-through'>
+                                            ₹{product.price}
+                                        </p>
+                                        <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+                                            ₹{product.offerPrice}
+                                        </p>
+                                    </>
+                                ) : (
+                                    <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+                                        ₹{product.price}
+                                    </p>
+                                )}
+                            </div>
 
 
                             {/* Divider */}

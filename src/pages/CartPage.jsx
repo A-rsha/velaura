@@ -146,8 +146,13 @@ function CartPage({ cartCount, setCartCount }) {
 
 
     const totalPrice = cartItems.reduce(
-        (total, item) =>
-            total + item.price * item.quantity,
+        (total, item) => {
+            const price = item.productId?.isOffer
+                ? item.productId?.offerPrice
+                : item.price
+            return total + price * item.quantity
+        },
+
         0
     )
 
@@ -375,15 +380,24 @@ function CartPage({ cartCount, setCartCount }) {
                                                     {item.productId?.title}
                                                 </h2>
 
-                                                <p
-                                                    className="
-                                                        mt-2
-                                                        text-sm
-                                                        text-gray-500
-                                                    "
-                                                >
-                                                    ₹{item.price}
-                                                </p>
+                                                {item.productId?.isOffer ? (
+                                                    <div className='mt-2'>
+                                                        <p className='text-sm text-gray-600 line-through'>
+                                                            ₹{item.price}
+                                                        </p>
+                                                        <p className='text-sm font-semibold text-[#2B2926]'>
+                                                            ₹{item.productId?.offerPrice}
+                                                        </p>
+
+                                                        <p className="mt-1 text-xs text-gray-500">
+                                                            {item.productId?.offerPercentage}% OFF
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="mt-2 text-sm text-gray-500">
+                                                        ₹{item.price}
+                                                    </p>
+                                                )}
 
                                             </div>
 

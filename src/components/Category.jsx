@@ -1,57 +1,33 @@
 import React from 'react'
 
-import jewelryImg from '../assets/jwel.jpeg'
-import watchImg from '../assets/watch.jpeg'
-import bagImg from '../assets/bag.jpeg'
-import sunglassImg from '../assets/sunglass.jpeg'
-import walletImg from '../assets/walet.jpeg'
-import hairimg from '../assets/pearl hair.jpeg'
-import beautyImg from '../assets/beauty.jpeg'
 
 import { FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
+import { useState,useEffect} from 'react'
+import API from '../services/axios'
+
 
 
 function Category() {
 
     const navigate = useNavigate()
-
+   const [categories,setCategories]=useState([])
 
     const handleCategoryClick = (category) => {
         navigate(`/shop?category=${category}`)
     }
 
-
-    const categories = [
-        {
-            name: "Jewelry",
-            image: jewelryImg
-        },
-        {
-            name: "Watches",
-            image: watchImg
-        },
-        {
-            name: "Bags",
-            image: bagImg
-        },
-        {
-            name: "Sunglasses",
-            image: sunglassImg
-        },
-        {
-            name: "Wallets",
-            image: walletImg
-        },
-        {
-            name: "Hair Accessories",
-            image: hairimg
-        },
-        {
-            name: "Beauty Accessories",
-            image: beautyImg
+    const fetchCategories =async()=>{
+        try {
+                       const response = await API.get('/category/getCategories')
+                       setCategories(response.data.data)
+        } catch (error) {
+            console.log(error)
         }
-    ]
+    }
+    useEffect(()=>{
+     fetchCategories()
+    },[])
 
 
     return (
