@@ -19,7 +19,7 @@ function FeaturedProducts() {
     const [wishlistStatus, setWishlistStatus] = useState({})
 
 
-    
+
     useEffect(() => {
 
         const fetchProducts = async () => {
@@ -94,11 +94,11 @@ function FeaturedProducts() {
     }, [])
 
 
-    
+
     const handleWishlist = async (productId) => {
 
-        const token =localStorage.getItem("token")
-        if(!token){
+        const token = localStorage.getItem("token")
+        if (!token) {
             alert("please login to add products to your wishlist")
             return
         }
@@ -107,7 +107,7 @@ function FeaturedProducts() {
             wishlistStatus[productId] || false
 
 
-        
+
         setWishlistStatus((prev) => ({
             ...prev,
             [productId]: !isWishlisted
@@ -134,7 +134,7 @@ function FeaturedProducts() {
             )
 
 
-        
+
             setWishlistStatus((prev) => ({
                 ...prev,
                 [productId]: isWishlisted
@@ -279,6 +279,11 @@ function FeaturedProducts() {
                                         group-hover:scale-105
                                     "
                                 />
+                                {product.isOffer && (
+                                    <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font medium text-white'>
+                                        {product.offerPercentage}% OFF
+                                    </span>
+                                )}
 
 
                                 {/* Wishlist */}
@@ -347,21 +352,21 @@ function FeaturedProducts() {
 
 
                                 <div>
-              {product.isOffer ? (
-                <>
-                <p className='text-sm text-gray-600 line-through'>
-                  ₹{product.price}
-                </p>
-                <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
-                  ₹{product.offerPrice}
-                </p>
-                </>
-              ):(
-                <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
-                  ₹{product.price}
-                </p>
-              )}
-             </div>
+                                    {product.isOffer ? (
+                                        <>
+                                            <p className='text-sm text-gray-600 line-through'>
+                                                ₹{product.price}
+                                            </p>
+                                            <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+                                                ₹{product.offerPrice}
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+                                            ₹{product.price}
+                                        </p>
+                                    )}
+                                </div>
 
 
                                 {/* Rating */}
