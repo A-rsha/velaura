@@ -30,6 +30,9 @@ export const addWishlist =(productId)=>API.post(`/wishlist/add/${productId}`)
 export const getWishlist=()=>API.get('/wishlist/get')
 export const removeWishlist=(productId)=>API.delete(`/wishlist/remove/${productId}`)
 
+export const addReview=(data)=>API.post('/review/addReview',data)
+export const getreview=(productId)=>API.get(`/review/getReview/${productId}`)
+
 export const createCategory=(data)=>API.post('/category/create',data)
 export const getCategory=()=>API.get('/category/getCategories')
 export const getOneCategory=(id)=>API.get(`/category/getOneCategory/${id}`)
