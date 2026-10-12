@@ -23,7 +23,12 @@ function Navbar({ cartCount }) {
 
   const navigate = useNavigate()
 
-  const userName = localStorage.getItem("userName")
+  const role = localStorage.getItem("role")
+
+const userName =
+role === "user"
+? localStorage.getItem("userName")
+: null
 
 
   const userInitials = userName
@@ -37,35 +42,31 @@ function Navbar({ cartCount }) {
 
 
   useEffect(() => {
+const getProfile = async () => {
+const token = localStorage.getItem("token")
+const role = localStorage.getItem("role")
 
-    const getProfile = async () => {
 
-      const token = localStorage.getItem("token")
+if (!token || role !== "user") {
+  setProfile(null)
+  return
+}
 
-      if (!token) {
-        return
-      }
+try {
+  const res = await API.get("/auth/profile")
+  setProfile(res.data.user)
+} catch (error) {
+  console.error(
+    "Profile error:",
+    error.response?.data || error.message
+  )
+}
 
-      try {
 
-        const res = await API.get('/auth/profile')
+}
 
-        setProfile(res.data.user)
-
-      } catch (error) {
-
-        console.error(
-          "Profile error:",
-          error.response?.data || error.message
-        )
-
-      }
-
-    }
-
-    getProfile()
-
-  }, [])
+getProfile()
+}, [])
 
 
  

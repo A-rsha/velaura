@@ -22,39 +22,45 @@ function LoginPage() {
     }
 
 
-    const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
+    e.preventDefault()
 
-        e.preventDefault()
+    try {
+        setLoading(true)
 
-        try {
+        const res = await API.post("/auth/login", formData)
 
-            setLoading(true)
+        console.log("LOGIN RESPONSE:", res.data)
 
-            const res = await API.post("/auth/login", formData)
-
-            console.log("LOGIN RESPONSE:", res.data)
-
-            localStorage.setItem("token", res.data.token)
-          localStorage.setItem("refreshToken", res.data.refreshToken);
-            localStorage.setItem("role", res.data.user.role)
-            localStorage.setItem("userName",res.data.user.name)
-
-           
-                navigate("/")
-            
-
-        } catch (error) {
-
-            alert("Invalid email and password")
-
-        } finally {
-
-            setLoading(false)
-
+        // Only normal users can log in here
+        if (res.data.user.role !== "user") {
+            alert("Please use the Admin Login page.")
+            return
         }
 
-    }
+        // Clear previous login session
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("role")
+        localStorage.removeItem("userName")
 
+        // Save user login details
+        localStorage.setItem("token", res.data.token)
+        localStorage.setItem("refreshToken", res.data.refreshToken)
+        localStorage.setItem("role", res.data.user.role)
+        localStorage.setItem("userName", res.data.user.name)
+
+        navigate("/")
+
+    } catch (error) {
+        alert(
+            error.response?.data?.message ||
+            "Invalid email and password"
+        )
+    } finally {
+        setLoading(false)
+    }
+}
 
     return (
 

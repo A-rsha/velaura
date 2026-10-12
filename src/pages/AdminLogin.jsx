@@ -33,16 +33,23 @@ function AdminLogin() {
             console.log("ADMIN LOGIN RESPONSE:", res.data)
 
             if (res.data.user.role !== "admin") {
-                alert("You are not authorized as an admin")
-                return
-            }
+    alert("You are not authorized as an admin")
+    return
+}
 
-            localStorage.setItem("token", res.data.token)
-            localStorage.setItem("role", res.data.user.role)
-            localStorage.setItem("userName", res.data.user.name)
+// Clear previous login session
+localStorage.removeItem("token")
+localStorage.removeItem("refreshToken")
+localStorage.removeItem("role")
+localStorage.removeItem("userName")
 
-            navigate("/adminDashboard")
+// Save admin login details
+localStorage.setItem("token", res.data.token)
+localStorage.setItem("refreshToken", res.data.refreshToken)
+localStorage.setItem("role", res.data.user.role)
+localStorage.setItem("userName", res.data.user.name)
 
+navigate("/adminDashboard")
         } catch (error) {
 
             console.log(

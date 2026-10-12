@@ -14,7 +14,7 @@ function Banner() {
         relative
         h-[430px]
         sm:h-[480px]
-        md:h-[520px]
+   md:h-[520px]
         lg:h-[560px]
         overflow-hidden
       "

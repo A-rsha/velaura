@@ -50,6 +50,7 @@ function App() {
 <Route path='/order' element={<Orders/>}/>
 <Route path='/myOrder' element={<MyOrder/>}/>
 <Route path='/addCategory' element={<AddCategory/>}/>
+
     </Routes>
    
    </BrowserRouter>
