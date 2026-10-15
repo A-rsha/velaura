@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import API from '../services/axios'
 
 function ProductDetails({ cartCount, setCartCount, setCartItems }) {
     const { id } = useParams()
-
+    const navigate = useNavigate()
     const [product, setProduct] = useState(null)
     const [reviews, setReviews] = useState([])
+    const [relatedProducts, setRelatedProducts] = useState([])
     const [rating, setRating] = useState(0)
     const [comment, setComment] = useState('')
     const [activeTab, setActiveTab] = useState('description')
@@ -16,7 +17,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
     const [submittingReview, setSubmittingReview] = useState(false)
     const [showReviewForm, setShowReviewForm] = useState(false)
 
-   
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -33,7 +34,32 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         fetchProduct()
     }, [id])
 
- 
+    useEffect(() => {
+
+        const fetchRelatedProducts = async () => {
+            try {
+                const res = await API.get('/product/getProducts')
+                const allProducts = res.data.data || []
+                const related = allProducts.filter((item) => {
+                    return (
+                        item.category === product?.category &&
+                        String(item._id) !== String(id)
+                    )
+                })
+                setRelatedProducts(related.slice(0, 4))
+            } catch (error) {
+                console.log(
+                    'error fetching related products:',
+                    error.response?.data || error
+                )
+            }
+        }
+        if (product) {
+            fetchRelatedProducts()
+        }
+    }, [product, id])
+
+
     const fetchReviews = async () => {
         try {
             setLoadingReviews(true)
@@ -87,7 +113,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         }
     }
 
-  
+
     const handleSubmitReview = async (e) => {
         e.preventDefault()
 
@@ -166,7 +192,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
             <main className="px-4 pb-16 pt-24 sm:px-6 sm:pt-28 lg:px-12">
                 <div className="mx-auto max-w-6xl">
 
-                   
+
                     <p className="mb-6 break-words text-xs text-gray-500 sm:text-sm">
                         Home / Shop / {product.title}
                     </p>
@@ -256,6 +282,83 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                         </div>
                     </section>
 
+                    {relatedProducts.length > 0 && (
+                        <section className="mx-auto mt-16 max-w-6xl border-t border-[#DED5C8] px-4 py-12 sm:mt-20 sm:px-6">
+
+                            <div className="mb-8">
+                                <p className="text-xs uppercase tracking-[3px] text-gray-500">
+                                    YOU MAY ALSO LIKE
+                                </p>
+
+                                <h2 className="mt-2 font-serif text-2xl text-[#2B2926] sm:text-3xl">
+                                    Related Products
+                                </h2>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
+
+                                {relatedProducts.map((item) => (
+                                    <div
+                                        key={item._id}
+                                        onClick={() => navigate(`/product/${item._id}`)}
+                                        className="group cursor-pointer"
+                                    >
+                                        <div className="relative aspect-[4/5] overflow-hidden border border-[#DED5C8] bg-white">
+
+                                            <img
+                                                src={item.image}
+                                                alt={item.title}
+                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                            />
+
+                                            {item.isOffer && (
+                                                <span className="absolute left-2 top-2 bg-[#2B2926] px-2 py-1 text-xs text-white">
+                                                    {item.offerPercentage}% OFF
+                                                </span>
+                                            )}
+
+                                        </div>
+
+                                        <div className="border-x border-b border-[#DED5C8] px-3 py-4">
+
+                                            <h3 className="truncate text-sm font-medium text-[#2B2926]">
+                                                {item.title}
+                                            </h3>
+
+                                            <div className="mt-2 flex flex-wrap items-center gap-2">
+
+                                                {item.isOffer ? (
+                                                    <>
+                                                        <span className="text-sm text-gray-400 line-through">
+                                                            ₹{item.price}
+                                                        </span>
+
+                                                        <span className="text-sm font-semibold text-[#2B2926]">
+                                                            ₹{item.offerPrice}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-sm font-semibold text-[#2B2926]">
+                                                        ₹{item.price}
+                                                    </span>
+                                                )}
+
+                                            </div>
+
+                                            <p className="mt-3 text-xs text-gray-600 underline underline-offset-4" onClick={() => navigate(`/product/${item._id}`)}>
+                                                View Product ↗
+                                            </p>
+
+
+                                        </div>
+                                    </div>
+                                ))}
+
+                            </div>
+                        </section>
+                    )}
+
+
                     {/* Description & Reviews */}
                     <section className="mt-16 border-t border-[#DED5C8] sm:mt-20">
 
@@ -265,11 +368,10 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('description')}
-                                className={`shrink-0 border-b-2 py-4 text-sm transition ${
-                                    activeTab === 'description'
-                                        ? 'border-[#2B2926] font-medium'
-                                        : 'border-transparent text-gray-500 hover:text-[#2B2926]'
-                                }`}
+                                className={`shrink-0 border-b-2 py-4 text-sm transition ${activeTab === 'description'
+                                    ? 'border-[#2B2926] font-medium'
+                                    : 'border-transparent text-gray-500 hover:text-[#2B2926]'
+                                    }`}
                             >
                                 Description
                             </button>
@@ -277,11 +379,10 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('reviews')}
-                                className={`shrink-0 border-b-2 py-4 text-sm transition ${
-                                    activeTab === 'reviews'
-                                        ? 'border-[#2B2926] font-medium'
-                                        : 'border-transparent text-gray-500 hover:text-[#2B2926]'
-                                }`}
+                                className={`shrink-0 border-b-2 py-4 text-sm transition ${activeTab === 'reviews'
+                                    ? 'border-[#2B2926] font-medium'
+                                    : 'border-transparent text-gray-500 hover:text-[#2B2926]'
+                                    }`}
                             >
                                 Reviews & Ratings ({totalReviews})
                             </button>
@@ -423,11 +524,10 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                                                                     onClick={() => setRating(star)}
                                                                     aria-label={`Rate ${star} out of 5 stars`}
                                                                     aria-pressed={rating === star}
-                                                                    className={`text-3xl transition hover:scale-110 sm:text-4xl ${
-                                                                        star <= rating
-                                                                            ? 'text-amber-500'
-                                                                            : 'text-gray-300'
-                                                                    }`}
+                                                                    className={`text-3xl transition hover:scale-110 sm:text-4xl ${star <= rating
+                                                                        ? 'text-amber-500'
+                                                                        : 'text-gray-300'
+                                                                        }`}
                                                                 >
                                                                     ★
                                                                 </button>

@@ -19,6 +19,8 @@ import AdminLogin from './pages/AdminLogin'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import AdminSidebar from './components/AdminSidebar'
 import AddCategory from './pages/AddCategory'
+import ReviewManagement from './pages/ReviewManagement'
+import AdsManager from './pages/AdsManager'
 
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
 <Route path='/order' element={<Orders/>}/>
 <Route path='/myOrder' element={<MyOrder/>}/>
 <Route path='/addCategory' element={<AddCategory/>}/>
+<Route path='/reviews' element={<ReviewManagement/>}/>
+<Route path='/ads' element={<AdsManager/>}/>
 
     </Routes>
    

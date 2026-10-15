@@ -1,10 +1,19 @@
 import React from 'react'
-import { FiGrid, FiPackage, FiPlus, FiShoppingBag } from 'react-icons/fi'
+import { FiGrid, FiLogOut, FiMonitor, FiPackage, FiPlus, FiShoppingBag, FiStar } from 'react-icons/fi'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function AdminSidebar() {
     const navigate = useNavigate()
     const location = useLocation()
+
+    const handleLogout=()=>{
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("role")
+        localStorage.removeItem("userName")
+        navigate("/adminLogin")
+        window.location.reload()
+    }
     return (
 
         <aside
@@ -65,7 +74,7 @@ function AdminSidebar() {
 
             {/* Navigation */}
 
-            <div className="px-4 py-6">
+            <div className="flex h-[calc(100vh-90px)] flex-col px-4 py-6">
 
 
                 <button
@@ -140,8 +149,8 @@ function AdminSidebar() {
                     <FiShoppingBag size={17} />
                     Orders
                 </button>
-                
-                  <button onClick={() => navigate('/addCategory')}
+
+                <button onClick={() => navigate('/addCategory')}
                     className={`
                           mt-1
                       flex
@@ -165,8 +174,65 @@ function AdminSidebar() {
                     Category
                 </button>
 
+                <button onClick={() => navigate('/reviews')}
+                    className={`
+                          mt-1
+                      flex
+                      w-full
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      transition
+                      ${location.pathname === '/reviews'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
+                ><FiStar size={17} />Review Management</button>
+                
+                <button onClick={() => navigate('/ads')}
+                    className={`
+                          mt-1
+                      flex
+                      w-full
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      transition
+                      ${location.pathname === '/ads'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
+                ><FiMonitor size={17} />Ads Manager</button>
+                
+
+
+                <button onClick={handleLogout} className='mt-auto 
+                      flex
+                      w-full
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      transition text-gray-600 hover:bg-black hover:text-white'>
+                    <FiLogOut size={17} />
+                    <span>Logout</span>
+                </button>
+
 
             </div>
+
+
 
 
             {/* Bottom */}

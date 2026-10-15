@@ -12,6 +12,8 @@ export const postProduct =(data)=> API.post('/product/postProduct',data,{
 
 export const getProducts=()=>API.get('/product/getProducts')
 export const getProduct=(id)=>API.get(`/product/getProduct/${id}`)
+export const getOfferProduct=()=>API.get('/product/getOfferProduct')
+export const newArrivals=()=>API.get('/product/newArrivals')
 export const updateProduct=(id,data)=>API.put(`/product/updateProduct/${id}`,data)
 export const deleteProduct=(id)=>API.delete(`/product/deleteproduct/${id}`)
 
@@ -26,6 +28,11 @@ export const create=(data)=>API.post('/order/create',data)
 export const getMyOrders=()=>API.get('/order/getMyOrders')
 export const getAllOrders=()=>API.get('/order/getAllOrders')
 
+export const getAds=()=>API.get('/ads/getAds')
+export const addAd=(data)=>API.post('/ads/addAds')
+export const deleteAd=(id)=>API.delete(`/ads/deleteAd/${id}`)
+
+
 export const addWishlist =(productId)=>API.post(`/wishlist/add/${productId}`)
 export const getWishlist=()=>API.get('/wishlist/get')
 export const removeWishlist=(productId)=>API.delete(`/wishlist/remove/${productId}`)
@@ -33,6 +40,7 @@ export const removeWishlist=(productId)=>API.delete(`/wishlist/remove/${productI
 export const addReview=(data)=>API.post('/review/addReview',data)
 export const getreview=(productId)=>API.get(`/review/getReview/${productId}`)
 export const getAllReviews=()=>API.get('/review/getAllReviews')
+export const deleteReview=(id)=>API.delete(`/review/deleteReview/${id}`)
 
 export const createCategory=(data)=>API.post('/category/create',data)
 export const getCategory=()=>API.get('/category/getCategories')

@@ -7,7 +7,8 @@ import FeaturedProducts from '../components/FeaturedProducts'
 import AddBanner from '../components/AddBanner'
 import ReviewSection from '../components/ReviewSection'
 import ShoppingBenefits from '../components/ShoppingBenefits'
-
+import SpecialOffer from '../components/SpecialOffer'
+import NewArrivals from '../components/NewArrivals'
 
 
 function Home() {
@@ -17,6 +18,8 @@ function Home() {
         <Banner/>
         <Category/>
         <FeaturedProducts/>
+        <SpecialOffer/>
+        <NewArrivals/>
         <AddBanner/>
         <ReviewSection/>
         <ShoppingBenefits/>

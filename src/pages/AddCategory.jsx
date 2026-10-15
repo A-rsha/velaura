@@ -18,7 +18,6 @@ function AddCategory() {
     })
 
 
-    // ---------------- GET CATEGORIES ----------------
 
     const getCategories = async () => {
         try {
