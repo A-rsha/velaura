@@ -46,7 +46,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
 
                     try {
 
-                        
+
                         const paymentMethod =
                             selectedMethod === "Card"
                                 ? "CARD"
@@ -61,6 +61,16 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
                             "METHOD SENT TO BACKEND:",
                             paymentMethod
                         );
+                        if (
+                            !shippingAddress ||
+                            !shippingAddress.address?.trim() ||
+                            !shippingAddress.city?.trim() ||
+                            !shippingAddress.state?.trim() ||
+                            !shippingAddress.pincode?.trim()
+                        ) {
+                            alert("Please enter your complete shipping address");
+                            return;
+                        }
 
                         const verifyRes = await API.post(
                             "/payment/verify",

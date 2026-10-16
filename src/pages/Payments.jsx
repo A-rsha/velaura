@@ -304,7 +304,7 @@ function Payments() {
                                                 shrink-0
                                             
                                                 justify-center
-                                                border
+                                                
 
                                                 border-[#DED5C8]
                                                 bg-white">
