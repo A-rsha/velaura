@@ -332,7 +332,8 @@ function Payments() {
 
                                 <PaymentButton
                                     shippingAddress={ShippingAddress}
-                                    selectedMethod={selectedMethod} />
+                                    selectedMethod={selectedMethod}
+                                    setAddressError={setAddressError} />
 
                             </div>
 

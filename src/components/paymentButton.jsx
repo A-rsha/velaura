@@ -1,10 +1,15 @@
 import RazorpayCheckout from "@razorpay/razorpay-js/checkout";
 import API from "../services/axios";
 
-const PaymentButton = ({ shippingAddress, selectedMethod }) => {
+const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
     const handlePayment = async () => {
+ if (!shippingAddress?.trim()) {
+        setAddressError("Address is required")
+        return
+    }
 
+    setAddressError("")
         try {
 
             const res = await API.post("/payment/createOrder");
@@ -61,16 +66,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod }) => {
                             "METHOD SENT TO BACKEND:",
                             paymentMethod
                         );
-                        if (
-                            !shippingAddress ||
-                            !shippingAddress.address?.trim() ||
-                            !shippingAddress.city?.trim() ||
-                            !shippingAddress.state?.trim() ||
-                            !shippingAddress.pincode?.trim()
-                        ) {
-                            alert("Please enter your complete shipping address");
-                            return;
-                        }
+                       
 
                         const verifyRes = await API.post(
                             "/payment/verify",
