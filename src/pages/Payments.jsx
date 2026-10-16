@@ -308,7 +308,7 @@ function Payments() {
 
                                                 border-[#DED5C8]
                                                 bg-white">
-                                <input value={ShippingAddress}
+                                <textarea value={ShippingAddress}
                                     className=" text-black text-right"
                                     type="text"
                                     placeholder="Enter delivery address" onChange={(e) => setShippingAddress(e.target.value)}
