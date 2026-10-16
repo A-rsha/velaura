@@ -23,7 +23,7 @@ function Payments() {
     const [ShippingAddress, setShippingAddress] = useState("")
 
     const [selectedMethod, setSelectedMethod] = useState("UPI")
-
+    const [addressError,setAddressError]=useState("")
 
     const paymentMethods = [
         {
@@ -299,21 +299,30 @@ function Payments() {
                                 ))}
 
                             </div>
-                            <div className="mt-8  h-20
-                                                w-full
-                                                shrink-0
-                                            
-                                                justify-center
-                                                
+            <div className="mt-8 w-full">
+    <textarea
+        value={ShippingAddress}
+        className={`w-full rounded-lg border p-3 text-left text-black outline-none ${
+            addressError
+                ? "border-red-500"
+                : "border-[#DED5C8]"
+        }`}
+        placeholder="Enter delivery address"
+        onChange={(e) => {
+            setShippingAddress(e.target.value)
 
-                                                border-[#DED5C8]
-                                                bg-white">
-                                <textarea value={ShippingAddress}
-                                    className=" text-black text-right"
-                                    type="text"
-                                    placeholder="Enter delivery address" onChange={(e) => setShippingAddress(e.target.value)}
-                                />
-                            </div>
+            if (e.target.value.trim()) {
+                setAddressError("")
+            }
+        }}
+    />
+
+    {addressError && (
+        <p className="mt-1 text-sm text-red-500">
+            {addressError}
+        </p>
+    )}
+</div>
 
 
                             {/* Payment Button */}
