@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useNavigate, useParams } from 'react-router-dom'
 import API from '../services/axios'
+import { toast } from 'react-toastify'
 
 function ProductDetails({ cartCount, setCartCount, setCartItems }) {
     const { id } = useParams()
@@ -95,7 +96,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                 productId: product._id
             })
 
-            alert('Product added to cart')
+            toast.success('Product added to cart')
 
             if (setCartCount) {
                 setCartCount(prev => prev + 1)
@@ -106,7 +107,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                 error.response?.data || error
             )
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 'Add To Cart Failed'
             )
@@ -118,12 +119,12 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         e.preventDefault()
 
         if (rating < 1 || rating > 5) {
-            alert('Please select a star rating')
+            toast.warn('Please select a star rating')
             return
         }
 
         if (!comment.trim()) {
-            alert('Please write your review')
+            toast.warn('Please write your review')
             return
         }
 
@@ -136,7 +137,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                 comment: comment.trim()
             })
 
-            alert('Review submitted successfully')
+            toast.success('Review submitted successfully')
 
             setRating(0)
             setComment('')
@@ -150,13 +151,13 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
             )
 
             if (error.response?.status === 401) {
-                alert('Please login to submit a review')
+                toast.warn('Please login to submit a review')
             } else if (error.response?.status === 403) {
-                alert(
+                toast.warn(
                     'You can review this product only after purchasing it.'
                 )
             } else {
-                alert(
+                toast.error(
                     error.response?.data?.message ||
                     'Unable to submit review'
                 )

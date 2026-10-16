@@ -14,6 +14,7 @@ import Footer from "../components/Footer"
 import API from "../services/axios"
 
 
+
 function Payments() {
 
     const [cart, setCart] = useState(null)

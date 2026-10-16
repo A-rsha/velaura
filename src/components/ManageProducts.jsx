@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import API from '../services/axios'
 import AdminSidebar from './AdminSidebar'
 import { FiImage, FiPlus, FiTag, FiX } from 'react-icons/fi'
+import { toast } from 'react-toastify'
 
 
 
@@ -137,7 +138,7 @@ function ManageProducts() {
       )
 
 
-      alert("Product created successfully")
+      toast.success("Product created successfully")
 
       window.location.reload()
 
@@ -149,7 +150,7 @@ function ManageProducts() {
         error.response?.data || error
       )
 
-      alert("Error creating product")
+      toast.error("Error creating product")
 
 
     } finally {
@@ -227,7 +228,7 @@ function ManageProducts() {
         formData
       )
 
-      alert("Product updated successfully")
+      toast.success("Product updated successfully")
 
       setEditProduct(null)
 

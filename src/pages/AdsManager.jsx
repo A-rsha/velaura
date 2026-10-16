@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fi'
 import API from '../services/axios'
 
+
 function AdsManager() {
     const [ads, setAds] = useState([])
     const [selectedImage, setSelectedImage] = useState(null)

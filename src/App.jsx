@@ -21,6 +21,9 @@ import AdminSidebar from './components/AdminSidebar'
 import AddCategory from './pages/AddCategory'
 import ReviewManagement from './pages/ReviewManagement'
 import AdsManager from './pages/AdsManager'
+import {ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
@@ -55,7 +58,10 @@ function App() {
 <Route path='/reviews' element={<ReviewManagement/>}/>
 <Route path='/ads' element={<AdsManager/>}/>
 
+
     </Routes>
+    <ToastContainer position="top-center"
+autoClose={4000}/>
    
    </BrowserRouter>
   )

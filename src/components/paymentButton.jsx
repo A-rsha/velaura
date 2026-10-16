@@ -1,5 +1,6 @@
 import RazorpayCheckout from "@razorpay/razorpay-js/checkout";
 import API from "../services/axios";
+import { toast } from "react-toastify";
 
 const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
@@ -17,7 +18,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
             console.log("RAZORPAY ORDER RESPONSE:", res.data);
 
             if (!res.data.success) {
-                alert("Unable to create order");
+                toast.error("Unable to create order");
                 return;
             }
 
@@ -84,11 +85,11 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
                         if (verifyRes.data.success) {
 
-                            alert("Payment successful");
+                            toast.success("Payment successful");
 
                         } else {
 
-                            alert("Payment verification failed");
+                            toast.error("Payment verification failed");
 
                         }
 
@@ -104,7 +105,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
                             error.response?.data
                         );
 
-                        alert(
+                        toast.error(
                             error.response?.data?.message ||
                             "Payment verification failed"
                         );
@@ -134,7 +135,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
                         response
                     );
 
-                    alert("Payment failed");
+                    toast.error("Payment failed");
 
                 }
             );
@@ -153,7 +154,7 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
                 error.response?.data
             );
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Something went wrong"
             );

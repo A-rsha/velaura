@@ -33,7 +33,7 @@ function AdminLogin() {
             console.log("ADMIN LOGIN RESPONSE:", res.data)
 
             if (res.data.user.role !== "admin") {
-    alert("You are not authorized as an admin")
+    toast.error("You are not authorized as an admin")
     return
 }
 
@@ -57,7 +57,7 @@ navigate("/adminDashboard")
                 error.response?.data || error
             )
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Invalid admin email or password"
             )

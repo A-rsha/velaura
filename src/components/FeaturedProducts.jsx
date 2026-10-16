@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 
+
 import API from '../services/axios'
 import {
     addWishlist,
     getWishlist,
     removeWishlist
 } from '../services/api'
+import { toast } from 'react-toastify'
 
 
 function FeaturedProducts() {
@@ -99,7 +101,7 @@ function FeaturedProducts() {
 
         const token = localStorage.getItem("token")
         if (!token) {
-            alert("please login to add products to your wishlist")
+            toast.warn("please login to add products to your wishlist")
             return
         }
 

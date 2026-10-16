@@ -4,6 +4,7 @@ import API from '../services/axios'
 import { useNavigate } from 'react-router-dom'
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { addWishlist, getWishlist, removeWishlist } from '../services/api'
+import { toast } from 'react-toastify'
 
 function Products({ selectedCategory }) {
 
@@ -102,7 +103,7 @@ function Products({ selectedCategory }) {
   const handleWishlist = async (productId) => {
      const token =localStorage.getItem("token")
         if(!token){
-            alert("please login to add products to your wishlist")
+            toast.warn("please login to add products to your wishlist")
             return
         }
 

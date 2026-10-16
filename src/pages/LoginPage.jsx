@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
+import {toast} from 'react-toastify'
 
 function LoginPage() {
 
@@ -32,19 +33,18 @@ const handleSubmit = async (e) => {
 
         console.log("LOGIN RESPONSE:", res.data)
 
-        // Only normal users can log in here
+    
         if (res.data.user.role !== "user") {
-            alert("Please use the Admin Login page.")
+            toast.warn("Please use the Admin Login page.")
             return
         }
 
-        // Clear previous login session
         localStorage.removeItem("token")
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("role")
         localStorage.removeItem("userName")
 
-        // Save user login details
+      
         localStorage.setItem("token", res.data.token)
         localStorage.setItem("refreshToken", res.data.refreshToken)
         localStorage.setItem("role", res.data.user.role)
@@ -53,7 +53,7 @@ const handleSubmit = async (e) => {
         navigate("/")
 
     } catch (error) {
-        alert(
+        toast.error(
             error.response?.data?.message ||
             "Invalid email and password"
         )

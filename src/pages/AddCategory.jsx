@@ -3,6 +3,7 @@ import { FiEdit2, FiImage, FiPlus, FiX } from 'react-icons/fi'
 import AdminSidebar from '../components/AdminSidebar'
 import { useState, useEffect } from 'react'
 import API from '../services/axios'
+import {toast} from 'react-toastify'
 
 function AddCategory() {
 
@@ -65,7 +66,7 @@ function AddCategory() {
 
         if (!formData.name || !formData.image) {
 
-            alert("Category and image are required")
+            toast.warn("Category and image are required")
 
             return
         }
@@ -103,7 +104,7 @@ function AddCategory() {
             setPreview(null)
 
 
-            alert("Category Created successfully")
+            toast.success("Category Created successfully")
 
 
         } catch (error) {
@@ -113,7 +114,7 @@ function AddCategory() {
                 error
             )
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Failed to create Category"
             )
@@ -176,7 +177,7 @@ function AddCategory() {
             )
 
 
-            alert("Category updated successfully")
+            toast.success("Category updated successfully")
 
 
             setEditCategory(null)
