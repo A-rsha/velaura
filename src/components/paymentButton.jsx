@@ -1,6 +1,7 @@
 import RazorpayCheckout from "@razorpay/razorpay-js/checkout";
 import API from "../services/axios";
 import { toast } from "react-toastify";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 
 const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
@@ -18,7 +19,9 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
             console.log("RAZORPAY ORDER RESPONSE:", res.data);
 
             if (!res.data.success) {
-                toast.error("Unable to create order");
+                toast.error("Unable to create order",{
+                   icon:<FiXCircle size={21}/>
+                });
                 return;
             }
 
@@ -85,11 +88,15 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
                         if (verifyRes.data.success) {
 
-                            toast.success("Payment successful");
+                            toast.success("Payment successful",{
+                                icon:<FiCheckCircle size={21}/>
+                            });
 
                         } else {
 
-                            toast.error("Payment verification failed");
+                            toast.error("Payment verification failed",{
+                                icon:<FiXCircle size={21}/>
+                            });
 
                         }
 
@@ -107,7 +114,9 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
                         toast.error(
                             error.response?.data?.message ||
-                            "Payment verification failed"
+                            "Payment verification failed",{
+                                icon:<FiXCircle size={21}/>
+                            }
                         );
 
                     }
@@ -135,7 +144,9 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
                         response
                     );
 
-                    toast.error("Payment failed");
+                    toast.error("Payment failed",{
+                                icon:<FiXCircle size={21}/>
+                            });
 
                 }
             );
@@ -156,7 +167,9 @@ const PaymentButton = ({ shippingAddress, selectedMethod ,setAddressError}) => {
 
             toast.error(
                 error.response?.data?.message ||
-                "Something went wrong"
+                "Something went wrong",{
+                                icon:<FiXCircle size={21}/>
+                            }
             );
         }
     };

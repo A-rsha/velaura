@@ -4,6 +4,8 @@ export const register =(data)=>API.post('/auth/register',data)
 export const login =(data)=>API.post('/auth/login',data)
 export const profile=()=>API.get('/auth/profile')
 
+export const verifyLoginOtp = (data) => API.post('/auth/verify-login-otp', data);
+
 export const postProduct =(data)=> API.post('/product/postProduct',data,{
     headers:{
         'Content-Type':'multipart/form-data',
@@ -47,6 +49,11 @@ export const getCategory=()=>API.get('/category/getCategories')
 export const getOneCategory=(id)=>API.get(`/category/getOneCategory/${id}`)
 export const updateCategory=(id,data)=>API.put(`/category/updateCategory/${id}`,data)
 export const deleteCategory=(id)=>API.delete(`/category/deleteCategory/${id}`)
+
+export const requestReturn=(data)=>API.post('/return/requestReturn',data)
+export const getAllReturns=()=>API.get('/return/getAllReturns')
+export const getMyReturns=()=>API.get('/return/getMyReturns')
+export const updateReturnStatus=(returnId)=>API.put(`/return/updateReturnStatus/${returnId}`,{status})
 
 export const razorpay =()=>API.post('/payment/createOrder')
 export const verify=(paymentResponse)=>API.post('/payment/verify',paymentResponse)

@@ -1,17 +1,24 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { FiArrowUpRight } from 'react-icons/fi'
+import { FiArrowUpRight, FiHeart, FiAlertTriangle } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import API from '../services/axios'
+import {
+    addWishlist,
+    getWishlist,
+    removeWishlist
+} from '../services/api'
+
 
 
 function NewArrivals() {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
-    const [error,setError]=useState(false)
-    
-    const navigate =useNavigate()
+    const [error, setError] = useState(false)
+    const [wishlistStatus, setWishlistStatus] = useState({})
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchNewArrivals = async () => {
@@ -28,17 +35,112 @@ function NewArrivals() {
                     error.reponse?.data || error
                 )
                 setError(true)
-             
-            }finally{
-                   setLoading(false)
+
+            } finally {
+                setLoading(false)
             }
         }
         fetchNewArrivals()
     }, [])
-    console.log("FetchNewArrivals:",error)
+
+
+
+    useEffect(() => {
+
+        const fetchWishlist = async () => {
+
+            try {
+
+                const res = await getWishlist()
+
+                const wishlistProducts =
+                    res.data?.wishlist || []
+
+                const status = {}
+
+                wishlistProducts.forEach((item) => {
+
+                    const productId =
+                        item.productId?._id ||
+                        item.productId ||
+                        item._id
+
+                    if (productId) {
+                        status[productId] = true
+                    }
+
+                })
+
+                setWishlistStatus(status)
+
+            } catch (error) {
+
+                console.log(
+                    "WISHLIST ERROR:",
+                    error.response?.data || error
+                )
+
+            }
+
+        }
+
+        fetchWishlist()
+
+    }, [])
+
+    const handleWishlist = async (productId) => {
+
+        const token = localStorage.getItem("token")
+        if (!token) {
+            toast.warn("please login to add products to your wishlist", {
+                icon: <FiAlertTriangle size={21} color='#9A7958' />
+            })
+            return
+        }
+
+        const isWishlisted =
+            wishlistStatus[productId] || false
+
+
+
+        setWishlistStatus((prev) => ({
+            ...prev,
+            [productId]: !isWishlisted
+        }))
+
+
+        try {
+
+            if (isWishlisted) {
+
+                await removeWishlist(productId)
+
+            } else {
+
+                await addWishlist(productId)
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "WISHLIST ERROR:",
+                error.response?.data || error
+            )
+
+
+
+            setWishlistStatus((prev) => ({
+                ...prev,
+                [productId]: isWishlisted
+            }))
+
+        }
+
+    }
     return (
         <section
-                    className="
+            className="
                         bg-white
                         px-5
                         py-12
@@ -48,16 +150,16 @@ function NewArrivals() {
                         md:py-16
                         lg:px-16
                     "
-                >
-                    <div className="mx-auto max-w-6xl">
-        
-                        {/* Section Heading */}
-                        <div className="mb-7 flex items-end justify-between sm:mb-8">
-                            <div>
-                
-        
-                                <h2
-                                    className="
+        >
+            <div className="mx-auto max-w-6xl">
+
+                {/* Section Heading */}
+                <div className="mb-7 flex items-end justify-between sm:mb-8">
+                    <div>
+
+
+                        <h2
+                            className="
                                         font-serif
                                         text-2xl
                                         font-medium
@@ -65,16 +167,16 @@ function NewArrivals() {
                                         sm:text-3xl
                                         md:text-4xl
                                     "
-                                >
-                                   NEW ARRIVALS
-                                </h2>
-                            </div>
-        
-                            {/* View All */}
-                            <button
-                                type="button"
-                                onClick={() => navigate('/shop')}
-                                className="
+                        >
+                            NEW ARRIVALS
+                        </h2>
+                    </div>
+
+                    {/* View All */}
+                    <button
+                        type="button"
+                        onClick={() => navigate('/shop')}
+                        className="
                                     hidden
                                     items-center
                                     gap-1
@@ -89,30 +191,30 @@ function NewArrivals() {
                                     sm:flex
                                     sm:text-sm
                                 "
-                            >
-                                View All Products
-                                <FiArrowUpRight size={14} />
-                            </button>
-                        </div>
-        
-                        {/* Loading State */}
-                        {loading && (
-                            <div className="py-12 text-center text-sm text-gray-500">
-                                Loading NEW ARRIVALS...
-                            </div>
-                        )}
-        
-                        {/* Error State */}
-                        {!loading && error && (
-                            <div className="py-12 text-center">
-                                <p className="text-sm text-red-600">
-                                    Unable to load New Arrivals.
-                                </p>
-        
-                                <button
-                                    type="button"
-                                    onClick={() => window.location.reload()}
-                                    className="
+                    >
+                        View All Products
+                        <FiArrowUpRight size={14} />
+                    </button>
+                </div>
+
+                {/* Loading State */}
+                {loading && (
+                    <div className="py-12 text-center text-sm text-gray-500">
+                        Loading NEW ARRIVALS...
+                    </div>
+                )}
+
+                {/* Error State */}
+                {!loading && error && (
+                    <div className="py-12 text-center">
+                        <p className="text-sm text-red-600">
+                            Unable to load New Arrivals.
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={() => window.location.reload()}
+                            className="
                                         mt-4
                                         border
                                         border-[#2B2926]
@@ -123,29 +225,29 @@ function NewArrivals() {
                                         hover:bg-[#2B2926]
                                         hover:text-white
                                     "
-                                >
-                                    Try Again
-                                </button>
-                            </div>
-                        )}
-        
-                        {/* Empty State */}
-                        {!loading && !error && products.length === 0 && (
-                            <div className="py-12 text-center">
-                                <p className="text-base text-[#2B2926]">
-                                    No New Arrivals available right now.
-                                </p>
-        
-                                <p className="mt-2 text-sm text-gray-500">
-                                    Please check back soon for exciting New Arrivals.
-                                </p>
-                            </div>
-                        )}
-        
-                        {/* Product Grid */}
-                        {!loading && !error && products.length > 0 && (
-                            <div
-                                className="
+                        >
+                            Try Again
+                        </button>
+                    </div>
+                )}
+
+                {/* Empty State */}
+                {!loading && !error && products.length === 0 && (
+                    <div className="py-12 text-center">
+                        <p className="text-base text-[#2B2926]">
+                            No New Arrivals available right now.
+                        </p>
+
+                        <p className="mt-2 text-sm text-gray-500">
+                            Please check back soon for exciting New Arrivals.
+                        </p>
+                    </div>
+                )}
+
+                {/* Product Grid */}
+                {!loading && !error && products.length > 0 && (
+                    <div
+                        className="
                                     grid
                                     grid-cols-2
                                     gap-x-4
@@ -155,18 +257,16 @@ function NewArrivals() {
                                     lg:grid-cols-4
                                     lg:gap-x-6
                                 "
+                    >
+                        {products.map((product) => (
+                            <div
+                                key={product._id}
+                                
+                                className="group min-w-0 cursor-pointer"
                             >
-                                {products.map((product) => (
-                                    <div
-                                        key={product._id}
-                                        onClick={() =>
-                                            navigate(`/product/${product._id}`)
-                                        }
-                                        className="group min-w-0 cursor-pointer"
-                                    >
-                                        {/* Product Image */}
-                                        <div
-                                            className="
+                                {/* Product Image */}
+                                <div
+                                    className="
                                                 relative
                                                 aspect-[4/5]
                                                 overflow-hidden
@@ -174,12 +274,12 @@ function NewArrivals() {
                                                 border-[#DED5C8]
                                                 bg-[#F5F0E8]
                                             "
-                                        >
-                                            <img
-                                                src={product.image}
-                                                alt={product.title}
-                                                loading="lazy"
-                                                className="
+                                >
+                                    <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        loading="lazy"
+                                        className="
                                                     h-full
                                                     w-full
                                                     object-cover
@@ -187,12 +287,12 @@ function NewArrivals() {
                                                     duration-500
                                                     group-hover:scale-105
                                                 "
-                                            />
-        
-                                            {/* Offer Badge */}
-                                            {product.isOffer && (
-                                                <span
-                                                    className="
+                                    />
+
+                                    {/* Offer Badge */}
+                                    {product.isOffer && (
+                                        <span
+                                            className="
                                                         absolute
                                                         left-2
                                                         top-2
@@ -208,15 +308,47 @@ function NewArrivals() {
                                                         sm:px-3
                                                         sm:text-xs
                                                     "
-                                                >
-                                                    {product.offerPercentage}% OFF
-                                                </span>
-                                            )}
-                                        </div>
-        
-                                        {/* Product Details */}
-                                        <div
-                                            className="
+                                        >
+                                            {product.offerPercentage}% OFF
+                                        </span>
+                                    )}
+
+
+                                    <button onClick={()=>handleWishlist(product._id)}
+                           
+                                        className="
+                                                                                    absolute
+                                                                                    right-3
+                                                                                    top-3
+                                                                                    flex
+                                                                                    h-8
+                                                                                    w-8
+                                                                                    items-center
+                                                                                    justify-center
+                                                                                    rounded-full
+                                                                                    bg-white/90
+                                                                                    transition
+                                                                                    duration-300
+                                                                                    hover:scale-105
+                                                                                "
+                                    >
+
+                                        <FiHeart
+                                            size={16}
+                                            strokeWidth={1.5}
+                                            className={
+                                                wishlistStatus[product._id]
+                                                    ? "fill-red-500 text-red-500"
+                                                    : "text-[#2B2926]"
+                                            }
+                                        />
+
+                                    </button>
+                                </div>
+
+                                {/* Product Details */}
+                                <div
+                                    className="
                                                 border-x
                                                 border-b
                                                 border-[#DED5C8]
@@ -225,83 +357,83 @@ function NewArrivals() {
                                                 sm:px-4
                                                 sm:py-4
                                             "
-                                        >
-                                            {/* Product Name */}
-                                            <h3
-                                                className="
+                                >
+                                    {/* Product Name */}
+                                    <h3
+                                        className="
                                                     line-clamp-1
                                                     text-xs
                                                     font-medium
                                                     text-[#2B2926]
                                                     sm:text-sm
                                                 "
-                                            >
-                                                {product.title}
-                                            </h3>
-        
-                                            {/* Product Price */}
-                                            <div className="mt-1">
-                                                {product.isOffer ? (
-                                                    <>
-                                                        <p
-                                                            className="
+                                    >
+                                        {product.title}
+                                    </h3>
+
+                                    {/* Product Price */}
+                                    <div className="mt-1">
+                                        {product.isOffer ? (
+                                            <>
+                                                <p
+                                                    className="
                                                                 text-xs
                                                                 text-gray-500
                                                                 line-through
                                                                 sm:text-sm
                                                             "
-                                                        >
-                                                            ₹{product.price}
-                                                        </p>
-        
-                                                        <p
-                                                            className="
+                                                >
+                                                    ₹{product.price}
+                                                </p>
+
+                                                <p
+                                                    className="
                                                                 text-sm
                                                                 font-semibold
                                                                 text-[#2B2926]
                                                                 sm:text-base
                                                             "
-                                                        >
-                                                            ₹{product.offerPrice}
-                                                        </p>
-                                                    </>
-                                                ) : (
-                                                    <p
-                                                        className="
+                                                >
+                                                    ₹{product.offerPrice}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <p
+                                                className="
                                                             text-sm
                                                             font-medium
                                                             text-[#2B2926]
                                                             sm:text-base
                                                         "
-                                                    >
-                                                        ₹{product.price}
-                                                    </p>
-                                                )}
-                                            </div>
-        
-                                            {/* View Product */}
-                                            <div
-                                                className="
+                                            >
+                                                ₹{product.price}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* View Product */}
+                                    <div
+                                        className="
                                                     mt-1.5
                                                     flex
                                                     items-center
                                                     justify-between
                                                     gap-1
                                                 "
-                                            >
-                                                <span className="text-xs tracking-[1px] text-[#B7791F]">
-                                                    ★★★★★
-                                                </span>
-        
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation()
-                                                        navigate(
-                                                            `/product/${product._id}`
-                                                        )
-                                                    }}
-                                                    className="
+                                    >
+                                        <span className="text-xs tracking-[1px] text-[#B7791F]">
+                                            ★★★★★
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                navigate(
+                                                    `/product/${product._id}`
+                                                )
+                                            }}
+                                            className="
                                                         inline-flex
                                                         items-center
                                                         gap-1
@@ -316,24 +448,24 @@ function NewArrivals() {
                                                         hover:opacity-60
                                                         sm:text-sm
                                                     "
-                                                >
-                                                    View
-                                                    <FiArrowUpRight size={14} />
-                                                </button>
-                                            </div>
-                                        </div>
+                                        >
+                                            View
+                                            <FiArrowUpRight size={14} />
+                                        </button>
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        )}
-        
-                        {/* Mobile View All */}
-                        {!loading && !error && products.length > 0 && (
-                            <div className="mt-8 flex justify-center sm:hidden">
-                                <button
-                                    type="button"
-                                    onClick={() => navigate('/shop')}
-                                    className="
+                        ))}
+                    </div>
+                )}
+
+                {/* Mobile View All */}
+                {!loading && !error && products.length > 0 && (
+                    <div className="mt-8 flex justify-center sm:hidden">
+                        <button
+                            type="button"
+                            onClick={() => navigate('/shop')}
+                            className="
                                         flex
                                         items-center
                                         gap-1
@@ -343,14 +475,14 @@ function NewArrivals() {
                                         text-sm
                                         font-medium
                                     "
-                                >
-                                    View All Products
-                                    <FiArrowUpRight size={14} />
-                                </button>
-                            </div>
-                        )}
+                        >
+                            View All Products
+                            <FiArrowUpRight size={14} />
+                        </button>
                     </div>
-                </section>
+                )}
+            </div>
+        </section>
     )
 }
 

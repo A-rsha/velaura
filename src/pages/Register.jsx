@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
 import {toast} from 'react-toastify'
+import { FiCheckCircle, FiXCircle } from 'react-icons/fi'
 
 function Register() {
 
@@ -34,7 +35,9 @@ function Register() {
 
       await API.post('/auth/register', formData)
 
-      toast.success("Registered successfully")
+      toast.success("Registered successfully",{
+        icon:<FiCheckCircle size={21}/>
+      })
 
       navigate("/login")
 
@@ -45,7 +48,9 @@ function Register() {
 
       toast.error(
         error.response?.data?.message ||
-        "Registration failed"
+        "Registration failed",{
+          icon:<FiXCircle size={21}/>
+        }
       )
 
     } finally {

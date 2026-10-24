@@ -23,6 +23,7 @@ import ReviewManagement from './pages/ReviewManagement'
 import AdsManager from './pages/AdsManager'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import ReturnManager from './pages/ReturnManager'
 
 
 
@@ -57,11 +58,11 @@ function App() {
 <Route path='/addCategory' element={<AddCategory/>}/>
 <Route path='/reviews' element={<ReviewManagement/>}/>
 <Route path='/ads' element={<AdsManager/>}/>
+<Route path='/returnManager' element={<ReturnManager/>}/>
 
 
     </Routes>
-    <ToastContainer position="top-center"
-autoClose={4000}/>
+  <ToastContainer position="top-center" autoClose={3000} hideProgressBar closeOnClick pauseOnHover draggable theme="light" toastClassName="velaura-toast" bodyClassName="velaura-toast-body" />
    
    </BrowserRouter>
   )

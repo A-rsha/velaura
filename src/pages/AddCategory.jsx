@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiEdit2, FiImage, FiPlus, FiX } from 'react-icons/fi'
+import { FiAlertTriangle, FiCheckCircle, FiEdit2, FiImage, FiPlus, FiX } from 'react-icons/fi'
 import AdminSidebar from '../components/AdminSidebar'
 import { useState, useEffect } from 'react'
 import API from '../services/axios'
@@ -66,7 +66,9 @@ function AddCategory() {
 
         if (!formData.name || !formData.image) {
 
-            toast.warn("Category and image are required")
+            toast.warn("Category and image are required",{
+                icon:<FiAlertTriangle size={21}/>
+            })
 
             return
         }
@@ -104,7 +106,9 @@ function AddCategory() {
             setPreview(null)
 
 
-            toast.success("Category Created successfully")
+            toast.success("Category Created successfully",{
+                icon:<FiCheckCircle size={21}/>
+            })
 
 
         } catch (error) {
@@ -116,7 +120,9 @@ function AddCategory() {
 
             toast.error(
                 error.response?.data?.message ||
-                "Failed to create Category"
+                "Failed to create Category",{
+                    icon:<FiAlertTriangle size={21}/>
+                }
             )
 
         } finally {
@@ -177,7 +183,9 @@ function AddCategory() {
             )
 
 
-            toast.success("Category updated successfully")
+            toast.success("Category updated successfully",{
+                
+            })
 
 
             setEditCategory(null)

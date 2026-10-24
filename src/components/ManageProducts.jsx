@@ -1,57 +1,96 @@
-import React, { useEffect, useState } from 'react'
+
+import React, { useEffect, useRef, useState } from 'react'
 import API from '../services/axios'
 import AdminSidebar from './AdminSidebar'
-import { FiImage, FiPlus, FiTag, FiX } from 'react-icons/fi'
+import {
+  FiCheckCircle,
+  FiImage,
+  FiPlus,
+  FiTag,
+  FiX,
+  FiEdit2,
+  FiTrash2,
+  FiPackage,
+  FiUploadCloud,
+} from 'react-icons/fi'
 import { toast } from 'react-toastify'
 
+const MAX_IMAGES = 6
+const MIN_IMAGES = 3
 
+const inputClass =
+  'w-full rounded-lg border border-[#D9D0C3] bg-white px-4 py-3 text-sm text-[#2B2926] outline-none transition focus:border-[#8A7660] focus:ring-2 focus:ring-[#8A7660]/10'
+
+const labelClass = 'mb-2 block text-sm font-medium text-[#403A33]'
+
+const emptyForm = () => ({
+  title: '',
+  description: '',
+  category: '',
+  price: '',
+  images: [],
+  isOffer: false,
+  offerPercentage: '',
+})
+
+const calculateOfferPrice = (price, percentage) => {
+  const originalPrice = Number(price)
+  const discount = Number(percentage)
+
+  if (
+    !Number.isFinite(originalPrice) ||
+    !Number.isFinite(discount) ||
+    originalPrice <= 0 ||
+    discount <= 0 ||
+    discount > 100
+  ) {
+    return 0
+  }
+
+  return Number(
+    (originalPrice - (originalPrice * discount) / 100).toFixed(2)
+  )
+}
 
 function ManageProducts() {
-
-  const [product, setProduct] = useState([])
-  const [editProduct, setEditProduct] = useState(null)
+  const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+
   const [showModal, setShowModal] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    price: "",
-    image: null
-  })
-  const [preview, setPreview] = useState(null)
-  const [isOffer, setIsOffer] = useState(false)
-  const [offerPercentage, setOfferPercentage] = useState("")
+  const [editProduct, setEditProduct] = useState(null)
+
   const [loading, setLoading] = useState(false)
 
-  const offerPrice =
-    isOffer && offerPercentage && formData.price
-      ? Number(
-        (
-          Number(formData.price) -
-          (
-            Number(formData.price) *
-            Number(offerPercentage)
-          ) /
-          100
-        ).toFixed(2)
-      )
-      : formData.price
+  const addImageInputRef = useRef(null)
+  const editImageInputRef = useRef(null)
 
+  const [formData, setFormData] = useState(emptyForm())
+
+  // Edit form keeps existing image URLs and newly selected File objects.
+  const [editData, setEditData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    price: '',
+    isOffer: false,
+    offerPercentage: '',
+    existingImages: [],
+    newImages: [],
+    removedImages: [],
+  })
 
   const fetchProducts = async () => {
     try {
       const res = await API.get('/product/getProducts')
 
-      console.log('PRODUCT RESPONSE:', res.data)
-
-      setProduct(res.data.data || [])
-
+      if (res.data.success) {
+        setProducts(res.data.data || [])
+      } else {
+        setProducts([])
+      }
     } catch (error) {
-      console.log(
-        "Error fetching products:",
-        error.response?.data || error
-      )
+      console.error('Fetch products error:', error)
+      toast.error('Failed to load products')
     }
   }
 
@@ -59,10 +98,11 @@ function ManageProducts() {
     try {
       const res = await API.get('/category/getCategories')
 
-      setCategories(res.data.data || [])
-
+      if (res.data.success) {
+        setCategories(res.data.data || [])
+      }
     } catch (error) {
-      console.log("CATEGORY ERROR:", error)
+      console.error('Fetch categories error:', error)
     }
   }
 
@@ -71,1773 +111,1094 @@ function ManageProducts() {
     fetchCategories()
   }, [])
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
 
-  const handleDelete = async (id) => {
-    try {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
+  }
 
-      await API.delete(`/product/deleteProduct/${id}`)
+  // ADD PRODUCT: select multiple images or add more later.
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || [])
+    e.target.value = ''
 
-      fetchProducts()
+    if (!selectedFiles.length) return
 
-    } catch (error) {
+    setFormData((prev) => {
+      const combined = [...prev.images, ...selectedFiles]
 
-      console.log(
-        "Delete error:",
-        error.response?.data || error
+      const unique = combined.filter(
+        (file, index, array) =>
+          index ===
+          array.findIndex(
+            (item) =>
+              item.name === file.name &&
+              item.size === file.size &&
+              item.lastModified === file.lastModified
+          )
       )
 
+      if (unique.length > MAX_IMAGES) {
+        toast.error(`You can upload a maximum of ${MAX_IMAGES} images.`)
+        return prev
+      }
+
+      return { ...prev, images: unique }
+    })
+  }
+
+  const removeAddImage = (indexToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, index) => index !== indexToRemove),
+    }))
+  }
+
+  const resetAddForm = () => {
+    setFormData(emptyForm())
+
+    if (addImageInputRef.current) {
+      addImageInputRef.current.value = ''
     }
   }
 
   const handleSubmit = async (e) => {
-
     e.preventDefault()
 
-    const data = new FormData()
+    if (!formData.title.trim()) {
+      toast.error('Please enter product title')
+      return
+    }
 
+    if (!formData.description.trim()) {
+      toast.error('Please enter product description')
+      return
+    }
 
-    Object.keys(formData).forEach((key) => {
+    if (!formData.category) {
+      toast.error('Please select a category')
+      return
+    }
 
-      if (formData[key]) {
-        data.append(key, formData[key])
+    if (!formData.price || Number(formData.price) <= 0) {
+      toast.error('Please enter a valid price')
+      return
+    }
+
+    if (
+      formData.images.length < MIN_IMAGES ||
+      formData.images.length > MAX_IMAGES
+    ) {
+      toast.error('Please select 3 to 6 images')
+      return
+    }
+
+    if (formData.isOffer) {
+      const percentage = Number(formData.offerPercentage)
+
+      if (percentage < 1 || percentage > 100) {
+        toast.error('Offer percentage must be between 1 and 100')
+        return
       }
-
-    })
-
-
-    data.append("isOffer", isOffer)
-
-    data.append(
-      "offerPercentage",
-      isOffer ? offerPercentage : 0
-    )
-
-    data.append(
-      "offerPrice",
-      isOffer ? offerPrice : formData.price
-    )
-
-
-    console.log("isOffer:", isOffer)
-    console.log("offerPercentage:", offerPercentage)
-    console.log("offerPrice:", offerPrice)
-
+    }
 
     try {
-
       setLoading(true)
 
-      await API.post(
-        '/product/postProduct',
-        data,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+      const data = new FormData()
+
+      data.append('title', formData.title.trim())
+      data.append('description', formData.description.trim())
+      data.append('category', formData.category)
+      data.append('price', String(Number(formData.price)))
+      data.append('isOffer', String(formData.isOffer))
+
+      const percentage = formData.isOffer
+        ? Number(formData.offerPercentage)
+        : 0
+
+      data.append('offerPercentage', String(percentage))
+      data.append(
+        'offerPrice',
+        String(
+          formData.isOffer
+            ? calculateOfferPrice(formData.price, percentage)
+            : 0
+        )
       )
 
-
-      toast.success("Product created successfully")
-
-      window.location.reload()
-
-
-    } catch (error) {
-
-      console.log(
-        "FULL ERROR:",
-        error.response?.data || error
-      )
-
-      toast.error("Error creating product")
-
-
-    } finally {
-
-      setLoading(false)
-
-    }
-
-  }
-
-  const handleChange = (e) => {
-
-    if (e.target.name === "image") {
-
-      const file = e.target.files[0]
-
-      setFormData({
-        ...formData,
-        image: file
+      formData.images.forEach((file) => {
+        data.append('images', file)
       })
 
-      if (file) {
-        setPreview(URL.createObjectURL(file))
+      const res = await API.post('/product/postProduct', data)
+
+      if (!res.data.success) {
+        toast.error(res.data.message || 'Failed to add product')
+        return
       }
 
-    } else {
-
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      })
-
+      toast.success('Product added successfully')
+      resetAddForm()
+      setShowModal(false)
+      await fetchProducts()
+    } catch (error) {
+      console.error('Add product error:', error)
+      toast.error(
+        error.response?.data?.message || 'Failed to add product'
+      )
+    } finally {
+      setLoading(false)
     }
+  }
 
+  // Open edit form and load existing images.
+  const handleEdit = (product) => {
+    const images =
+      Array.isArray(product.images) && product.images.length
+        ? product.images
+        : product.image
+          ? [product.image]
+          : []
+
+    setEditProduct(product)
+
+    setEditData({
+      title: product.title || '',
+      description: product.description || '',
+      category:
+        typeof product.category === 'object'
+          ? product.category?._id || ''
+          : product.category || '',
+      price: product.price ?? '',
+      isOffer: Boolean(product.isOffer),
+      offerPercentage: product.offerPercentage || '',
+      existingImages: images,
+      newImages: [],
+      removedImages: [],
+    })
+  }
+
+  const handleEditChange = (e) => {
+    const { name, value, type, checked } = e.target
+
+    setEditData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
+  }
+
+  // Add new images to the edit form.
+  const handleEditImagesChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || [])
+    e.target.value = ''
+
+    if (!selectedFiles.length) return
+
+    setEditData((prev) => {
+      const combined = [...prev.newImages, ...selectedFiles]
+
+      const unique = combined.filter(
+        (file, index, array) =>
+          index ===
+          array.findIndex(
+            (item) =>
+              item.name === file.name &&
+              item.size === file.size &&
+              item.lastModified === file.lastModified
+          )
+      )
+
+      const total =
+        prev.existingImages.length + unique.length
+
+      if (total > MAX_IMAGES) {
+        toast.error(`You can have a maximum of ${MAX_IMAGES} images.`)
+        return prev
+      }
+
+      return { ...prev, newImages: unique }
+    })
+  }
+
+  const removeExistingImage = (imageUrl) => {
+    setEditData((prev) => {
+      const updatedImages = prev.existingImages.filter(
+        (image) => image !== imageUrl
+      )
+
+      return {
+        ...prev,
+        existingImages: updatedImages,
+        removedImages: prev.removedImages.includes(imageUrl)
+          ? prev.removedImages
+          : [...prev.removedImages, imageUrl],
+      }
+    })
+  }
+
+  const removeNewEditImage = (indexToRemove) => {
+    setEditData((prev) => ({
+      ...prev,
+      newImages: prev.newImages.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    }))
   }
 
   const handleUpdate = async (e) => {
-
     e.preventDefault()
 
+    if (!editProduct?._id) {
+      toast.error('Product not found')
+      return
+    }
+
+    if (!editData.title.trim()) {
+      toast.error('Please enter product title')
+      return
+    }
+
+    if (!editData.description.trim()) {
+      toast.error('Please enter product description')
+      return
+    }
+
+    if (!editData.category) {
+      toast.error('Please select a category')
+      return
+    }
+
+    if (!editData.price || Number(editData.price) <= 0) {
+      toast.error('Please enter a valid price')
+      return
+    }
+
+    const totalImages =
+      editData.existingImages.length + editData.newImages.length
+
+    if (totalImages < MIN_IMAGES || totalImages > MAX_IMAGES) {
+      toast.error('The product must have 3 to 6 images')
+      return
+    }
+
+    if (editData.isOffer) {
+      const percentage = Number(editData.offerPercentage)
+
+      if (percentage < 1 || percentage > 100) {
+        toast.error('Offer percentage must be between 1 and 100')
+        return
+      }
+    }
+
     try {
+      setLoading(true)
 
-      const formData = new FormData()
+      const data = new FormData()
 
-      formData.append("title", editProduct.title)
-      formData.append("description", editProduct.description)
-      formData.append("category", editProduct.category)
-      formData.append("price", editProduct.price)
+      data.append('title', editData.title.trim())
+      data.append('description', editData.description.trim())
+      data.append('category', editData.category)
+      data.append('price', String(Number(editData.price)))
+      data.append('isOffer', String(editData.isOffer))
 
-      formData.append(
-        "isOffer",
-        editProduct.isOffer ? "true" : "false"
+      const percentage = editData.isOffer
+        ? Number(editData.offerPercentage)
+        : 0
+
+      data.append('offerPercentage', String(percentage))
+      data.append(
+        'offerPrice',
+        String(
+          editData.isOffer
+            ? calculateOfferPrice(editData.price, percentage)
+            : 0
+        )
       )
 
-      formData.append(
-        "offerPercentage",
-        editProduct.isOffer
-          ? editProduct.offerPercentage
-          : 0
+      // Existing URLs retained by the user.
+      data.append(
+        'existingImages',
+        JSON.stringify(editData.existingImages)
       )
 
-      formData.append(
-        "offerPrice",
-        editProduct.isOffer
-          ? editProduct.offerPrice
-          : 0
+      // Images removed by the user.
+      data.append(
+        'removedImages',
+        JSON.stringify(editData.removedImages)
       )
 
-      if (editProduct.image instanceof File) {
-        formData.append("image", editProduct.image)
+      // Newly uploaded images.
+      editData.newImages.forEach((file) => {
+        data.append('images', file)
+      })
+
+      const res = await API.put(
+        `/product/updateProduct/${editProduct._id}`,
+        data
+      )
+
+      if (!res.data.success) {
+        toast.error(res.data.message || 'Failed to update product')
+        return
       }
 
-      await API.put(
-        `/product/updateProduct/${editProduct._id}`,
-        formData
-      )
-
-      toast.success("Product updated successfully")
-
+      toast.success('Product updated successfully')
       setEditProduct(null)
-
-      fetchProducts()
-
+      await fetchProducts()
     } catch (error) {
-
-      console.log(
-        "Update error:",
-        error.response?.data || error
+      console.error('Update product error:', error)
+      toast.error(
+        error.response?.data?.message || 'Failed to update product'
       )
-
+    } finally {
+      setLoading(false)
     }
   }
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) {
+      return
+    }
+
+    try {
+      const res = await API.delete(`/product/deleteProduct/${id}`)
+
+      if (res.data.success) {
+        toast.success('Product deleted successfully')
+        await fetchProducts()
+      } else {
+        toast.error(res.data.message || 'Failed to delete product')
+      }
+    } catch (error) {
+      console.error('Delete product error:', error)
+      toast.error(
+        error.response?.data?.message || 'Failed to delete product'
+      )
+    }
+  }
+
+  const getCategoryName = (category) => {
+    if (typeof category === 'object' && category !== null) {
+      return category.name || category.title || 'Category'
+    }
+
+    const found = categories.find((item) => item._id === category)
+
+    return found?.name || found?.title || category || 'Category'
+  }
+
+  const getPreviewUrl = (file) => URL.createObjectURL(file)
+
+  const renderImageCard = ({
+    src,
+    alt,
+    main = false,
+    onRemove,
+    key,
+  }) => (
+    <div key={key} className="relative">
+      <div
+        className={`overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${main ? 'h-56 sm:h-64' : 'aspect-square'
+          }`}
+      >
+        <img
+          src={src}
+          alt={alt}
+          className={`h-full w-full ${main ? 'object-contain' : 'object-cover'}`}
+        />
+      </div>
+
+      {main && (
+        <span className="absolute left-2 top-2 rounded-full bg-[#2B2926] px-3 py-1 text-xs text-white">
+          Main Image
+        </span>
+      )}
+
+      <button
+        type="button"
+        onClick={onRemove}
+        title="Remove image"
+        className="absolute right-2 top-2 rounded-full bg-white p-2 text-red-600 shadow hover:bg-red-50"
+      >
+        <FiX size={14} />
+      </button>
+    </div>
+  )
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
-
+    <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
       <AdminSidebar />
 
-      <div className="lg:ml-64 px-4 sm:px-6 lg:px-10 py-8 sm:py-10">
+      <main className="min-h-screen px-4 py-6 sm:px-6 lg:ml-64 lg:px-8">
+        <div className="mx-auto max-w-7xl">
 
-        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#8A7660]">
+                Velaura Admin
+              </p>
 
-          {/* HEADER */}
+              <h1 className="text-2xl font-semibold sm:text-3xl">
+                Manage Products
+              </h1>
 
-          <div className="mb-8">
-
-            <p className="text-xs uppercase tracking-[0.25em] text-gray-500">
-              Administration
-            </p>
-
-            <h1 className="mt-2 text-3xl sm:text-4xl font-serif text-[#2B2926]">
-              Manage Products
-            </h1>
-
-            <p className="mt-2 text-sm text-gray-500">
-              View, edit and manage your Velaura products.
-            </p>
-
-
+              <p className="mt-2 text-sm text-[#777067]">
+                Add, edit and manage your store products.
+              </p>
+            </div>
 
             <button
               type="button"
-              onClick={() => setShowModal(true)}
-              className="
-                                           flex
-                                           w-full
-                                           items-center
-                                           justify-center
-                                           gap-2
-                                           mt-4
-                                           rounded-lg
-                                           bg-[#2B2926]
-                                           px-5
-                                           py-3
-                                           text-sm
-                                           font-medium
-                                           text-white
-                                           transition
-                                           duration-200
-                                           hover:bg-[#403D39]
-                                           sm:w-auto
-                                           sm:shrink-0
-                                       "
+              onClick={() => {
+                setFormData(emptyForm())
+                setShowModal(true)
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-5 py-3 text-sm font-medium text-white hover:bg-[#49443D]"
             >
-
               <FiPlus size={18} />
-
-              Add New Product
-
+              Add Product
             </button>
           </div>
 
-
-          {/* PRODUCT LIST */}
-
-          <div className="space-y-4">
-
-            {product.length === 0 ? (
-
-              <div className="bg-white border border-[#DED5C8] p-12 text-center">
-
-                <p className="text-lg font-medium text-[#2B2926]">
-                  No products found
-                </p>
-
-                <p className="mt-2 text-sm text-gray-500">
-                  Add a product to see it here.
-                </p>
-
+          <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="rounded-lg bg-[#F5F0E8] p-3">
+                <FiPackage size={22} />
               </div>
 
-            ) : (
+              <div>
+                <p className="text-sm text-[#777067]">Total Products</p>
+                <p className="mt-1 text-2xl font-semibold">
+                  {products.length}
+                </p>
+              </div>
+            </div>
 
-              product.map((item) => (
-
-                <div
-                  key={item._id}
-                  className="
-                    bg-white
-                    border
-                    border-[#DED5C8]
-                    p-4
-                    sm:p-5
-                    flex
-                    flex-col
-                    md:flex-row
-                    gap-5
-                    md:items-center
-                  "
-                >
-
-                  {/* IMAGE */}
-
-                  <div className="relative shrink-0">
-
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="
-                        w-full
-                        h-52
-                        sm:w-32
-                        sm:h-32
-                        object-cover
-                      "
-                    />
-
-                    {item.isOffer && (
-
-                      <span
-                        className="
-                          absolute
-                          left-2
-                          top-2
-                          bg-[#2B2926]
-                          text-white
-                          text-[10px]
-                          font-medium
-                          tracking-wide
-                          px-2.5
-                          py-1
-                        "
-                      >
-                        {item.offerPercentage}% OFF
-                      </span>
-
-                    )}
-
-                  </div>
-
-
-                  {/* PRODUCT DETAILS */}
-
-                  <div className="flex-1 min-w-0">
-
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-
-                      <div>
-
-                        <h2 className="
-                          text-lg
-                          font-medium
-                          text-[#2B2926]
-                        ">
-                          {item.title}
-                        </h2>
-
-                        <p className="
-                          mt-1
-                          text-xs
-                          uppercase
-                          tracking-wider
-                          text-gray-400
-                        ">
-                          {item.category}
-                        </p>
-
-                      </div>
-
-                    </div>
-
-
-                    <p className="
-                      mt-3
-                      text-sm
-                      leading-relaxed
-                      text-gray-500
-                      line-clamp-2
-                    ">
-                      {item.description}
-                    </p>
-
-
-                    {/* PRICE */}
-
-                    <div className="mt-4 flex items-center gap-3">
-
-                      {item.isOffer ? (
-
-                        <>
-                          <span className="
-                            text-sm
-                            text-gray-400
-                            line-through
-                          ">
-                            ₹{item.price}
-                          </span>
-
-                          <span className="
-                            text-lg
-                            font-semibold
-                            text-[#2B2926]
-                          ">
-                            ₹{item.offerPrice}
-                          </span>
-
-                        </>
-
-                      ) : (
-
-                        <span className="
-                          text-lg
-                          font-medium
-                          text-[#2B2926]
-                        ">
-                          ₹{item.price}
-                        </span>
-
-                      )}
-
-                    </div>
-
-                  </div>
-
-
-                  {/* ACTIONS */}
-
-                  <div className="
-                    flex
-                    md:flex-col
-                    gap-2
-                    w-full
-                    md:w-auto
-                  ">
-
-                    <button
-                      type="button"
-                      onClick={() => setEditProduct(item)}
-                      className="
-                        flex-1
-                        md:flex-none
-                        px-5
-                        py-2.5
-                        bg-[#2B2926]
-                        text-white
-                        text-sm
-                        font-medium
-                        transition
-                        hover:opacity-80
-                      "
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(item._id)}
-                      className="
-                        flex-1
-                        md:flex-none
-                        px-5
-                        py-2.5
-                        border
-                        border-[#D8CEC0]
-                        text-[#2B2926]
-                        text-sm
-                        font-medium
-                        transition
-                        hover:bg-[#F5F0E8]
-                      "
-                    >
-                      Delete
-                    </button>
-
-                  </div>
-
-                </div>
-
-              ))
-
-            )}
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      {/* EDIT PRODUCT MODAL */}
-
-      {editProduct && (
-
-        <div
-          className="
-            fixed
-            inset-0
-            z-50
-            bg-black/40
-            flex
-            items-center
-            justify-center
-            p-4
-          "
-        >
-
-          <form
-            onSubmit={handleUpdate}
-            className="
-              bg-[#FDFBF7]
-              w-full
-              max-w-lg
-              max-h-[92vh]
-              overflow-y-auto
-              shadow-2xl
-            "
-          >
-
-            {/* MODAL HEADER */}
-
-            <div className="
-              px-6
-              sm:px-8
-              py-5
-              border-b
-              border-[#DED5C8]
-              flex
-              items-center
-              justify-between
-            ">
+            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="rounded-lg bg-[#F5F0E8] p-3">
+                <FiTag size={22} />
+              </div>
 
               <div>
-
-                <p className="
-                  text-[10px]
-                  uppercase
-                  tracking-[0.25em]
-                  text-gray-400
-                ">
-                  Product Management
+                <p className="text-sm text-[#777067]">Offer Products</p>
+                <p className="mt-1 text-2xl font-semibold">
+                  {products.filter((item) => item.isOffer).length}
                 </p>
+              </div>
+            </div>
+          </div>
 
-                <h2 className="
-                  mt-1
-                  text-2xl
-                  font-serif
-                  text-[#2B2926]
-                ">
-                  Edit Product
+          <div className="overflow-hidden rounded-xl border border-[#E5DDD1] bg-white">
+            <div className="border-b border-[#EAE3D9] px-5 py-4 sm:px-6">
+              <h2 className="font-semibold">Product List</h2>
+              <p className="mt-1 text-xs text-[#777067]">
+                All products available in your store
+              </p>
+            </div>
+
+            {products.length === 0 ? (
+              <div className="px-6 py-16 text-center">
+                <FiPackage
+                  size={36}
+                  className="mx-auto mb-3 text-[#B5AA9B]"
+                />
+                <p className="font-medium">No products found</p>
+                <p className="mt-1 text-sm text-[#777067]">
+                  Add your first product to get started.
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[750px] text-left">
+                  <thead className="bg-[#FAF8F4] text-xs uppercase tracking-wider text-[#777067]">
+                    <tr>
+                      <th className="px-5 py-4">Product</th>
+                      <th className="px-5 py-4">Category</th>
+                      <th className="px-5 py-4">Price</th>
+                      <th className="px-5 py-4">Offer</th>
+                      <th className="px-5 py-4">Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-[#EEE7DD]">
+                    {products.map((item) => (
+                      <tr key={item._id} className="hover:bg-[#FCFAF7]">
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              className="h-14 w-14 rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] object-cover"
+                            />
+
+                            <div className="max-w-[220px]">
+                              <p className="font-medium">{item.title}</p>
+                              <p className="mt-1 line-clamp-2 text-xs text-[#777067]">
+                                {item.description}
+                              </p>
+
+                              {item.images?.length > 0 && (
+                                <p className="mt-1 text-xs text-[#8A7660]">
+                                  {item.images.length} images
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-4 text-sm">
+                          {getCategoryName(item.category)}
+                        </td>
+
+                        <td className="px-5 py-4 text-sm">
+                          {item.isOffer ? (
+                            <>
+                              <p className="font-semibold">
+                                ₹{item.offerPrice}
+                              </p>
+                              <p className="text-xs text-[#999084] line-through">
+                                ₹{item.price}
+                              </p>
+                            </>
+                          ) : (
+                            <span className="font-medium">₹{item.price}</span>
+                          )}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          {item.isOffer ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F1E7D8] px-3 py-1 text-xs font-medium text-[#735D43]">
+                              <FiTag size={12} />
+                              {item.offerPercentage}% OFF
+                            </span>
+                          ) : (
+                            <span className="text-xs text-[#999084]">
+                              No offer
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleEdit(item)}
+                              title="Edit product"
+                              className="rounded-lg border border-[#E5DDD1] p-2 hover:bg-[#F5F0E8]"
+                            >
+                              <FiEdit2 size={16} />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(item._id)}
+                              title="Delete product"
+                              className="rounded-lg border border-red-100 p-2 text-red-600 hover:bg-red-50"
+                            >
+                              <FiTrash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* ADD PRODUCT MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
+              <div>
+                <h2 className="text-lg font-semibold sm:text-xl">
+                  Add New Product
                 </h2>
-
+                <p className="mt-1 text-xs text-[#777067]">
+                  Add product details and images.
+                </p>
               </div>
 
               <button
                 type="button"
-                onClick={() => setEditProduct(null)}
-                className="
-                  h-9
-                  w-9
-                  flex
-                  items-center
-                  justify-center
-                  text-xl
-                  text-gray-500
-                  hover:text-[#2B2926]
-                "
+                onClick={() => {
+                  setShowModal(false)
+                  setFormData(emptyForm())
+                }}
+                className="rounded-full p-2 hover:bg-[#EDE5D9]"
               >
-                ×
+                <FiX size={21} />
               </button>
-
             </div>
 
-
-            {/* FORM */}
-
-            <div className="px-6 sm:px-8 py-6 space-y-5">
-
-              {/* TITLE */}
-
+            <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-7">
               <div>
-
-                <label className="
-                  block
-                  text-xs
-                  uppercase
-                  tracking-wider
-                  font-medium
-                  text-gray-500
-                  mb-2
-                ">
-                  Product Name
-                </label>
-
+                <label className={labelClass}>Product Title *</label>
                 <input
-                  type="text"
-                  value={editProduct.title}
-                  onChange={(e) =>
-                    setEditProduct({
-                      ...editProduct,
-                      title: e.target.value
-                    })
-                  }
-                  className="
-                    w-full
-                    border
-                    border-[#D8CEC0]
-                    bg-white
-                    px-3
-                    py-3
-                    text-sm
-                    text-[#2B2926]
-                    outline-none
-                    focus:border-[#2B2926]
-                  "
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="Enter product name"
+                  className={inputClass}
                 />
-
               </div>
-
-
-              {/* DESCRIPTION */}
 
               <div>
-
-                <label className="
-                  block
-                  text-xs
-                  uppercase
-                  tracking-wider
-                  font-medium
-                  text-gray-500
-                  mb-2
-                ">
-                  Description
-                </label>
-
+                <label className={labelClass}>Description *</label>
                 <textarea
-                  value={editProduct.description}
-                  onChange={(e) =>
-                    setEditProduct({
-                      ...editProduct,
-                      description: e.target.value
-                    })
-                  }
-                  rows="4"
-                  className="
-                    w-full
-                    border
-                    border-[#D8CEC0]
-                    bg-white
-                    px-3
-                    py-3
-                    text-sm
-                    text-[#2B2926]
-                    outline-none
-                    resize-none
-                    focus:border-[#2B2926]
-                  "
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="3"
+                  placeholder="Describe your product"
+                  className={`${inputClass} resize-y`}
                 />
-
               </div>
 
-
-              {/* CATEGORY + PRICE */}
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
-
-                  <label className="
-                    block
-                    text-xs
-                    uppercase
-                    tracking-wider
-                    font-medium
-                    text-gray-500
-                    mb-2
-                  ">
-                    Category
-                  </label>
+                  <label className={labelClass}>Category *</label>
 
                   <select
-                    value={editProduct.category}
-                    onChange={(e) =>
-                      setEditProduct({
-                        ...editProduct,
-                        category: e.target.value
-                      })
-                    }
-                    className="
-                      w-full
-                      border
-                      border-[#D8CEC0]
-                      bg-white
-                      px-3
-                      py-3
-                      text-sm
-                      text-[#2B2926]
-                      outline-none
-                      focus:border-[#2B2926]
-                    "
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    className={inputClass}
                   >
-
-                    <option value="">
-                      Select Category
-                    </option>
+                    <option value="">Select category</option>
 
                     {categories.map((category) => (
-
-                      <option
-                        key={category._id}
-                        value={category.name}
-                      >
+                      <option key={category._id} value={category.name}>
                         {category.name}
                       </option>
-
                     ))}
-
                   </select>
 
                 </div>
 
-
                 <div>
-
-                  <label className="
-                    block
-                    text-xs
-                    uppercase
-                    tracking-wider
-                    font-medium
-                    text-gray-500
-                    mb-2
-                  ">
-                    Price
-                  </label>
-
+                  <label className={labelClass}>Price (₹) *</label>
                   <input
                     type="number"
-                    value={editProduct.price}
-                    onChange={(e) => {
-
-                      const price = Number(e.target.value)
-
-                      const offerPrice =
-                        editProduct.isOffer
-                          ? price -
-                          (
-                            price *
-                            Number(
-                              editProduct.offerPercentage || 0
-                            )
-                          ) /
-                          100
-                          : 0
-
-                      setEditProduct({
-                        ...editProduct,
-                        price: e.target.value,
-                        offerPrice: Number(
-                          offerPrice.toFixed(2)
-                        )
-                      })
-
-                    }}
-                    className="
-                      w-full
-                      border
-                      border-[#D8CEC0]
-                      bg-white
-                      px-3
-                      py-3
-                      text-sm
-                      text-[#2B2926]
-                      outline-none
-                      focus:border-[#2B2926]
-                    "
+                    name="price"
+                    min="1"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="Enter price"
+                    className={inputClass}
                   />
-
                 </div>
-
               </div>
 
-
-              {/* IMAGE */}
-
-              <div>
-
-                <label className="
-                  block
-                  text-xs
-                  uppercase
-                  tracking-wider
-                  font-medium
-                  text-gray-500
-                  mb-2
-                ">
-                  Change Image
-                </label>
-
-                <div className="
-                  border
-                  border-dashed
-                  border-[#CFC3B4]
-                  bg-white
-                  p-4
-                ">
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setEditProduct({
-                        ...editProduct,
-                        image: e.target.files[0]
-                      })
-                    }
-                    className="
-                      w-full
-                      text-sm
-                      text-gray-500
-                    "
-                  />
-
-                </div>
-
-              </div>
-
-
-              {/* OFFER SECTION */}
-
-              <div className="
-                border
-                border-[#D8CEC0]
-                bg-white
-                p-5
-              ">
-
-                <div className="
-                  flex
-                  items-center
-                  justify-between
-                  gap-4
-                ">
-
+              {/* ADD IMAGES */}
+              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+                <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
-
-                    <p className="
-                      text-sm
-                      font-medium
-                      text-[#2B2926]
-                    ">
-                      Product Offer
+                    <h3 className="flex items-center gap-2 font-semibold">
+                      <FiImage size={18} />
+                      Product Images *
+                    </h3>
+                    <p className="mt-1 text-xs text-[#777067]">
+                      Select 3–6 images. The first image is the main image.
                     </p>
-
-                    <p className="
-                      mt-1
-                      text-xs
-                      text-gray-500
-                    ">
-                      Apply a discount to this product
-                    </p>
-
                   </div>
 
-
-                  <label className="
-                    relative
-                    inline-flex
-                    items-center
-                    cursor-pointer
-                  ">
-
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={editProduct.isOffer || false}
-                      onChange={(e) => {
-
-                        const isOffer = e.target.checked
-
-                        const percentage =
-                          isOffer
-                            ? Number(
-                              editProduct.offerPercentage || 10
-                            )
-                            : 0
-
-                        const offerPrice =
-                          isOffer
-                            ? Number(
-                              (
-                                Number(editProduct.price) -
-                                (
-                                  Number(editProduct.price) *
-                                  percentage
-                                ) /
-                                100
-                              ).toFixed(2)
-                            )
-                            : 0
-
-                        setEditProduct({
-                          ...editProduct,
-                          isOffer,
-                          offerPercentage: percentage,
-                          offerPrice
-                        })
-
-                      }}
-                    />
-
-                    <div className="
-                      w-11
-                      h-6
-                      bg-gray-300
-                      peer-focus:outline-none
-                      peer-focus:ring-2
-                      peer-focus:ring-gray-300
-                      rounded-full
-                      peer
-                      peer-checked:bg-[#2B2926]
-                      after:content-['']
-                      after:absolute
-                      after:top-[2px]
-                      after:left-[2px]
-                      after:bg-white
-                      after:border-gray-300
-                      after:border
-                      after:rounded-full
-                      after:h-5
-                      after:w-5
-                      after:transition-all
-                      peer-checked:after:translate-x-full
-                    "></div>
-
-                  </label>
-
+                  <span className="rounded-full bg-[#F5F0E8] px-3 py-1 text-xs font-medium">
+                    {formData.images.length}/{MAX_IMAGES}
+                  </span>
                 </div>
 
-
-                {editProduct.isOffer && (
-
-                  <div className="mt-5 pt-5 border-t border-[#E5DED4]">
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                      {/* PERCENTAGE */}
-
-                      <div>
-
-                        <label className="
-                          block
-                          text-xs
-                          uppercase
-                          tracking-wider
-                          font-medium
-                          text-gray-500
-                          mb-2
-                        ">
-                          Discount
-                        </label>
-
-                        <div className="relative">
-
-                          <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={
-                              editProduct.offerPercentage || ""
-                            }
-                            onChange={(e) => {
-
-                              const percentage =
-                                Number(e.target.value)
-
-                              const offerPrice =
-                                Number(editProduct.price) -
-                                (
-                                  Number(editProduct.price) *
-                                  percentage
-                                ) /
-                                100
-
-                              setEditProduct({
-                                ...editProduct,
-                                offerPercentage: percentage,
-                                offerPrice: Number(
-                                  offerPrice.toFixed(2)
-                                )
-                              })
-
-                            }}
-                            className="
-                              w-full
-                              border
-                              border-[#D8CEC0]
-                              bg-white
-                              px-3
-                              py-3
-                              pr-10
-                              text-sm
-                              outline-none
-                              focus:border-[#2B2926]
-                            "
-                          />
-
-                          <span className="
-                            absolute
-                            right-3
-                            top-1/2
-                            -translate-y-1/2
-                            text-sm
-                            text-gray-400
-                          ">
-                            %
-                          </span>
-
-                        </div>
-
-                      </div>
-
-
-                      {/* OFFER PRICE */}
-
-                      <div>
-
-                        <label className="
-                          block
-                          text-xs
-                          uppercase
-                          tracking-wider
-                          font-medium
-                          text-gray-500
-                          mb-2
-                        ">
-                          Offer Price
-                        </label>
-
-                        <div className="
-                          border
-                          border-[#D8CEC0]
-                          bg-[#F5F0E8]
-                          px-3
-                          py-3
-                          text-sm
-                          font-semibold
-                          text-[#2B2926]
-                        ">
-                          ₹{editProduct.offerPrice || 0}
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <p className="
-                      mt-3
-                      text-xs
-                      text-gray-400
-                    ">
-                      Original price ₹{editProduct.price} with{" "}
-                      {editProduct.offerPercentage}% discount
-                    </p>
-
-                  </div>
-
+                {formData.images.length > 0 && (
+                  <>
+                    <p className="mb-2 text-sm font-medium">Main Image</p>
+                    {renderImageCard({
+                      src: getPreviewUrl(formData.images[0]),
+                      alt: 'Main product preview',
+                      main: true,
+                      onRemove: () => removeAddImage(0),
+                      key: 'add-main',
+                    })}
+                  </>
                 )}
 
+                {formData.images.length > 1 && (
+                  <div className="mt-5">
+                    <p className="mb-2 text-sm font-medium">
+                      Related Images
+                    </p>
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+                      {formData.images.slice(1).map((file, index) => (
+                        <div key={`${file.name}-${file.lastModified}-${index}`}>
+                          {renderImageCard({
+                            src: getPreviewUrl(file),
+                            alt: `Related image ${index + 1}`,
+                            onRemove: () => removeAddImage(index + 1),
+                            key: `${file.name}-${index}`,
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <input
+                  ref={addImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+
+                <button
+                  type="button"
+                  disabled={formData.images.length >= MAX_IMAGES}
+                  onClick={() => addImageInputRef.current?.click()}
+                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                >
+                  <FiUploadCloud size={19} />
+                  {formData.images.length ? 'Add More Images' : 'Choose Product Images'}
+                </button>
               </div>
 
-            </div>
+              {/* OFFER */}
+              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+                <label className="flex cursor-pointer items-center gap-3">
+                  <input
+                    type="checkbox"
+                    name="isOffer"
+                    checked={formData.isOffer}
+                    onChange={handleChange}
+                    className="h-4 w-4 accent-[#2B2926]"
+                  />
+                  <span className="flex items-center gap-2 text-sm font-medium">
+                    <FiTag size={17} />
+                    Enable Special Offer
+                  </span>
+                </label>
 
+                {formData.isOffer && (
+                  <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className={labelClass}>
+                        Offer Percentage (%)
+                      </label>
+                      <input
+                        type="number"
+                        name="offerPercentage"
+                        min="1"
+                        max="100"
+                        value={formData.offerPercentage}
+                        onChange={handleChange}
+                        className={inputClass}
+                      />
+                    </div>
 
-
-
-            <div className="
-              px-6
-              sm:px-8
-              py-5
-              border-t
-              border-[#DED5C8]
-              flex
-              flex-col-reverse
-              sm:flex-row
-              sm:justify-end
-              gap-3
-            ">
-
-              <button
-                type="button"
-                onClick={() => setEditProduct(null)}
-                className="
-                  px-6
-                  py-3
-                  border
-                  border-[#D8CEC0]
-                  text-sm
-                  font-medium
-                  text-[#2B2926]
-                  hover:bg-[#F5F0E8]
-                  transition
-                "
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="
-                  px-6
-                  py-3
-                  bg-[#2B2926]
-                  text-white
-                  text-sm
-                  font-medium
-                  hover:opacity-85
-                  transition
-                "
-              >
-                Save Changes
-              </button>
-
-            </div>
-
-          </form>
-
-        </div>
-
-      )}
-
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:p-6">
-          <div className="my-4 w-full max-w-lg rounded-2xl bg-white p-5 shadow-xl sm:my-6 sm:p-6">
-            <div className='flex items-center justify-between'>
-
-              <div>
-
-                <p className="
-                      text-[10px]
-                      uppercase
-                      tracking-[0.25em]
-                      text-gray-400
-                    ">
-                  Product Management
-                </p>
-
-                <h2 className="
-                      mt-1
-                      text-2xl
-                      font-serif
-                      text-[#2B2926]
-                    ">
-                  Create Product
-                </h2>
-
-                <p className="
-                      mt-1
-                      text-sm
-                      text-gray-500
-                    ">
-                  Add a new accessory to your VELAURA store.
-                </p>
-
+                    <div>
+                      <label className={labelClass}>Final Offer Price</label>
+                      <div className={inputClass}>
+                        ₹
+                        {calculateOfferPrice(
+                          formData.price,
+                          formData.offerPercentage
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setShowModal(false)
-                }
-                className="
-                                                          rounded-full
-                                                          p-2
-                                                          text-gray-500
-                                                          transition
-                                                          hover:bg-gray-100
-                                                      "
-              >
+              <div className="flex flex-col-reverse gap-3 border-t border-[#E5DDD1] pt-5 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowModal(false)
+                    setFormData(emptyForm())
+                  }}
+                  className="rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
+                >
+                  Cancel
+                </button>
 
-                <FiX size={20} />
-
-              </button>
-            </div>
-
-            <div className='px-5 py-7 sm:px-8 sm:py-8'>
-              <form onSubmit={handleSubmit} className='space-y-7' >
-                <div>
-
-                  <div className="mb-5">
-
-                    <p className="
-                        text-xs
-                        uppercase
-                        tracking-[0.18em]
-                        text-gray-400
-                      ">
-                      Product Information
-                    </p>
-
-                  </div>
-
-                  <div className='space-y-5'>
-                    <div>
-
-                      <label className="
-                          mb-2
-                          block
-                          text-sm
-                          font-medium
-                          text-[#2B2926]
-                        ">
-                        Product Title
-                      </label>
-
-                      <input
-                        type="text"
-                        name="title"
-                        placeholder="Enter product title"
-                        onChange={handleChange}
-                        required
-                        className="
-                            w-full
-                            border
-                            border-[#D8CEC0]
-                            bg-white
-                            px-4
-                            py-3
-                            text-sm
-                            text-[#2B2926]
-                            outline-none
-                            transition
-                            placeholder:text-gray-400
-                            focus:border-[#2B2926]
-                          "
-                      />
-
-                    </div>
-                    <div>
-                      <label className="
-                          mb-2
-                          block
-                          text-sm
-                          font-medium
-                          text-[#2B2926]
-                        ">
-                        Description
-                      </label>
-                      <textarea
-                        name="description"
-                        placeholder="Enter product description"
-                        onChange={handleChange}
-                        rows="4"
-                        className="
-                            w-full
-                            resize-none
-                            border
-                            border-[#D8CEC0]
-                            bg-white
-                            px-4
-                            py-3
-                            text-sm
-                            text-[#2B2926]
-                            outline-none
-                            transition
-                            placeholder:text-gray-400
-                            focus:border-[#2B2926]
-                          "
-                      />
-                    </div>
-
-                    <div className="
-                        grid
-                        grid-cols-1
-                        gap-5
-                        md:grid-cols-2
-                      ">
-                      <div>
-                        <label className="
-                            mb-2
-                            block
-                            text-sm
-                            font-medium
-                            text-[#2B2926]
-                          ">
-                          Category
-                        </label>
-
-                        <select
-                          name="category"
-                          onChange={handleChange}
-                          required
-                          className="
-                              w-full
-                              border
-                              border-[#D8CEC0]
-                              bg-white
-                              px-4
-                              py-3
-                              text-sm
-                              text-[#2B2926]
-                              outline-none
-                              focus:border-[#2B2926]
-                            "
-                        >
-                          <option value="">
-                            Select Category
-                          </option>
-                          {categories.map((category) => (
-
-                            <option
-                              key={category._id}
-                              value={category.name}
-                            >
-                              {category.name}
-                            </option>
-
-                          ))}
-
-                        </select>
-                      </div>
-                      <div>
-                        <label className=' mb-2
-                            block
-                            text-sm
-                            font-medium
-                            text-[#2B2926]'>
-                          Price</label>
-
-                        <div className='relative'>
-                          <span className='absolute
-                              left-4
-                              top-1/2
-                              -translate-y-1/2
-                              text-sm
-                              text-gray-500
-                              '>₹
-                          </span>
-                          <input
-                            type="number"
-                            name="price"
-                            placeholder="Enter price"
-                            onChange={handleChange}
-                            required
-                            className="
-                                w-full
-                                border
-                                border-[#D8CEC0]
-                                bg-white
-                                py-3
-                                pl-8
-                                pr-4
-                                text-sm
-                                text-[#2B2926]
-                                outline-none
-                                placeholder:text-gray-400
-                                focus:border-[#2B2926]
-                              "
-                          />
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-
-                <div className="
-                    border
-                    border-[#DED5C8]
-                    bg-[#F5F0E8]
-                    p-5
-                    sm:p-6">
-                  <div className="
-                      flex
-                      flex-col
-                      gap-4
-                      sm:flex-row
-                      sm:items-center
-                      sm:justify-between
-                    ">
-                    <div className="flex items-start gap-3">
-                      <div className="
-                          flex
-                          h-10
-                          w-10
-                          shrink-0
-                          items-center
-                          justify-center
-                          bg-[#2B2926]
-                          text-white
-                        ">
-                        <FiTag size={17} />
-                      </div>
-
-                      <div>
-                        <p className=' text-sm
-                            font-medium
-                            text-[#2B2926]'>
-                          Product Offer</p>
-                        <p className="
-                            mt-1
-                            text-xs
-                            text-gray-500
-                          ">
-                          Add a discount to this product.
-                        </p>
-                      </div>
-                    </div>
-
-                    <label className="
-                        relative
-                        inline-flex
-                        cursor-pointer
-                        items-center
-                      ">
-
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        checked={isOffer}
-                        onChange={(e) =>
-                          setIsOffer(e.target.checked)
-                        }
-                      />
-                      <div className="
-                          h-6
-                          w-11
-                          rounded-full
-                          bg-gray-300
-                          transition
-                          peer-checked:bg-[#2B2926]
-                        " />
-
-                      <div className="
-                          absolute
-                          left-[2px]
-                          top-[2px]
-                          h-5
-                          w-5
-                          rounded-full
-                          border
-                          border-gray-300
-                          bg-white
-                          transition
-                          peer-checked:translate-x-5
-                        " />
-                    </label>
-                  </div>
-
-                  {isOffer && (
-                    <div className="
-                        mt-6
-                        border-t
-                        border-[#DED5C8]
-                        pt-5
-                      ">
-                      <div className="
-                          grid
-                          grid-cols-1
-                          gap-4
-                          sm:grid-cols-2
-                        ">
-
-                        <div>
-                          <label className="
-                              mb-2
-                              block
-                              text-sm
-                              font-medium
-                              text-[#2B2926]
-                            ">
-                            Offer Percentage
-                          </label>
-
-                          <div className='relative'>
-                            <input
-                              type="number"
-                              min="1"
-                              max="100"
-                              value={offerPercentage}
-                              onChange={(e) =>
-                                setOfferPercentage(
-                                  e.target.value
-                                )
-                              }
-                              placeholder="e.g. 20"
-                              className="
-                                  w-full
-                                  border
-                                  border-[#D8CEC0]
-                                  bg-white
-                                  px-4
-                                  py-3
-                                  pr-10
-                                  text-sm
-                                  outline-none
-                                  placeholder:text-gray-400
-                                  focus:border-[#2B2926]
-                                "
-                            />
-                            <span className="
-                                absolute
-                                right-4
-                                top-1/2
-                                -translate-y-1/2
-                                text-sm
-                                text-gray-400
-                              ">
-                              %
-                            </span>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="
-                              mb-2
-                              block
-                              text-sm
-                              font-medium
-                              text-[#2B2926]
-                            ">
-                            Final Offer Price
-                          </label>
-
-                          <div className="
-                              flex
-                              min-h-[46px]
-                              items-center
-                              border
-                              border-[#D8CEC0]
-                              bg-white
-                              px-4
-                            ">
-                            {offerPercentage && formData.price ? (
-                              <span className="
-                                  text-lg
-                                  font-semibold
-                                  text-[#2B2926]
-                                ">
-                                ₹{offerPrice}
-                              </span>
-                            ) : (
-                              <span className="
-                                  text-sm
-                                  text-gray-400
-                                ">
-                                Enter price and discount
-                              </span>
-                            )}
-                          </div>
-
-
-                        </div>
-                      </div>
-
-                      {offerPercentage && formData.price && (
-                        <div className="
-                            mt-4
-                            flex
-                            items-center
-                            justify-between
-                            border
-                            border-[#DED5C8]
-                            bg-white
-                            px-4
-                            py-3
-                          ">
-                          <span className="
-                              text-xs
-                              text-gray-500
-                            ">
-                            Original Price
-                          </span>
-                          <span className="
-                              text-sm
-                              text-gray-400
-                              line-through
-                            ">
-                            ₹{formData.price}
-                          </span>
-                        </div>
-                      )}
-
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <div className="mb-5">
-
-                    <p className="
-                        text-xs
-                        uppercase
-                        tracking-[0.18em]
-                        text-gray-400
-                      ">
-                      Product Image
-                    </p>
-
-                  </div>
-                  <div className="
-                      grid
-                      grid-cols-1
-                      gap-5
-                      md:grid-cols-2
-                     ">
-
-                    <label className="
-                        flex
-                        min-h-[220px]
-                        cursor-pointer
-                        flex-col
-                        items-center
-                        justify-center
-                        border
-                        border-dashed
-                        border-[#CFC3B4]
-                        bg-[#F5F0E8]
-                        px-5
-                        text-center
-                        transition
-                        hover:border-[#2B2926]
-                        hover:bg-[#EEE8DE]
-                      ">
-                      <div className="
-                                                flex
-                                                h-12
-                                                w-12
-                                                items-center
-                                                justify-center
-                                                border
-                                                border-[#D8CEC0]
-                                                bg-white
-                                                text-[#2B2926]
-                                              ">
-
-                        <FiImage size={22} />
-
-                      </div>
-
-                      <p className="
-                          mt-4
-                          text-sm
-                          font-medium
-                          text-[#2B2926]
-                        ">
-                        Click to upload image
-                      </p>
-
-                      <p className="
-                          mt-1
-                          text-xs
-                          text-gray-400
-                        ">
-                        PNG, JPG or JPEG
-                      </p>
-
-                      <input
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleChange}
-                      />
-
-                    </label>
-
-                    <div className="
-                        flex
-                        min-h-[220px]
-                        items-center
-                        justify-center
-                        overflow-hidden
-                        border
-                        border-[#DED5C8]
-                        bg-white
-                      ">
-
-                      {preview ? (
-                        <img
-                          src={preview}
-                          alt="preview"
-                          className="
-                              h-full
-                              max-h-[220px]
-                              w-full
-                              object-contain
-                            "
-                        />
-                      ) : (
-                        <div className="text-center">
-
-                          <FiImage
-                            size={30}
-                            className="
-                                                      mx-auto
-                                                      text-[#D8CEC0]
-                                                    "
-                          />
-
-                          <p className="
-                                                    mt-3
-                                                    text-xs
-                                                    text-gray-400
-                                                  ">
-                            Image preview
-                          </p>
-
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="
-                    flex
-                    flex-col-reverse
-                    gap-3
-                    border-t
-                    border-[#DED5C8]
-                    pt-6
-                    sm:flex-row
-                    sm:justify-end
-                  ">
-                  <button
-                    type="button"
-                    onClick={() => {
-
-                      setFormData({
-                        title: "",
-                        description: "",
-                        category: "",
-                        price: "",
-                        image: null
-                      })
-
-                      setPreview(null)
-                      setIsOffer(false)
-                      setOfferPercentage("")
-
-                    }}
-                    className="
-                        w-full
-                        border
-                        border-[#D8CEC0]
-                        px-7
-                        py-3
-                        text-sm
-                        font-medium
-                        text-[#2B2926]
-                        transition
-                        hover:bg-[#F5F0E8]
-                        sm:w-auto
-                      "
-                  >
-                    Clear
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="
-                        flex
-                        w-full
-                        items-center
-                        justify-center
-                        gap-2
-                        bg-[#2B2926]
-                        px-7
-                        py-3
-                        text-sm
-                        font-medium
-                        text-white
-                        transition
-                        hover:bg-black
-                        disabled:cursor-not-allowed
-                        disabled:opacity-60
-                        sm:w-auto
-                      "
-                  >
-
-                    <FiPlus size={17} />
-                    {loading
-                      ? "Creating..."
-                      : "Create Product"
-                    }
-                  </button>
-                </div>
-
-
-              </form>
-            </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                >
+                  <FiPlus size={17} />
+                  {loading ? 'Adding Product...' : 'Add Product'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
+      {/* EDIT PRODUCT MODAL */}
+      {editProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
+              <div>
+                <h2 className="text-lg font-semibold sm:text-xl">
+                  Edit Product
+                </h2>
+                <p className="mt-1 text-xs text-[#777067]">
+                  Update product details and manage images.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setEditProduct(null)}
+                className="rounded-full p-2 hover:bg-[#EDE5D9]"
+              >
+                <FiX size={21} />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdate} className="space-y-6 p-5 sm:p-7">
+              <div>
+                <label className={labelClass}>Product Title *</label>
+                <input
+                  name="title"
+                  value={editData.title}
+                  onChange={handleEditChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass}>Description *</label>
+                <textarea
+                  name="description"
+                  value={editData.description}
+                  onChange={handleEditChange}
+                  rows="3"
+                  className={`${inputClass} resize-y`}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div>
+                  <label className={labelClass}>Category *</label>
+                  <select
+                    name="category"
+                    value={editData.category}
+                    onChange={handleEditChange}
+                    className={inputClass}
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name ||
+                          category.title ||
+                          category.categoryName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>Price (₹) *</label>
+                  <input
+                    type="number"
+                    name="price"
+                    min="1"
+                    value={editData.price}
+                    onChange={handleEditChange}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {/* EXISTING IMAGES */}
+              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+                <div className="mb-4 flex items-start justify-between">
+                  <div>
+                    <h3 className="flex items-center gap-2 font-semibold">
+                      <FiImage size={18} />
+                      Product Images
+                    </h3>
+                    <p className="mt-1 text-xs text-[#777067]">
+                      Remove unwanted images or add new ones.
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-[#F5F0E8] px-3 py-1 text-xs">
+                    {editData.existingImages.length + editData.newImages.length}/{MAX_IMAGES}
+                  </span>
+                </div>
+
+                {editData.existingImages.length > 0 && (
+                  <>
+                    <p className="mb-2 text-sm font-medium">
+                      Existing Images
+                    </p>
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                      {editData.existingImages.map((url, index) => (
+                        <div key={url} className="relative">
+                          <div
+                            className={`overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${index === 0 ? 'aspect-square sm:col-span-1' : 'aspect-square'
+                              }`}
+                          >
+                            <img
+                              src={url}
+                              alt={`Existing product image ${index + 1}`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+
+                          {index === 0 && (
+                            <span className="absolute bottom-1 left-1 rounded bg-[#2B2926] px-2 py-1 text-[10px] text-white">
+                              Main
+                            </span>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => removeExistingImage(url)}
+                            title="Remove image"
+                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                          >
+                            <FiX size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {editData.newImages.length > 0 && (
+                  <div className="mt-5">
+                    <p className="mb-2 text-sm font-medium">
+                      Newly Added Images
+                    </p>
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                      {editData.newImages.map((file, index) => (
+                        <div key={`${file.name}-${file.lastModified}-${index}`} className="relative">
+                          <div className="aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
+                            <img
+                              src={getPreviewUrl(file)}
+                              alt={`New image ${index + 1}`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeNewEditImage(index)}
+                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                          >
+                            <FiX size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <input
+                  ref={editImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleEditImagesChange}
+                  className="hidden"
+                />
+
+                <button
+                  type="button"
+                  disabled={
+                    editData.existingImages.length + editData.newImages.length >= MAX_IMAGES
+                  }
+                  onClick={() => editImageInputRef.current?.click()}
+                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                >
+                  <FiUploadCloud size={18} />
+                  Add More Images
+                </button>
+
+                <p className="mt-2 text-xs text-[#777067]">
+                  Keep between 3 and 6 images before saving.
+                </p>
+              </div>
+
+              {/* OFFER */}
+              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4">
+                <label className="flex cursor-pointer items-center gap-3">
+                  <input
+                    type="checkbox"
+                    name="isOffer"
+                    checked={editData.isOffer}
+                    onChange={handleEditChange}
+                    className="h-4 w-4 accent-[#2B2926]"
+                  />
+                  <span className="flex items-center gap-2 text-sm font-medium">
+                    <FiTag size={17} />
+                    Enable Special Offer
+                  </span>
+                </label>
+
+                {editData.isOffer && (
+                  <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className={labelClass}>
+                        Offer Percentage (%)
+                      </label>
+                      <input
+                        type="number"
+                        name="offerPercentage"
+                        min="1"
+                        max="100"
+                        value={editData.offerPercentage}
+                        onChange={handleEditChange}
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={labelClass}>Final Offer Price</label>
+                      <div className={inputClass}>
+                        ₹
+                        {calculateOfferPrice(
+                          editData.price,
+                          editData.offerPercentage
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col-reverse gap-3 border-t border-[#E5DDD1] pt-5 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => setEditProduct(null)}
+                  className="rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                >
+                  <FiCheckCircle size={17} />
+                  {loading ? 'Updating...' : 'Update Product'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

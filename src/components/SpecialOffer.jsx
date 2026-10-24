@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiArrowUpRight } from 'react-icons/fi'
+import { FiHeart, FiArrowUpRight, FiAlertTriangle  } from 'react-icons/fi'
 import API from '../services/axios'
+import {
+    addWishlist,
+    getWishlist,
+    removeWishlist
+} from '../services/api'
+import { toast } from 'react-toastify'
 
 function SpecialOffer() {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+     const [wishlistStatus, setWishlistStatus] = useState({})
 
     const navigate = useNavigate()
 
@@ -33,6 +40,103 @@ function SpecialOffer() {
 
         fetchOfferProducts()
     }, [])
+
+    useEffect(() => {
+    
+            const fetchWishlist = async () => {
+    
+                try {
+    
+                    const res = await getWishlist()
+    
+                    const wishlistProducts =
+                        res.data?.wishlist || []
+    
+                    const status = {}
+    
+                    wishlistProducts.forEach((item) => {
+    
+                        const productId =
+                            item.productId?._id ||
+                            item.productId ||
+                            item._id
+    
+                        if (productId) {
+                            status[productId] = true
+                        }
+    
+                    })
+    
+                    setWishlistStatus(status)
+    
+                } catch (error) {
+    
+                    console.log(
+                        "WISHLIST ERROR:",
+                        error.response?.data || error
+                    )
+    
+                }
+    
+            }
+    
+            fetchWishlist()
+    
+        }, [])
+    
+    
+    
+        const handleWishlist = async (productId) => {
+    
+            const token = localStorage.getItem("token")
+            if (!token) {
+                toast.warn("please login to add products to your wishlist",{
+                    icon: <FiAlertTriangle size={21} color='#9A7958'/>
+                })
+                return
+            }
+    
+            const isWishlisted =
+                wishlistStatus[productId] || false
+    
+    
+    
+            setWishlistStatus((prev) => ({
+                ...prev,
+                [productId]: !isWishlisted
+            }))
+    
+    
+            try {
+    
+                if (isWishlisted) {
+    
+                    await removeWishlist(productId)
+    
+                } else {
+    
+                    await addWishlist(productId)
+    
+                }
+    
+            } catch (error) {
+    
+                console.log(
+                    "WISHLIST ERROR:",
+                    error.response?.data || error
+                )
+    
+    
+    
+                setWishlistStatus((prev) => ({
+                    ...prev,
+                    [productId]: isWishlisted
+                }))
+    
+            }
+    
+        }
+    
 
     return (
         <section
@@ -168,9 +272,7 @@ function SpecialOffer() {
                         {products.map((product) => (
                             <div
                                 key={product._id}
-                                onClick={() =>
-                                    navigate(`/product/${product._id}`)
-                                }
+                               
                                 className="group min-w-0 cursor-pointer"
                             >
                                 {/* Product Image */}
@@ -221,6 +323,39 @@ function SpecialOffer() {
                                             {product.offerPercentage}% OFF
                                         </span>
                                     )}
+
+                                    <button
+                                                                        onClick={() =>
+                                                                            handleWishlist(product._id)
+                                                                        }
+                                                                        className="
+                                                                            absolute
+                                                                            right-3
+                                                                            top-3
+                                                                            flex
+                                                                            h-8
+                                                                            w-8
+                                                                            items-center
+                                                                            justify-center
+                                                                            rounded-full
+                                                                            bg-white/90
+                                                                            transition
+                                                                            duration-300
+                                                                            hover:scale-105
+                                                                        "
+                                                                    >
+                                    
+                                                                        <FiHeart
+                                                                            size={16}
+                                                                            strokeWidth={1.5}
+                                                                            className={
+                                                                                wishlistStatus[product._id]
+                                                                                    ? "fill-red-500 text-red-500"
+                                                                                    : "text-[#2B2926]"
+                                                                            }
+                                                                        />
+                                    
+                                                                    </button>
                                 </div>
 
                                 {/* Product Details */}
