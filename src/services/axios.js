@@ -12,7 +12,7 @@ API.interceptors.request.use((req) => {
         req.headers.Authorization = `Bearer ${token}`;
     }
 
-    return req;
+    return req
 });
 
 API.interceptors.response.use(
@@ -50,11 +50,6 @@ API.interceptors.response.use(
                 return API(originalRequest);
 
             } catch (refreshError) {
-                console.error(
-                     "Refresh failed:",
-                    refreshError.response?.status,
-                    refreshError.response?.data || refreshError.message
-                )
                 localStorage.removeItem("token");
                 localStorage.removeItem("refreshToken");
 
