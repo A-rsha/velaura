@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://localhost:4000/api"
+    baseURL: "https://velaura-backend-1.onrender.com/api"
 });
 
 API.interceptors.request.use((req) => {
@@ -16,9 +16,7 @@ API.interceptors.request.use((req) => {
 });
 
 API.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
 
     async (error) => {
         const originalRequest = error.config;
@@ -37,7 +35,7 @@ API.interceptors.response.use(
 
             try {
                 const res = await axios.post(
-                    "http://localhost:4000/api/auth/refresh",
+                    "https://velaura-backend-1.onrender.com/api/auth/refresh",
                     {
                         refreshToken: refreshToken
                     }
@@ -52,6 +50,11 @@ API.interceptors.response.use(
                 return API(originalRequest);
 
             } catch (refreshError) {
+                console.error(
+                     "Refresh failed:",
+                    refreshError.response?.status,
+                    refreshError.response?.data || refreshError.message
+                )
                 localStorage.removeItem("token");
                 localStorage.removeItem("refreshToken");
 
