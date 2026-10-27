@@ -192,15 +192,25 @@ function LoginPage() {
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('role')
             localStorage.removeItem('userName')
+            localStorage.removeItem('userId')
 
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('refreshToken', res.data.refreshToken)
             localStorage.setItem('role', res.data.user.role)
             localStorage.setItem('userName', res.data.user.name)
+            localStorage.setItem('userId', res.data.user.id)
 
             toast.success('Email verified! Login successful.')
 
             navigate('/')
+
+            console.log({
+    token: localStorage.getItem('token'),
+    refreshToken: localStorage.getItem('refreshToken'),
+    userName: localStorage.getItem('userName'),
+    role: localStorage.getItem('role'),
+    userId: localStorage.getItem('userId')
+})
         } catch (error) {
             console.error(
                 'OTP VERIFICATION ERROR:',
