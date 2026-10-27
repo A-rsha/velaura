@@ -34,11 +34,16 @@ function AdminLogin() {
 
             console.log("ADMIN LOGIN RESPONSE:", res.data)
 
-            if (res.data.user.role !== "admin") {
-                toast.error("You are not authorized as an admin")
-                return
+            if (res.data.requiresOTP) {
+                toast.error("Please use the normal user login page.");
+                return;
             }
-            
+
+            if (res.data.user?.role !== "admin") {
+                toast.error("You are not authorized as an admin.");
+                return;
+            }
+
 
             // Clear previous login session
             localStorage.removeItem("token")
