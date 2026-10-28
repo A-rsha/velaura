@@ -64,12 +64,12 @@ function LoginPage() {
 
             localStorage.setItem('token', data.token)
             localStorage.setItem('refreshToken', data.refreshToken)
-            localStorage.setItem('role', data.role)
+            localStorage.setItem('role', data.user.role)
             localStorage.setItem('userName', data.user.name)
             localStorage.setItem('userId', data.user.id)
 
             toast.success('Google login successfull!')
-            navigate('/')
+           window.location.href = '/'
         } catch (error) {
             toast.error
                 (error.response?.data?.message ||
