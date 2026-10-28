@@ -127,7 +127,7 @@ function LoginPage() {
 
             console.log('LOGIN RESPONSE:', res.data)
 
-            
+
             if (res.data.requiresOTP === true) {
                 setOtpStep(true)
                 setOtp(['', '', '', '', '', ''])
@@ -467,6 +467,23 @@ function LoginPage() {
                                     <span>Email verification helps protect your account.</span>
                                 </div>
                             </form>
+                            {!otpStep && (<div className="mt-5"> <div className="mb-4 flex items-center gap-3"> <div className="h-px flex-1 bg-gray-200"></div> <span className="text-sm text-gray-500">OR</span> <div className="h-px flex-1 bg-gray-200"></div> </div>
+
+
+                                {googleLoading && (
+                                    <p className="mb-2 text-center text-sm text-gray-500">
+                                        Connecting to Google...
+                                    </p>
+                                )}
+
+                                <div
+                                    ref={googleButtonRef}
+                                    className="flex justify-center"
+                                ></div>
+                            </div>
+
+                            )}
+
 
                             {/* Register Link */}
                             <div className="mt-8 pt-6 border-t border-[#DED5C8] text-center">
