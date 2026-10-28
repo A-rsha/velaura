@@ -2,6 +2,9 @@ import API from './axios'
 
 export const register =(data)=>API.post('/auth/register',data)
 export const login =(data)=>API.post('/auth/login',data)
+export const googleLogin = (credential) =>
+    API.post('/auth/google', { credential })
+
 export const profile=()=>API.get('/auth/profile')
 
 export const verifyLoginOtp = (data) => API.post('/auth/verify-login-otp', data);

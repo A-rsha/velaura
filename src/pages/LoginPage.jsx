@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
 import { toast } from 'react-toastify'
@@ -27,7 +27,10 @@ function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [resending, setResending] = useState(false)
 
-    // Handle email and password input
+    const googleButtonRef = useRef(null)
+    const [googleLoading, setGoogleLoading] = useState(false)
+
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -35,7 +38,82 @@ function LoginPage() {
         })
     }
 
-    // STEP 1: Validate credentials and send OTP
+    const handleGoogleLogin = async (credential) => {
+        try {
+            setGoogleLoading(true)
+
+            const response = await API.post('/auth/google', {
+                credential
+            })
+
+            const data = response.data
+            if (
+                !data.success ||
+                !data.token ||
+                !data.refreshToken ||
+                !data.user
+            ) {
+                toast.error(data.message || 'Google login failed')
+                return
+            }
+
+            if (data.user.role !== 'user') {
+                toast.error('Please use the Admin Login Page.')
+                return
+            }
+
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('refreshToken', data.refreshToken)
+            localStorage.setItem('role', data.role)
+            localStorage.setItem('userName', data.user.name)
+            localStorage.setItem('userId', data.user.id)
+
+            toast.success('Google login successfull!')
+            navigate('/')
+        } catch (error) {
+            toast.error
+                (error.response?.data?.message ||
+                    'Google login failed. please try again')
+        } finally {
+            setGoogleLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (
+                window.google &&
+                window.google.accounts &&
+                googleButtonRef.current
+            ) {
+                clearInterval(timer)
+
+                window.google.accounts.id.initialize({
+                    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                    callback: (response) => {
+                        if (response.credential) {
+                            handleGoogleLogin(response.credential)
+                        }
+                    },
+                })
+
+                window.google.accounts.id.renderButton(
+                    googleButtonRef.current,
+                    {
+                        theme: 'outline',
+                        size: 'large',
+                        text: 'continue_with',
+                        shape: 'rectangular',
+                        width: 320,
+                    }
+                )
+            }
+        }, 200)
+
+        return () => clearInterval(timer)
+
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -49,7 +127,7 @@ function LoginPage() {
 
             console.log('LOGIN RESPONSE:', res.data)
 
-            // IMPORTANT: OTP response does not need a user object.
+            
             if (res.data.requiresOTP === true) {
                 setOtpStep(true)
                 setOtp(['', '', '', '', '', ''])
@@ -205,12 +283,12 @@ function LoginPage() {
             navigate('/')
 
             console.log({
-    token: localStorage.getItem('token'),
-    refreshToken: localStorage.getItem('refreshToken'),
-    userName: localStorage.getItem('userName'),
-    role: localStorage.getItem('role'),
-    userId: localStorage.getItem('userId')
-})
+                token: localStorage.getItem('token'),
+                refreshToken: localStorage.getItem('refreshToken'),
+                userName: localStorage.getItem('userName'),
+                role: localStorage.getItem('role'),
+                userId: localStorage.getItem('userId')
+            })
         } catch (error) {
             console.error(
                 'OTP VERIFICATION ERROR:',
