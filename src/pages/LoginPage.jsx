@@ -58,7 +58,11 @@ function LoginPage() {
             }
 
             if (data.user.role !== 'user') {
-                toast.error('Please use the Admin Login Page.')
+                if(data.user.role === 'vendor'){
+                toast.error('Please use vendor login to access your account.')
+                }else{
+                    toast.error('please use admin login to access your account')
+                }
                 return
             }
 
@@ -69,7 +73,7 @@ function LoginPage() {
             localStorage.setItem('userId', data.user.id)
 
             toast.success('Google login successfull!')
-           window.location.href = '/'
+            navigate('/')
         } catch (error) {
             toast.error
                 (error.response?.data?.message ||
@@ -257,13 +261,16 @@ function LoginPage() {
             }
 
             // Admins must use the admin login page.
-            if (res.data.user.role !== 'user') {
-                toast.warning('Please use the Admin Login page.')
+         if (res.data.user.role !== 'user') {
+    if (res.data.user.role === 'vendor') {
+        toast.warning('Please use Vendor Login to access your account.')
+    } else {
+        toast.warning('Please use Admin Login to access your account.')
+    }
 
-                setOtpStep(false)
-                setOtp(['', '', '', '', '', ''])
-                return
-            }
+    setOtp(['', '', '', '', '', ''])
+    return
+}
 
             // Store tokens only after successful OTP verification.
             localStorage.removeItem('token')

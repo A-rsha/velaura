@@ -20,10 +20,24 @@ import AdminProtectedRoute from './components/AdminProtectedRoute'
 import AdminSidebar from './components/AdminSidebar'
 import AddCategory from './pages/AddCategory'
 import ReviewManagement from './pages/ReviewManagement'
+import VendorRegistration from './pages/VendorRegistration'
 import AdsManager from './pages/AdsManager'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import ReturnManager from './pages/ReturnManager'
+import SellerPlans from './pages/SellerPlans'
+import SellerTerms from './pages/SellerTerms'
+import VendorDashboard from './pages/VendorDashboard'
+import VendorLogin from './pages/VendorLogin'
+import { Navigate } from 'react-router-dom'
+import VendorOrders from './pages/VendorOrders'
+import VendorAddProducts from './pages/VendorAddProducts'
+import VendorForm from './pages/VendorForm'
+import VendorSidebar from './components/VendorSidebar'
+import VendorManagement from './pages/VendorManagement'
+
+
+
 
 
 
@@ -59,8 +73,41 @@ function App() {
 <Route path='/reviews' element={<ReviewManagement/>}/>
 <Route path='/ads' element={<AdsManager/>}/>
 <Route path='/returnManager' element={<ReturnManager/>}/>
+<Route path='/sellerPlans' element={<SellerPlans/>}/>
+<Route path='/vendorRegistration' element={<VendorRegistration/>}/>
+<Route path='/vendorForm' element={<VendorForm/>}/>
+<Route path='/sellerTerms' element={<SellerTerms/>}/>
+<Route path='/vaddProduct' element={<VendorAddProducts/>}/>
+<Route path='/vendorLogin' element={<VendorLogin/>}/>
+<Route path='/vendorSidebar' element={<VendorSidebar/>}/>
+<Route
+    path="/vendorOrders"
+    element={
+        localStorage.getItem('token') &&
+        localStorage.getItem('role') === 'vendor'
+            ? <VendorOrders />
+            : <Navigate to="/vendorLogin" replace />
+    }
+/>
+<Route path='/vmanageProducts' element={<VendorManagement/>}/>
+<Route
+    path="/vendorDashboard"
+    element={
+        (() => {
+            const token = localStorage.getItem('token')
+            const role = localStorage.getItem('role')
 
+            console.log("VENDOR DASHBOARD ROUTE CHECK:", {
+                tokenExists: !!token,
+                role
+            })
 
+            return token && role === 'vendor'
+                ? <VendorDashboard />
+                : <Navigate to="/vendorLogin" replace />
+        })()
+    }
+/>
     </Routes>
   <ToastContainer position="top-center" autoClose={3000} hideProgressBar closeOnClick pauseOnHover draggable theme="light" toastClassName="velaura-toast" bodyClassName="velaura-toast-body" />
    

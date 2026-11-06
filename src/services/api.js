@@ -2,6 +2,9 @@ import API from './axios'
 
 export const register =(data)=>API.post('/auth/register',data)
 export const login =(data)=>API.post('/auth/login',data)
+export const vendorRegister = (data) => {
+    return API.post('/auth/vendor-register', data)
+}
 export const googleLogin = (credential) =>
     API.post('/auth/google', { credential })
 
@@ -16,7 +19,9 @@ export const postProduct =(data)=> API.post('/product/postProduct',data,{
 })
 
 export const getProducts=()=>API.get('/product/getProducts')
+export const vendorProducts=()=>API.get('/product/myProducts')
 export const getProduct=(id)=>API.get(`/product/getProduct/${id}`)
+
 export const getOfferProduct=()=>API.get('/product/getOfferProduct')
 export const newArrivals=()=>API.get('/product/newArrivals')
 export const updateProduct=(id,data)=>API.put(`/product/updateProduct/${id}`,data)
@@ -32,6 +37,11 @@ export const deleteCart=(productId)=>API.delete('/cart/removeFromCart',{
 export const create=(data)=>API.post('/order/create',data)
 export const getMyOrders=()=>API.get('/order/getMyOrders')
 export const getAllOrders=()=>API.get('/order/getAllOrders')
+
+
+export const getVendorOrders = () => {
+    return API.get('/order/getVendorOrders')
+}
 
 export const getAds=()=>API.get('/ads/getAds')
 export const addAd=(data)=>API.post('/ads/addAds')
@@ -60,3 +70,10 @@ export const updateReturnStatus=(returnId)=>API.put(`/return/updateReturnStatus/
 
 export const razorpay =()=>API.post('/payment/createOrder')
 export const verify=(paymentResponse)=>API.post('/payment/verify',paymentResponse)
+
+export const sellerSubscription =(data)=>API.post('/sellerSubscription/createSubOrder',data)
+export const  sellerverifySub =(data)=>API.post('/sellerSubscription/verifySubPayment',data)
+
+export const sellerCreateStore =(data)=>API.post('/sellerStore/createStore',data)
+export const getMySellerStore = () => API.get('/sellerStore/myStore')
+export const acceptSellerTerms = () => API.post('/sellerStore/acceptTerms')
