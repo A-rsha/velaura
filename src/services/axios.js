@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000/api";
+const BASE_URL = "https://velaura-backend-3.onrender.com/api";
 
 const API = axios.create({
     baseURL: BASE_URL,
@@ -12,7 +12,6 @@ const refreshAPI = axios.create({
     baseURL: BASE_URL,
 });
 
-// Attach access token to every API request
 API.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
