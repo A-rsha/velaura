@@ -26,7 +26,7 @@ API.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Refresh access token when the API returns 401
+
 API.interceptors.response.use(
     (response) => response,
 
