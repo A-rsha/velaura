@@ -32,10 +32,9 @@ import VendorLogin from './pages/VendorLogin'
 import { Navigate } from 'react-router-dom'
 import VendorOrders from './pages/VendorOrders'
 import VendorAddProducts from './pages/VendorAddProducts'
-import VendorForm from './pages/VendorForm'
 import VendorSidebar from './components/VendorSidebar'
 import VendorManagement from './pages/VendorManagement'
-
+import VendorList from'./pages/VendorList'
 
 
 
@@ -75,7 +74,7 @@ function App() {
 <Route path='/returnManager' element={<ReturnManager/>}/>
 <Route path='/sellerPlans' element={<SellerPlans/>}/>
 <Route path='/vendorRegistration' element={<VendorRegistration/>}/>
-<Route path='/vendorForm' element={<VendorForm/>}/>
+<Route path='/vendorList' element={<VendorList/>}/>
 <Route path='/sellerTerms' element={<SellerTerms/>}/>
 <Route path='/vaddProduct' element={<VendorAddProducts/>}/>
 <Route path='/vendorLogin' element={<VendorLogin/>}/>
@@ -93,19 +92,7 @@ function App() {
 <Route
     path="/vendorDashboard"
     element={
-        (() => {
-            const token = localStorage.getItem('token')
-            const role = localStorage.getItem('role')
-
-            console.log("VENDOR DASHBOARD ROUTE CHECK:", {
-                tokenExists: !!token,
-                role
-            })
-
-            return token && role === 'vendor'
-                ? <VendorDashboard />
-                : <Navigate to="/vendorLogin" replace />
-        })()
+        <VendorDashboard />
     }
 />
     </Routes>

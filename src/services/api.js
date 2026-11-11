@@ -43,6 +43,10 @@ export const getVendorOrders = () => {
     return API.get('/order/getVendorOrders')
 }
 
+export const getAllVendors =()=>{
+    return API.get('/admin/vendors')
+}
+
 export const getAds=()=>API.get('/ads/getAds')
 export const addAd=(data)=>API.post('/ads/addAds')
 export const deleteAd=(id)=>API.delete(`/ads/deleteAd/${id}`)

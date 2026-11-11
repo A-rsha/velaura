@@ -3,7 +3,8 @@ import { FiMenu, FiPackage, FiShoppingBag } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 
 import VendorSidebar from '../components/VendorSidebar'
-import { getVendorOrders } from '../services/api'
+import API from '../services/axios'
+
 
 const VendorOrders = () => {
     const [orders, setOrders] = useState([])
@@ -17,7 +18,7 @@ const VendorOrders = () => {
         try {
             setLoading(true)
 
-            const response = await getVendorOrders()
+            const response = await API.get('/order/getVendorOrders')
 
             setOrders(response.data.orders || [])
 

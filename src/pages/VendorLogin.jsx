@@ -50,16 +50,16 @@ function VendorLogin() {
                 return
             }
 
-            // Admin account is not allowed here
+        
             if (res.data.user?.role !== 'vendor') {
                 toast.error('This account is not registered as a vendor.')
                 return
             }
 
-            // Save vendor session
+           
             saveVendorSession(res.data)
 
-            navigate('/vendorDashboard', { replace: true })
+            navigate('/vendorDashboard')
 
         } catch (error) {
 
@@ -148,7 +148,7 @@ function VendorLogin() {
         otpRefs.current[Math.min(pasted.length, 5)]?.focus()
     }
  
-    // VERIFY OTP
+    
     const handleVerifyOTP = async (e) => {
 
         e.preventDefault()
@@ -190,6 +190,7 @@ function VendorLogin() {
                 userId: localStorage.getItem('userId')
             })
             toast.success('Vendor login successful!')
+            navigate('/vendorDashboard')
 
             const subscription = res.data.user?.subscription
 
@@ -209,9 +210,7 @@ function VendorLogin() {
             ) {
                 navigate('/sellerPlans', { replace: true })
             }
-            else {
-                navigate('/vendorForm', { replace: true })
-            }
+           
 
         } catch (error) {
 

@@ -847,8 +847,42 @@ getProfile()
 
               </button>
 
-               
+               <button
+                onClick={() => {
+                  setProfileOpen(false)
+                  navigate("/vendorRegistration")
+                }}
+                className="
+                  flex
+                  w-full
+                  items-center
+                  gap-4
+                  border-b
+                  border-[#E5DED4]
+                  py-4
+                  text-left
+                  text-sm
+                  text-[#2B2926]
+                  transition
+                  hover:opacity-60
+                "
+              >
 
+                <FiUser
+                  size={19}
+                  strokeWidth={1.4}
+                />
+
+                <span>
+                  Become a seller
+                </span>
+
+              </button>
+
+              
+
+
+        
 
               {/* Logout */}
 

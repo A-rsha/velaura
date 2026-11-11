@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiGrid, FiLogOut, FiMonitor, FiPackage, FiPlus, FiRotateCcw, FiShoppingBag, FiStar } from 'react-icons/fi'
+import { FiGrid, FiLogOut, FiMonitor, FiPackage, FiPlus, FiRotateCcw, FiShoppingBag, FiStar, FiUser } from 'react-icons/fi'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function AdminSidebar() {
@@ -230,6 +230,26 @@ function AdminSidebar() {
                             : 'text-gray-600 hover:bg-gray-100 hover:text-black'
                         }`}
                 ><FiRotateCcw size={17} />Return Manager</button>
+
+                <button onClick={() => navigate('/vendorList')}
+                    className={`
+                          mt-1
+                      flex
+                      w-full
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      transition
+                      ${location.pathname === '/vendorList'
+                            ? 'bg-[#2B2926] text-white'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-black'
+                        }`}
+                ><FiUser size={17} />Vendor Management</button>
+                
                 
 
 

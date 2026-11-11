@@ -226,7 +226,7 @@ function LoginPage() {
         otpRefs.current[focusIndex]?.focus()
     }
 
-    // STEP 2: Verify OTP before completing login
+   
     const handleVerifyOTP = async (e) => {
         e.preventDefault()
 
@@ -260,7 +260,7 @@ function LoginPage() {
                 return
             }
 
-            // Admins must use the admin login page.
+            
          if (res.data.user.role !== 'user') {
     if (res.data.user.role === 'vendor') {
         toast.warning('Please use Vendor Login to access your account.')
