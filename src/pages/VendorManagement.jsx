@@ -210,7 +210,7 @@ function VendorManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+    <div className="vendor-management-page min-h-screen bg-[#F5F0E8] text-[#2B2926]">
 
       {/* SIDEBAR */}
       <VendorSidebar
@@ -224,7 +224,7 @@ function VendorManagement() {
         <div className="mx-auto max-w-7xl">
 
           {/* PAGE HEADING */}
-          <div className="mb-8 flex items-center justify-between">
+          <div className="vendor-page-heading mb-8 flex items-center justify-between">
 
             <div>
               <p className="text-[10px] uppercase tracking-[2px] text-[#9A7958]">
@@ -242,7 +242,7 @@ function VendorManagement() {
 
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded border border-[#DED5C8] bg-[#FDFBF7] p-3 lg:hidden"
+              className="vendor-menu-btn rounded border border-[#DED5C8] bg-[#FDFBF7] p-3 lg:hidden"
             >
               <FiMenu size={21} />
             </button>
@@ -252,7 +252,7 @@ function VendorManagement() {
           {/* MY PRODUCTS */}
           <section className="mb-9">
 
-            <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+            <div className="vendor-section-heading mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
 
               <div>
                 <p className="text-[10px] uppercase tracking-[2px] text-gray-400">
@@ -270,7 +270,7 @@ function VendorManagement() {
 
               <Link
                 to="/vaddProduct"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#9A7958] hover:text-[#2B2926]"
+                className="vendor-add-link inline-flex items-center gap-2 text-sm font-semibold text-[#9A7958] hover:text-[#2B2926]"
               >
                 <FiPlusCircle size={17} />
                 Add New Product
@@ -281,14 +281,15 @@ function VendorManagement() {
             {/* LOADING */}
             {loadingProducts ? (
 
-              <div className="border border-[#DED5C8] bg-[#FDFBF7] p-10 text-center text-sm text-gray-500">
+              <div className="vendor-state border border-[#DED5C8] bg-[#FDFBF7] p-10 text-center text-sm text-gray-500">
+                <div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-[#DED5C8] border-t-[#9A7958]"></div>
                 Loading products...
               </div>
 
             ) : products.length === 0 ? (
 
               /* EMPTY PRODUCTS */
-              <div className="border border-dashed border-[#D8C8B3] bg-[#FDFBF7] p-10 text-center">
+              <div className="vendor-empty-state border border-dashed border-[#D8C8B3] bg-[#FDFBF7] p-10 text-center">
 
                 <FiPackage
                   size={35}
@@ -305,7 +306,7 @@ function VendorManagement() {
 
                 <Link
                   to="/vaddProduct"
-                  className="mt-5 inline-flex items-center gap-2 bg-[#2B2926] px-5 py-3 text-sm text-white hover:bg-[#51483E]"
+                  className="vendor-primary-btn mt-5 inline-flex items-center gap-2 bg-[#2B2926] px-5 py-3 text-sm text-white hover:bg-[#51483E]"
                 >
                   <FiPlusCircle size={16} />
                   Add Product
@@ -318,15 +319,16 @@ function VendorManagement() {
               /* PRODUCT CARDS */
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-                {products.map((product) => (
+                {products.map((product, index) => (
 
                   <div
                     key={product._id}
-                    className="overflow-hidden border border-[#DED5C8] bg-[#FDFBF7] transition duration-300 hover:-translate-y-1 hover:shadow-md"
+                    style={{ animationDelay: `${index * 90}ms` }}
+                    className="vendor-product-card overflow-hidden border border-[#DED5C8] bg-[#FDFBF7]"
                   >
 
                     {/* PRODUCT IMAGE */}
-                    <div className="relative h-52 bg-[#F0EAE0]">
+                    <div className="vendor-product-image relative h-52 bg-[#F0EAE0]">
 
                       <img
                         src={
@@ -339,7 +341,7 @@ function VendorManagement() {
                       />
 
                       {product.isOffer && (
-                        <span className="absolute left-3 top-3 bg-[#2B2926] px-3 py-1 text-xs text-white">
+                        <span className="vendor-offer-badge absolute left-3 top-3 bg-[#2B2926] px-3 py-1 text-xs text-white">
                           {product.offerPercentage}% OFF
                         </span>
                       )}
@@ -353,7 +355,7 @@ function VendorManagement() {
                         {product.category}
                       </p>
 
-                      <h4 className="mt-2 truncate font-serif text-lg">
+                      <h4 className="vendor-product-title mt-2 truncate font-serif text-lg">
                         {product.title}
                       </h4>
 
@@ -380,7 +382,7 @@ function VendorManagement() {
 
                         <button
                           onClick={() => handleEditClick(product)}
-                          className="flex flex-1 items-center justify-center gap-2 border border-[#B58A5A] py-2.5 text-xs font-semibold text-[#9A7958] transition hover:bg-[#F0EAE0]"
+                          className="vendor-edit-btn flex flex-1 items-center justify-center gap-2 border border-[#B58A5A] py-2.5 text-xs font-semibold text-[#9A7958]"
                         >
                           <FiEdit2 size={14} />
                           Edit
@@ -389,7 +391,7 @@ function VendorManagement() {
                         <button
                           onClick={() => handleDeleteProduct(product._id)}
                           disabled={deletingId === product._id}
-                          className="flex flex-1 items-center justify-center gap-2 border border-red-200 py-2.5 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="vendor-delete-btn flex flex-1 items-center justify-center gap-2 border border-red-200 py-2.5 text-xs font-semibold text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <FiTrash2 size={14} />
 
@@ -421,7 +423,7 @@ function VendorManagement() {
       {editProduct && (
 
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/60 p-3 sm:p-6"
+          className="vendor-modal-backdrop fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/60 p-3 sm:p-6"
           onClick={() => {
             if (!updating) {
               setEditProduct(null)
@@ -431,7 +433,7 @@ function VendorManagement() {
         >
 
           <div
-            className="my-auto w-full max-w-2xl bg-[#FDFBF7] shadow-2xl"
+            className="vendor-modal my-auto w-full max-w-2xl bg-[#FDFBF7] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
 
@@ -455,7 +457,7 @@ function VendorManagement() {
                   setEditProduct(null)
                   setSelectedImages([])
                 }}
-                className="rounded-full p-2 transition hover:bg-[#F0EAE0]"
+                className="vendor-modal-close rounded-full p-2"
               >
                 <FiX size={22} />
               </button>
@@ -480,7 +482,7 @@ function VendorManagement() {
                   value={editProduct.title || ''}
                   onChange={handleEditChange}
                   required
-                  className="w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#9A7958]"
+                  className="vendor-modal-input w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none"
                   placeholder="Enter product name"
                 />
               </div>
@@ -497,7 +499,7 @@ function VendorManagement() {
                   onChange={handleEditChange}
                   required
                   rows={4}
-                  className="w-full resize-none border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#9A7958]"
+                  className="vendor-modal-input w-full resize-none border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none"
                   placeholder="Enter product description"
                 />
               </div>
@@ -513,7 +515,7 @@ function VendorManagement() {
                   value={editProduct.category || ''}
                   onChange={handleEditChange}
                   required
-                  className="w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#9A7958]"
+                  className="vendor-modal-input w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none"
                 >
                   <option value="">Select Category</option>
                   <option value="belts">Belts</option>
@@ -539,13 +541,13 @@ function VendorManagement() {
                   value={editProduct.price || ''}
                   onChange={handleEditChange}
                   required
-                  className="w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#9A7958]"
+                  className="vendor-modal-input w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none"
                   placeholder="Enter price"
                 />
               </div>
 
               {/* OFFER CHECKBOX */}
-              <div className="border border-[#DED5C8] bg-[#F5F0E8] p-4">
+              <div className="vendor-offer-box border border-[#DED5C8] bg-[#F5F0E8] p-4">
 
                 <label className="flex cursor-pointer items-center gap-3">
 
@@ -580,7 +582,7 @@ function VendorManagement() {
                       value={editProduct.offerPercentage || ''}
                       onChange={handleEditChange}
                       required
-                      className="w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#9A7958]"
+                      className="vendor-modal-input w-full border border-[#DED5C8] bg-white px-4 py-3 text-sm outline-none"
                       placeholder="Enter offer percentage"
                     />
 
@@ -638,7 +640,7 @@ function VendorManagement() {
 
                     <div
                       key={index}
-                      className="h-20 w-20 overflow-hidden border border-[#DED5C8] bg-white"
+                      className="vendor-current-image h-20 w-20 overflow-hidden border border-[#DED5C8] bg-white"
                     >
                       <img
                         src={image}
@@ -660,7 +662,7 @@ function VendorManagement() {
                   Change Product Images
                 </label>
 
-                <label className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[#D8C8B3] bg-[#F5F0E8] px-4 py-7 text-center transition hover:bg-[#F0EAE0]">
+                <label className="vendor-upload-area flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[#D8C8B3] bg-[#F5F0E8] px-4 py-7 text-center">
 
                   <FiUploadCloud
                     size={28}
@@ -722,7 +724,7 @@ function VendorManagement() {
                     setEditProduct(null)
                     setSelectedImages([])
                   }}
-                  className="border border-[#DED5C8] px-6 py-3 text-sm font-semibold transition hover:bg-[#F0EAE0] disabled:opacity-50"
+                  className="vendor-cancel-btn border border-[#DED5C8] px-6 py-3 text-sm font-semibold disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -730,7 +732,7 @@ function VendorManagement() {
                 <button
                   type="submit"
                   disabled={updating}
-                  className="bg-[#2B2926] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[#51483E] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="vendor-update-btn bg-[#2B2926] px-7 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {updating ? 'Updating...' : 'Update Product'}
                 </button>
@@ -744,6 +746,295 @@ function VendorManagement() {
         </div>
 
       )}
+
+      {/* ANIMATION STYLES */}
+      <style>{`
+
+        .vendor-page-heading {
+          animation: vendorFadeUp 0.6s ease both;
+        }
+
+        .vendor-section-heading {
+          animation: vendorFadeUp 0.6s ease both;
+          animation-delay: 0.1s;
+        }
+
+        .vendor-menu-btn {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-menu-btn:hover {
+          background: #F0EAE0;
+          transform: rotate(5deg);
+        }
+
+        .vendor-add-link {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-add-link:hover {
+          transform: translateX(4px);
+        }
+
+        .vendor-add-link svg {
+          transition: transform 0.3s ease;
+        }
+
+        .vendor-add-link:hover svg {
+          transform: rotate(90deg);
+        }
+
+        .vendor-product-card {
+          opacity: 0;
+          animation: vendorCardEnter 0.6s ease forwards;
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .vendor-product-card:hover {
+          transform: translateY(-7px);
+          box-shadow: 0 15px 30px rgba(43, 41, 38, 0.10);
+        }
+
+        .vendor-product-image {
+          overflow: hidden;
+        }
+
+        .vendor-product-image img {
+          transition: transform 0.6s ease;
+        }
+
+        .vendor-product-card:hover .vendor-product-image img {
+          transform: scale(1.07);
+        }
+
+        .vendor-offer-badge {
+          animation: vendorBadgeEnter 0.5s ease both;
+          transition: transform 0.3s ease;
+        }
+
+        .vendor-product-card:hover .vendor-offer-badge {
+          transform: translateY(-3px);
+        }
+
+        .vendor-product-title {
+          transition: color 0.3s ease;
+        }
+
+        .vendor-product-card:hover .vendor-product-title {
+          color: #9A7958;
+        }
+
+        .vendor-edit-btn,
+        .vendor-delete-btn {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-edit-btn:hover {
+          background: #2B2926;
+          color: white;
+          border-color: #2B2926;
+          transform: translateY(-2px);
+        }
+
+        .vendor-delete-btn:hover:not(:disabled) {
+          background: #FEF2F2;
+          border-color: #DC2626;
+          transform: translateY(-2px);
+        }
+
+        .vendor-edit-btn:active,
+        .vendor-delete-btn:active {
+          transform: scale(0.97);
+        }
+
+        .vendor-state,
+        .vendor-empty-state {
+          animation: vendorFadeUp 0.5s ease both;
+        }
+
+        .vendor-empty-state svg {
+          animation: vendorFloat 3s ease-in-out infinite;
+        }
+
+        .vendor-primary-btn {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-primary-btn:hover {
+          background: #51483E;
+          transform: translateY(-3px);
+          box-shadow: 0 7px 18px rgba(43, 41, 38, 0.15);
+        }
+
+        .vendor-modal-backdrop {
+          animation: vendorBackdrop 0.25s ease both;
+          backdrop-filter: blur(4px);
+        }
+
+        .vendor-modal {
+          animation: vendorModalEnter 0.35s ease both;
+          transform-origin: center;
+        }
+
+        .vendor-modal-close {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-modal-close:hover:not(:disabled) {
+          background: #F0EAE0;
+          transform: rotate(90deg);
+        }
+
+        .vendor-modal-input {
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vendor-modal-input:focus {
+          border-color: #9A7958;
+          box-shadow: 0 0 0 3px rgba(154, 121, 88, 0.10);
+        }
+
+        .vendor-offer-box {
+          transition: box-shadow 0.3s ease;
+        }
+
+        .vendor-offer-box:hover {
+          box-shadow: 0 5px 15px rgba(43, 41, 38, 0.04);
+        }
+
+        .vendor-current-image {
+          animation: vendorImageEnter 0.4s ease both;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vendor-current-image:hover {
+          transform: scale(1.08);
+          box-shadow: 0 5px 12px rgba(43, 41, 38, 0.12);
+        }
+
+        .vendor-upload-area {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-upload-area:hover {
+          border-color: #9A7958;
+          background: #F0EAE0;
+        }
+
+        .vendor-upload-area svg {
+          transition: transform 0.3s ease;
+        }
+
+        .vendor-upload-area:hover svg {
+          transform: translateY(-5px) scale(1.1);
+        }
+
+        .vendor-cancel-btn,
+        .vendor-update-btn {
+          transition: all 0.3s ease;
+        }
+
+        .vendor-cancel-btn:hover:not(:disabled) {
+          background: #F0EAE0;
+          transform: translateY(-2px);
+        }
+
+        .vendor-update-btn:hover:not(:disabled) {
+          background: #51483E;
+          transform: translateY(-2px);
+          box-shadow: 0 7px 18px rgba(43, 41, 38, 0.15);
+        }
+
+        .vendor-cancel-btn:active,
+        .vendor-update-btn:active {
+          transform: scale(0.98);
+        }
+
+        @keyframes vendorFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes vendorCardEnter {
+          from {
+            opacity: 0;
+            transform: translateY(22px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes vendorBadgeEnter {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes vendorBackdrop {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes vendorModalEnter {
+          from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes vendorImageEnter {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes vendorFloat {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-7px);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vendor-management-page *,
+          .vendor-management-page *::before,
+          .vendor-management-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+
+      `}</style>
 
     </div>
   )

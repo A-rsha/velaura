@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 import {
   FiHeart,
@@ -13,66 +12,50 @@ import {
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
 
-
 function Navbar({ cartCount }) {
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-
   const [profile, setProfile] = useState(null)
 
   const navigate = useNavigate()
 
   const role = localStorage.getItem("role")
 
-const userName =
-role === "user"
-? localStorage.getItem("userName")
-: null
-
+  const userName =
+    role === "user"
+      ? localStorage.getItem("userName")
+      : null
 
   const userInitials = userName
-    ? userName
-        .trim()
-        .slice(0, 2)
-        .toUpperCase()
+    ? userName.trim().slice(0, 2).toUpperCase()
     : ""
 
-
-
-
   useEffect(() => {
-const getProfile = async () => {
-const token = localStorage.getItem("token")
-const role = localStorage.getItem("role")
+    const getProfile = async () => {
+      const token = localStorage.getItem("token")
+      const role = localStorage.getItem("role")
 
+      if (!token || role !== "user") {
+        setProfile(null)
+        return
+      }
 
-if (!token || role !== "user") {
-  setProfile(null)
-  return
-}
+      try {
+        const res = await API.get("/auth/profile")
+        setProfile(res.data.user)
+      } catch (error) {
+        console.error(
+          "Profile error:",
+          error.response?.data || error.message
+        )
+      }
+    }
 
-try {
-  const res = await API.get("/auth/profile")
-  setProfile(res.data.user)
-} catch (error) {
-  console.error(
-    "Profile error:",
-    error.response?.data || error.message
-  )
-}
-
-
-}
-
-getProfile()
-}, [])
-
-
- 
+    getProfile()
+  }, [])
 
   const handleLogout = () => {
-
     localStorage.removeItem("token")
     localStorage.removeItem("refreshToken")
     localStorage.removeItem("userName")
@@ -82,11 +65,8 @@ getProfile()
     setMenuOpen(false)
 
     navigate("/")
-
     window.location.reload()
-
   }
-
 
   const navClass = ({ isActive }) =>
     `
@@ -94,21 +74,140 @@ getProfile()
       pb-1
       text-sm
       font-medium
-      transition
+      transition-all
       duration-300
       hover:text-gray-500
+      after:absolute
+      after:left-0
+      after:right-0
+      after:-bottom-0.5
+      after:h-[1px]
+      after:bg-[#2B2926]
+      after:origin-left
+      after:transition-transform
+      after:duration-300
       ${
         isActive
-          ? "after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-[1px] after:bg-[#2B2926]"
-          : ""
+          ? "after:scale-x-100"
+          : "after:scale-x-0 hover:after:scale-x-100"
       }
     `
 
+  const iconHover =
+    "transition-all duration-300 ease-out hover:scale-110 hover:-translate-y-0.5 hover:opacity-60 active:scale-95"
+
+  const menuItemHover =
+    "transition-all duration-300 ease-out hover:translate-x-1 hover:opacity-60 active:scale-[0.98]"
 
   return (
-
     <>
 
+      {/* Animation styles */}
+
+      <style>{`
+        @keyframes navbarFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes menuSlideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeOverlay {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes profileSlideIn {
+          from {
+            opacity: 0;
+            transform: translateX(100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes cartPop {
+          0% {
+            transform: scale(0);
+          }
+          70% {
+            transform: scale(1.2);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes profileInfoIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .navbar-entrance {
+          animation: navbarFadeIn 0.5s ease-out both;
+        }
+
+        .mobile-menu-animation {
+          animation: menuSlideDown 0.3s ease-out both;
+          transform-origin: top;
+        }
+
+        .profile-overlay-animation {
+          animation: fadeOverlay 0.25s ease-out both;
+        }
+
+        .profile-sidebar-animation {
+          animation: profileSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .cart-count-animation {
+          animation: cartPop 0.3s ease-out both;
+        }
+
+        .profile-info-animation {
+          animation: profileInfoIn 0.4s ease-out both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .navbar-entrance,
+          .mobile-menu-animation,
+          .profile-overlay-animation,
+          .profile-sidebar-animation,
+          .cart-count-animation,
+          .profile-info-animation {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      {/* NAVBAR */}
 
       <nav
         className="
@@ -119,6 +218,7 @@ getProfile()
           border-[#E5DED4]
           bg-[#F5F0E8]/95
           backdrop-blur-sm
+          navbar-entrance
         "
       >
 
@@ -136,6 +236,7 @@ getProfile()
           "
         >
 
+          {/* Mobile menu button */}
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -144,20 +245,22 @@ getProfile()
               items-center
               justify-center
               text-[#2B2926]
+              transition-all
+              duration-300
+              hover:scale-110
+              active:scale-90
               md:hidden
             "
             aria-label="Toggle menu"
           >
-
             {menuOpen ? (
               <FiX size={22} strokeWidth={1.5} />
             ) : (
               <FiMenu size={22} strokeWidth={1.5} />
             )}
-
           </button>
 
-
+          {/* Logo */}
 
           <div
             className="
@@ -174,6 +277,9 @@ getProfile()
                 flex-col
                 items-center
                 leading-none
+                transition-transform
+                duration-300
+                hover:scale-[1.04]
               "
             >
 
@@ -184,6 +290,8 @@ getProfile()
                   font-medium
                   tracking-[3px]
                   text-[#2B2926]
+                  transition-all
+                  duration-300
                   sm:text-2xl
                 "
               >
@@ -197,6 +305,9 @@ getProfile()
                   font-normal
                   tracking-[3px]
                   text-[#2B2926]
+                  transition-all
+                  duration-300
+                  group-hover:tracking-[4px]
                   sm:text-[8px]
                 "
               >
@@ -207,8 +318,7 @@ getProfile()
 
           </div>
 
-
-
+          {/* Desktop navigation */}
 
           <div
             className="
@@ -221,41 +331,25 @@ getProfile()
             "
           >
 
-            <NavLink
-              to="/"
-              className={navClass}
-            >
+            <NavLink to="/" className={navClass}>
               Home
             </NavLink>
 
-
-            <NavLink
-              to="/shop"
-              className={navClass}
-            >
+            <NavLink to="/shop" className={navClass}>
               Shop
             </NavLink>
 
-
-            <NavLink
-              to="/about"
-              className={navClass}
-            >
+            <NavLink to="/about" className={navClass}>
               About
             </NavLink>
 
-
-            <NavLink
-              to="/myOrder"
-              className={navClass}
-            >
+            <NavLink to="/myOrder" className={navClass}>
               My Orders
             </NavLink>
 
           </div>
 
-
-          
+          {/* Desktop icons */}
 
           <div
             className="
@@ -271,43 +365,28 @@ getProfile()
 
             <Link
               to="/wishlist"
-              className="
-                transition
-                duration-300
-                hover:opacity-50
-              "
+              className={iconHover}
               aria-label="Wishlist"
             >
-
-              <FiHeart
-                size={19}
-                strokeWidth={1.4}
-              />
-
+              <FiHeart size={19} strokeWidth={1.4} />
             </Link>
-
 
             {/* Cart */}
 
             <Link
               to="/cart"
-              className="
+              className={`
                 relative
-                transition
-                duration-300
-                hover:opacity-50
-              "
+                ${iconHover}
+              `}
               aria-label="Cart"
             >
 
-              <FiShoppingBag
-                size={19}
-                strokeWidth={1.4}
-              />
+              <FiShoppingBag size={19} strokeWidth={1.4} />
 
               {cartCount > 0 && (
-
                 <span
+                  key={cartCount}
                   className="
                     absolute
                     -right-2.5
@@ -323,35 +402,34 @@ getProfile()
                     text-[9px]
                     font-medium
                     text-white
+                    cart-count-animation
                   "
                 >
                   {cartCount}
                 </span>
-
               )}
 
             </Link>
 
-
-            {/* Account / User Initials */}
+            {/* Account */}
 
             <button
               onClick={() => {
-
                 if (userName) {
                   setProfileOpen(true)
                 } else {
                   navigate("/login")
                 }
-
               }}
               className="
                 flex
                 items-center
                 justify-center
-                transition
+                transition-all
                 duration-300
+                hover:scale-110
                 hover:opacity-70
+                active:scale-95
               "
               aria-label="Account"
             >
@@ -373,6 +451,9 @@ getProfile()
                     font-medium
                     tracking-wide
                     text-[#2B2926]
+                    transition-all
+                    duration-300
+                    hover:rotate-6
                   "
                 >
                   {userInitials}
@@ -390,6 +471,9 @@ getProfile()
                     rounded-full
                     border
                     border-[#2B2926]
+                    transition-all
+                    duration-300
+                    hover:bg-[#E8DFD2]
                   "
                 >
                   <span className="text-xs">
@@ -403,8 +487,7 @@ getProfile()
 
           </div>
 
-
-
+          {/* Mobile icons */}
 
           <div
             className="
@@ -417,38 +500,28 @@ getProfile()
             "
           >
 
-            {/* Wishlist */}
-
             <Link
               to="/wishlist"
               aria-label="Wishlist"
-              className="relative"
+              className={iconHover}
             >
-
-              <FiHeart
-                size={19}
-                strokeWidth={1.4}
-              />
-
+              <FiHeart size={19} strokeWidth={1.4} />
             </Link>
-
-
-            {/* Cart */}
 
             <Link
               to="/cart"
               aria-label="Cart"
-              className="relative"
+              className={`
+                relative
+                ${iconHover}
+              `}
             >
 
-              <FiShoppingBag
-                size={19}
-                strokeWidth={1.4}
-              />
+              <FiShoppingBag size={19} strokeWidth={1.4} />
 
               {cartCount > 0 && (
-
                 <span
+                  key={cartCount}
                   className="
                     absolute
                     -right-2
@@ -463,11 +536,11 @@ getProfile()
                     px-1
                     text-[9px]
                     text-white
+                    cart-count-animation
                   "
                 >
                   {cartCount}
                 </span>
-
               )}
 
             </Link>
@@ -476,8 +549,7 @@ getProfile()
 
         </div>
 
-
-        {/* ================= MOBILE MENU ================= */}
+        {/* MOBILE MENU */}
 
         {menuOpen && (
 
@@ -489,6 +561,7 @@ getProfile()
               px-5
               py-6
               md:hidden
+              mobile-menu-animation
             "
           >
 
@@ -517,6 +590,9 @@ getProfile()
                     flex
                     items-center
                     gap-3
+                    transition-all
+                    duration-300
+                    hover:scale-[1.03]
                   "
                 >
 
@@ -547,9 +623,6 @@ getProfile()
 
               )}
 
-
-              {/* Home */}
-
               <NavLink
                 to="/"
                 onClick={() => setMenuOpen(false)}
@@ -557,9 +630,6 @@ getProfile()
               >
                 Home
               </NavLink>
-
-
-              {/* Shop */}
 
               <NavLink
                 to="/shop"
@@ -569,9 +639,6 @@ getProfile()
                 Shop
               </NavLink>
 
-
-              {/* About */}
-
               <NavLink
                 to="/about"
                 onClick={() => setMenuOpen(false)}
@@ -579,9 +646,6 @@ getProfile()
               >
                 About
               </NavLink>
-
-
-              {/* My Orders */}
 
               <NavLink
                 to="/myOrder"
@@ -591,9 +655,6 @@ getProfile()
                 My Orders
               </NavLink>
 
-
-              {/* Wishlist */}
-
               <NavLink
                 to="/wishlist"
                 onClick={() => setMenuOpen(false)}
@@ -602,9 +663,6 @@ getProfile()
                 Wishlist
               </NavLink>
 
-
-              {/* Cart */}
-
               <NavLink
                 to="/cart"
                 onClick={() => setMenuOpen(false)}
@@ -612,7 +670,6 @@ getProfile()
               >
                 Cart
               </NavLink>
-
 
               {!userName && (
 
@@ -634,8 +691,7 @@ getProfile()
 
       </nav>
 
-
-      {/* ================= PROFILE OVERLAY ================= */}
+      {/* PROFILE OVERLAY */}
 
       {profileOpen && (
 
@@ -645,11 +701,12 @@ getProfile()
             inset-0
             z-[60]
             bg-black/30
+            profile-overlay-animation
           "
           onClick={() => setProfileOpen(false)}
         >
 
-          {/* ================= PROFILE SIDEBAR ================= */}
+          {/* PROFILE SIDEBAR */}
 
           <div
             className="
@@ -661,7 +718,7 @@ getProfile()
               max-w-sm
               bg-[#F5F0E8]
               shadow-xl
-              animate-[slideIn_0.3s_ease-out]
+              profile-sidebar-animation
             "
             onClick={(e) => e.stopPropagation()}
           >
@@ -692,23 +749,22 @@ getProfile()
                 My Account
               </span>
 
-
               <button
                 onClick={() => setProfileOpen(false)}
                 className="
                   text-[#2B2926]
-                  transition
+                  transition-all
+                  duration-300
+                  hover:rotate-90
                   hover:opacity-50
+                  active:scale-90
                 "
                 aria-label="Close profile"
               >
-
                 <FiX size={22} strokeWidth={1.4} />
-
               </button>
 
             </div>
-
 
             {/* Profile Info */}
 
@@ -721,6 +777,7 @@ getProfile()
                 border-[#E5DED4]
                 px-6
                 py-8
+                profile-info-animation
               "
             >
 
@@ -739,11 +796,13 @@ getProfile()
                   font-medium
                   tracking-wide
                   text-[#2B2926]
+                  transition-transform
+                  duration-300
+                  hover:scale-105
                 "
               >
                 {userInitials || <FiUser size={25} />}
               </div>
-
 
               <h3
                 className="
@@ -755,7 +814,6 @@ getProfile()
               >
                 {profile?.name || userName || "Guest"}
               </h3>
-
 
               {profile?.email && (
 
@@ -773,7 +831,6 @@ getProfile()
 
             </div>
 
-
             {/* Profile Menu */}
 
             <div className="px-6 py-5">
@@ -785,7 +842,7 @@ getProfile()
                   setProfileOpen(false)
                   navigate("/myOrder")
                 }}
-                className="
+                className={`
                   flex
                   w-full
                   items-center
@@ -796,22 +853,15 @@ getProfile()
                   text-left
                   text-sm
                   text-[#2B2926]
-                  transition
-                  hover:opacity-60
-                "
+                  ${menuItemHover}
+                `}
               >
 
-                <FiPackage
-                  size={19}
-                  strokeWidth={1.4}
-                />
+                <FiPackage size={19} strokeWidth={1.4} />
 
-                <span>
-                  My Orders
-                </span>
+                <span>My Orders</span>
 
               </button>
-
 
               {/* Wishlist */}
 
@@ -820,7 +870,7 @@ getProfile()
                   setProfileOpen(false)
                   navigate("/wishlist")
                 }}
-                className="
+                className={`
                   flex
                   w-full
                   items-center
@@ -831,28 +881,24 @@ getProfile()
                   text-left
                   text-sm
                   text-[#2B2926]
-                  transition
-                  hover:opacity-60
-                "
+                  ${menuItemHover}
+                `}
               >
 
-                <FiHeart
-                  size={19}
-                  strokeWidth={1.4}
-                />
+                <FiHeart size={19} strokeWidth={1.4} />
 
-                <span>
-                  Wishlist
-                </span>
+                <span>Wishlist</span>
 
               </button>
 
-               <button
+              {/* Become a seller */}
+
+              <button
                 onClick={() => {
                   setProfileOpen(false)
                   navigate("/vendorRegistration")
                 }}
-                className="
+                className={`
                   flex
                   w-full
                   items-center
@@ -863,26 +909,15 @@ getProfile()
                   text-left
                   text-sm
                   text-[#2B2926]
-                  transition
-                  hover:opacity-60
-                "
+                  ${menuItemHover}
+                `}
               >
 
-                <FiUser
-                  size={19}
-                  strokeWidth={1.4}
-                />
+                <FiUser size={15} strokeWidth={1.4} />
 
-                <span>
-                  Become a seller
-                </span>
+                <span>Become a seller</span>
 
               </button>
-
-              
-
-
-        
 
               {/* Logout */}
 
@@ -890,7 +925,7 @@ getProfile()
 
                 <button
                   onClick={handleLogout}
-                  className="
+                  className={`
                     flex
                     w-full
                     items-center
@@ -899,19 +934,13 @@ getProfile()
                     text-left
                     text-sm
                     text-[#2B2926]
-                    transition
-                    hover:opacity-60
-                  "
+                    ${menuItemHover}
+                  `}
                 >
 
-                  <FiLogOut
-                    size={19}
-                    strokeWidth={1.4}
-                  />
+                  <FiLogOut size={19} strokeWidth={1.4} />
 
-                  <span>
-                    Logout
-                  </span>
+                  <span>Logout</span>
 
                 </button>
 
@@ -930,6 +959,4 @@ getProfile()
   )
 }
 
-
 export default Navbar
-

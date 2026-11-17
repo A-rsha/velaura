@@ -1,14 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 import ShopBanner from '../components/ShopBanner'
 import Footer from '../components/Footer'
 import Products from '../components/Products'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import API from '../services/axios'
-
 
 function Shop() {
 
@@ -24,23 +21,27 @@ function Shop() {
             setSearchParams({ category })
         }
     }
+
     const fetchCategories = async () => {
         try {
             const res = await API.get('/category/getCategories')
+
             setCategories([
-                "All",...res.data.data.map((category)=>category.name)
+                "All",
+                ...res.data.data.map((category) => category.name)
             ])
+
         } catch (error) {
             console.log("CATEGORY ERROR:", error)
         }
     }
+
     useEffect(() => {
         fetchCategories()
     }, [])
-   
 
     return (
-        <div className="bg-[#F5F0E8] text-[#2B2926]">
+        <div className="bg-[#F5F0E8] text-[#2B2926] animate-shop-page">
 
             <Navbar />
 
@@ -48,7 +49,7 @@ function Shop() {
 
 
             {/* Category Tabs */}
-            <section className="mt-8 sm:mt-10">
+            <section className="mt-8 sm:mt-10 animate-shop-categories">
 
                 <div
                     className="
@@ -65,19 +66,23 @@ function Shop() {
                     "
                 >
 
-                    {categories.map((category) => (
+                    {categories.map((category, index) => (
 
                         <button
                             key={category}
                             onClick={() => handleCategoryChange(category)}
+                            style={{
+                                animationDelay: `${index * 70}ms`
+                            }}
                             className={`
+                                category-tab
                                 shrink-0
                                 pb-2
                                 text-xs
                                 sm:text-sm
                                 tracking-wide
                                 font-medium
-                                transition
+                                transition-all
                                 duration-300
                                 ${selectedCategory === category
                                     ? "border-b border-black text-black"
@@ -105,6 +110,7 @@ function Shop() {
                     sm:px-8
                     md:px-12
                     lg:px-16
+                    animate-collection-heading
                 "
             >
 
@@ -124,6 +130,7 @@ function Shop() {
                     </p>
 
                     <h2
+                        key={selectedCategory}
                         className="
                             text-2xl
                             sm:text-3xl
@@ -131,6 +138,7 @@ function Shop() {
                             font-serif
                             font-medium
                             tracking-tight
+                            animate-category-heading
                         "
                     >
                         {selectedCategory === "All"
@@ -168,6 +176,7 @@ function Shop() {
                     md:px-12
                     lg:px-16
                     pb-14
+                    animate-shop-products
                 "
             >
 
@@ -177,6 +186,102 @@ function Shop() {
 
 
             <Footer />
+
+
+            {/* Shop Page Animations */}
+            <style>{`
+
+                @keyframes shopPageEntrance {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes shopCategoryEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(12px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes collectionHeadingEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes categoryHeadingEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(8px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes shopProductsEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(18px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-shop-page {
+                    animation: shopPageEntrance 0.7s ease-out both;
+                }
+
+                .category-tab {
+                    animation: shopCategoryEntrance 0.5s ease-out both;
+                }
+
+                .category-tab:hover {
+                    transform: translateY(-3px);
+                }
+
+                .animate-collection-heading {
+                    animation: collectionHeadingEntrance 0.7s ease-out both;
+                    animation-delay: 0.15s;
+                }
+
+                .animate-category-heading {
+                    animation: categoryHeadingEntrance 0.4s ease-out both;
+                }
+
+                .animate-shop-products {
+                    animation: shopProductsEntrance 0.8s ease-out both;
+                    animation-delay: 0.2s;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .animate-shop-page,
+                    .category-tab,
+                    .animate-collection-heading,
+                    .animate-category-heading,
+                    .animate-shop-products {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+                }
+
+            `}</style>
 
         </div>
     )

@@ -14,6 +14,7 @@ function CartPage({ cartCount, setCartCount }) {
 
 
     const fetchCart = async () => {
+
         try {
 
             const res = await API.get('/cart/getCart')
@@ -30,6 +31,7 @@ function CartPage({ cartCount, setCartCount }) {
             )
 
         }
+
     }
 
 
@@ -39,6 +41,7 @@ function CartPage({ cartCount, setCartCount }) {
 
 
     // Increase quantity
+
     const increaseQuantity = async (productId, currentQuantity) => {
 
         try {
@@ -60,10 +63,12 @@ function CartPage({ cartCount, setCartCount }) {
             )
 
         }
+
     }
 
 
     // Decrease quantity
+
     const decreaseQuantity = async (productId, currentQuantity) => {
 
         if (currentQuantity <= 1) {
@@ -89,10 +94,12 @@ function CartPage({ cartCount, setCartCount }) {
             )
 
         }
+
     }
 
 
     // Delete product
+
     const deleteProduct = async (productId) => {
 
         try {
@@ -122,11 +129,14 @@ function CartPage({ cartCount, setCartCount }) {
             )
 
         }
+
     }
 
 
     if (!cart) {
+
         return (
+
             <div className="
                 min-h-screen
                 flex
@@ -134,11 +144,40 @@ function CartPage({ cartCount, setCartCount }) {
                 justify-center
                 bg-[#F5F0E8]
             ">
-                <p className="text-sm text-gray-500">
-                    Loading cart...
-                </p>
+
+                <div className="flex flex-col items-center gap-4">
+
+                    <div className="cart-loader"></div>
+
+                    <p className="text-sm text-gray-500">
+                        Loading cart...
+                    </p>
+
+                </div>
+
+                <style>{`
+
+                    .cart-loader {
+                        width: 34px;
+                        height: 34px;
+                        border: 2px solid #DED5C8;
+                        border-top-color: #2B2926;
+                        border-radius: 50%;
+                        animation: cartSpin 0.8s linear infinite;
+                    }
+
+                    @keyframes cartSpin {
+                        to {
+                            transform: rotate(360deg);
+                        }
+                    }
+
+                `}</style>
+
             </div>
+
         )
+
     }
 
 
@@ -147,19 +186,21 @@ function CartPage({ cartCount, setCartCount }) {
 
     const totalPrice = cartItems.reduce(
         (total, item) => {
+
             const price = item.productId?.isOffer
                 ? item.productId?.offerPrice
                 : item.price
-            return total + price * item.quantity
-        },
 
+            return total + price * item.quantity
+
+        },
         0
     )
 
 
     return (
 
-        <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+        <div className="cart-page min-h-screen bg-[#F5F0E8] text-[#2B2926]">
 
             <Navbar cartCount={cartCount} />
 
@@ -182,10 +223,11 @@ function CartPage({ cartCount, setCartCount }) {
 
                     {/* Page Heading */}
 
-                    <div className="mb-10 sm:mb-12">
+                    <div className="cart-heading mb-10 sm:mb-12">
 
                         <p
                             className="
+                                cart-subtitle
                                 mb-2
                                 text-[10px]
                                 sm:text-xs
@@ -199,6 +241,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                         <h1
                             className="
+                                cart-title
                                 font-serif
                                 text-3xl
                                 sm:text-4xl
@@ -211,6 +254,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                         <p
                             className="
+                                cart-description
                                 mt-3
                                 text-sm
                                 sm:text-base
@@ -229,6 +273,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                         <div
                             className="
+                                cart-empty
                                 border
                                 border-[#DED5C8]
                                 bg-[#F5F0E8]
@@ -238,8 +283,30 @@ function CartPage({ cartCount, setCartCount }) {
                             "
                         >
 
+                            <div className="empty-cart-icon">
+
+                                <svg
+                                    width="42"
+                                    height="42"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="mx-auto text-gray-500"
+                                >
+                                    <path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H6" />
+                                    <circle cx="10" cy="21" r="1" />
+                                    <circle cx="19" cy="21" r="1" />
+                                </svg>
+
+                            </div>
+
+
                             <p
                                 className="
+                                    mt-5
                                     font-serif
                                     text-2xl
                                     sm:text-3xl
@@ -261,6 +328,7 @@ function CartPage({ cartCount, setCartCount }) {
                             <button
                                 onClick={() => navigate('/shop')}
                                 className="
+                                    cart-explore-btn
                                     mt-6
                                     border
                                     border-[#2B2926]
@@ -296,21 +364,14 @@ function CartPage({ cartCount, setCartCount }) {
 
                             <div className="space-y-5">
 
-                                {cartItems.map((item) => (
+                                {cartItems.map((item, index) => (
 
                                     <div
                                         key={item.productId?._id}
-                                        className="
-                                            flex
-                                            flex-col
-                                            sm:flex-row
-                                            gap-5
-                                            border
-                                            border-[#DED5C8]
-                                            bg-white
-                                            p-4
-                                            sm:p-5
-                                        "
+                                        className="cart-item-card flex flex-col sm:flex-row gap-5 border border-[#DED5C8] bg-white p-4 sm:p-5"
+                                        style={{
+                                            '--cart-index': index
+                                        }}
                                     >
 
 
@@ -318,6 +379,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                                         <div
                                             className="
+                                                cart-image-wrapper
                                                 shrink-0
                                                 w-full
                                                 sm:w-32
@@ -332,6 +394,7 @@ function CartPage({ cartCount, setCartCount }) {
                                                 src={item.productId?.image}
                                                 alt={item.productId?.title}
                                                 className="
+                                                    cart-product-image
                                                     h-full
                                                     w-full
                                                     object-cover
@@ -359,6 +422,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                                                 <p
                                                     className="
+                                                        cart-category
                                                         text-[10px]
                                                         uppercase
                                                         tracking-[2px]
@@ -370,6 +434,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                                                 <h2
                                                     className="
+                                                        cart-product-title
                                                         mt-1
                                                         text-base
                                                         sm:text-lg
@@ -380,23 +445,31 @@ function CartPage({ cartCount, setCartCount }) {
                                                     {item.productId?.title}
                                                 </h2>
 
+
                                                 {item.productId?.isOffer ? (
-                                                    <div className='mt-2'>
-                                                        <p className='text-sm text-gray-600 line-through'>
+
+                                                    <div className="mt-2">
+
+                                                        <p className="text-sm text-gray-600 line-through">
                                                             ₹{item.price}
                                                         </p>
-                                                        <p className='text-sm font-semibold text-[#2B2926]'>
+
+                                                        <p className="text-sm font-semibold text-[#2B2926]">
                                                             ₹{item.productId?.offerPrice}
                                                         </p>
 
                                                         <p className="mt-1 text-xs text-gray-500">
                                                             {item.productId?.offerPercentage}% OFF
                                                         </p>
+
                                                     </div>
+
                                                 ) : (
+
                                                     <p className="mt-2 text-sm text-gray-500">
                                                         ₹{item.price}
                                                     </p>
+
                                                 )}
 
                                             </div>
@@ -413,8 +486,11 @@ function CartPage({ cartCount, setCartCount }) {
                                                 "
                                             >
 
+                                                {/* Quantity */}
+
                                                 <div
                                                     className="
+                                                        cart-quantity
                                                         flex
                                                         items-center
                                                         border
@@ -429,7 +505,9 @@ function CartPage({ cartCount, setCartCount }) {
                                                                 item.quantity
                                                             )
                                                         }
+                                                        aria-label="Decrease quantity"
                                                         className="
+                                                            quantity-btn
                                                             flex
                                                             h-9
                                                             w-9
@@ -446,6 +524,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                                                     <span
                                                         className="
+                                                            cart-quantity-value
                                                             flex
                                                             h-9
                                                             min-w-9
@@ -468,7 +547,9 @@ function CartPage({ cartCount, setCartCount }) {
                                                                 item.quantity
                                                             )
                                                         }
+                                                        aria-label="Increase quantity"
                                                         className="
+                                                            quantity-btn
                                                             flex
                                                             h-9
                                                             w-9
@@ -485,6 +566,8 @@ function CartPage({ cartCount, setCartCount }) {
                                                 </div>
 
 
+                                                {/* Remove */}
+
                                                 <button
                                                     onClick={() =>
                                                         deleteProduct(
@@ -492,6 +575,7 @@ function CartPage({ cartCount, setCartCount }) {
                                                         )
                                                     }
                                                     className="
+                                                        cart-remove-btn
                                                         flex
                                                         items-center
                                                         gap-1.5
@@ -501,8 +585,14 @@ function CartPage({ cartCount, setCartCount }) {
                                                         hover:text-red-600
                                                     "
                                                 >
-                                                    <FiTrash2 size={15} />
+
+                                                    <FiTrash2
+                                                        className="remove-icon"
+                                                        size={15}
+                                                    />
+
                                                     Remove
+
                                                 </button>
 
                                             </div>
@@ -520,6 +610,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                             <div
                                 className="
+                                    cart-summary
                                     h-fit
                                     border
                                     border-[#DED5C8]
@@ -616,6 +707,7 @@ function CartPage({ cartCount, setCartCount }) {
 
                                         <span
                                             className="
+                                                cart-total-price
                                                 text-xl
                                                 font-medium
                                             "
@@ -633,6 +725,7 @@ function CartPage({ cartCount, setCartCount }) {
                                 <button
                                     onClick={() => navigate('/payment')}
                                     className="
+                                        cart-checkout-btn
                                         mt-7
                                         flex
                                         w-full
@@ -649,8 +742,14 @@ function CartPage({ cartCount, setCartCount }) {
                                         hover:bg-black
                                     "
                                 >
+
                                     Proceed to Checkout
-                                    <FiArrowRight size={16} />
+
+                                    <FiArrowRight
+                                        className="checkout-arrow"
+                                        size={16}
+                                    />
+
                                 </button>
 
 
@@ -680,8 +779,382 @@ function CartPage({ cartCount, setCartCount }) {
 
             <Footer />
 
+
+            {/* Premium Cart Animations */}
+
+            <style>{`
+
+                /* Page Entrance */
+
+                .cart-page {
+                    animation: cartPageEnter 0.7s ease both;
+                }
+
+                @keyframes cartPageEnter {
+                    from {
+                        opacity: 0;
+                    }
+
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+
+                /* Heading */
+
+                .cart-heading {
+                    animation: cartHeadingEnter 0.8s ease both;
+                }
+
+                .cart-subtitle {
+                    animation: cartTextEnter 0.7s ease both;
+                }
+
+                .cart-title {
+                    animation: cartTextEnter 0.8s ease both;
+                    animation-delay: 0.1s;
+                    animation-fill-mode: both;
+                }
+
+                .cart-description {
+                    animation: cartTextEnter 0.8s ease both;
+                    animation-delay: 0.2s;
+                    animation-fill-mode: both;
+                }
+
+                @keyframes cartHeadingEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes cartTextEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(15px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+
+                /* Cart Item Cards */
+
+                .cart-item-card {
+                    opacity: 0;
+                    animation: cartItemEnter 0.65s ease forwards;
+                    animation-delay: calc(var(--cart-index) * 120ms);
+                    transition:
+                        transform 0.4s ease,
+                        box-shadow 0.4s ease,
+                        border-color 0.4s ease;
+                }
+
+                @keyframes cartItemEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .cart-item-card:hover {
+                    transform: translateY(-5px);
+                    border-color: #C8BBA9;
+                    box-shadow: 0 12px 28px rgba(43, 41, 38, 0.08);
+                }
+
+
+                /* Product Image */
+
+                .cart-image-wrapper {
+                    overflow: hidden;
+                }
+
+                .cart-product-image {
+                    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+                }
+
+                .cart-item-card:hover .cart-product-image {
+                    transform: scale(1.08);
+                }
+
+
+                /* Product Text */
+
+                .cart-category {
+                    transition: color 0.3s ease;
+                }
+
+                .cart-item-card:hover .cart-category {
+                    color: #927858;
+                }
+
+                .cart-product-title {
+                    transition:
+                        color 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .cart-item-card:hover .cart-product-title {
+                    color: #927858;
+                    transform: translateX(2px);
+                }
+
+
+                /* Quantity Buttons */
+
+                .quantity-btn {
+                    transition:
+                        background 0.3s ease,
+                        color 0.3s ease,
+                        transform 0.2s ease;
+                }
+
+                .quantity-btn:hover {
+                    background: #EAE2D7;
+                    color: #2B2926;
+                }
+
+                .quantity-btn:active {
+                    transform: scale(0.85);
+                }
+
+                .quantity-btn svg {
+                    transition: transform 0.25s ease;
+                }
+
+                .quantity-btn:hover svg {
+                    transform: scale(1.2);
+                }
+
+                .cart-quantity-value {
+                    transition: background 0.3s ease;
+                }
+
+                .cart-quantity:hover .cart-quantity-value {
+                    background: #FCFAF7;
+                }
+
+
+                /* Remove Button */
+
+                .cart-remove-btn {
+                    transition:
+                        color 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .cart-remove-btn:hover {
+                    color: #DC2626;
+                    transform: translateX(3px);
+                }
+
+                .remove-icon {
+                    transition:
+                        transform 0.3s ease;
+                }
+
+                .cart-remove-btn:hover .remove-icon {
+                    transform: rotate(-10deg) scale(1.15);
+                }
+
+
+                /* Order Summary */
+
+                .cart-summary {
+                    opacity: 0;
+                    animation: summaryEnter 0.8s ease forwards;
+                    animation-delay: 0.3s;
+                    transition:
+                        box-shadow 0.4s ease,
+                        border-color 0.4s ease;
+                }
+
+                @keyframes summaryEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .cart-summary:hover {
+                    border-color: #C8BBA9;
+                    box-shadow: 0 12px 30px rgba(43, 41, 38, 0.07);
+                }
+
+
+                /* Total Price */
+
+                .cart-total-price {
+                    transition:
+                        color 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .cart-summary:hover .cart-total-price {
+                    color: #927858;
+                    transform: scale(1.04);
+                }
+
+
+                /* Checkout Button */
+
+                .cart-checkout-btn {
+                    position: relative;
+                    overflow: hidden;
+                    transition:
+                        background 0.3s ease,
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .cart-checkout-btn::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: -120%;
+                    width: 70%;
+                    height: 100%;
+                    background: linear-gradient(
+                        110deg,
+                        transparent,
+                        rgba(255,255,255,0.2),
+                        transparent
+                    );
+                    transform: skewX(-20deg);
+                    transition: left 0.65s ease;
+                }
+
+                .cart-checkout-btn:hover::before {
+                    left: 150%;
+                }
+
+                .cart-checkout-btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 20px rgba(43, 41, 38, 0.2);
+                }
+
+                .cart-checkout-btn:active {
+                    transform: scale(0.98);
+                }
+
+                .checkout-arrow {
+                    transition: transform 0.3s ease;
+                }
+
+                .cart-checkout-btn:hover .checkout-arrow {
+                    transform: translateX(5px);
+                }
+
+
+                /* Empty Cart */
+
+                .cart-empty {
+                    animation: emptyCartEnter 0.8s ease both;
+                }
+
+                @keyframes emptyCartEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px) scale(0.98);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                .empty-cart-icon {
+                    animation: emptyCartFloat 2.5s ease-in-out infinite;
+                }
+
+                @keyframes emptyCartFloat {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+
+                    50% {
+                        transform: translateY(-7px);
+                    }
+                }
+
+
+                /* Explore Button */
+
+                .cart-explore-btn {
+                    transition:
+                        background 0.3s ease,
+                        color 0.3s ease,
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .cart-explore-btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 7px 18px rgba(43, 41, 38, 0.15);
+                }
+
+                .cart-explore-btn:active {
+                    transform: scale(0.96);
+                }
+
+
+                /* Reduced Motion */
+
+                @media (prefers-reduced-motion: reduce) {
+
+                    .cart-page,
+                    .cart-heading,
+                    .cart-subtitle,
+                    .cart-title,
+                    .cart-description,
+                    .cart-item-card,
+                    .cart-summary,
+                    .cart-empty,
+                    .empty-cart-icon,
+                    .cart-loader {
+                        animation: none !important;
+                        opacity: 1 !important;
+                        transform: none !important;
+                    }
+
+                    .cart-item-card,
+                    .cart-product-image,
+                    .quantity-btn,
+                    .cart-checkout-btn,
+                    .cart-remove-btn {
+                        transition: none !important;
+                    }
+
+                }
+
+            `}</style>
+
         </div>
+
     )
+
 }
 
 export default CartPage

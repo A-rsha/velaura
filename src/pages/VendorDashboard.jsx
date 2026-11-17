@@ -14,7 +14,6 @@ import {
   FiCreditCard,
   FiChevronRight,
   FiRefreshCw,
-  
 } from 'react-icons/fi'
 
 const getArray = (data) => {
@@ -104,6 +103,7 @@ function VendorDashboard() {
 
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
+
   const [subscription, setSubscription] = useState({
     plan: null,
     status: 'inactive',
@@ -175,13 +175,10 @@ function VendorDashboard() {
       }
 
       // ORDERS
-      // Try the vendor order endpoints used by the backend.
       let orderData = null
 
       const orderEndpoints = [
-        
         '/order/getVendorOrders'
-        
       ]
 
       for (const endpoint of orderEndpoints) {
@@ -354,7 +351,269 @@ function VendorDashboard() {
   const subscriptionStatus = getSubscriptionStatus()
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+    <div className="vendor-dashboard min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+
+      <style>{`
+        @keyframes dashboardFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes dashboardFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes dashboardPop {
+          0% {
+            opacity: 0;
+            transform: scale(.92);
+          }
+          70% {
+            transform: scale(1.03);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes dashboardBarGrow {
+          from {
+            height: 0;
+            opacity: .4;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes dashboardShine {
+          from { left: -120%; }
+          to { left: 130%; }
+        }
+
+        .dashboard-main {
+          animation: dashboardFadeUp .65s ease both;
+        }
+
+        .dashboard-header {
+          animation: dashboardFade .55s ease both;
+        }
+
+        .dashboard-welcome {
+          animation: dashboardFadeUp .65s .08s both;
+        }
+
+        .dashboard-subscription {
+          animation: dashboardFadeUp .65s .16s both;
+          transition: box-shadow .3s ease, transform .3s ease;
+        }
+
+        .dashboard-subscription:hover {
+          box-shadow: 0 12px 28px rgba(43, 41, 38, .07);
+          transform: translateY(-2px);
+        }
+
+        .dashboard-stat {
+          animation: dashboardFadeUp .6s ease both;
+          transition:
+            transform .3s ease,
+            box-shadow .3s ease,
+            border-color .3s ease;
+        }
+
+        .dashboard-stat:nth-child(1) { animation-delay: .08s; }
+        .dashboard-stat:nth-child(2) { animation-delay: .16s; }
+        .dashboard-stat:nth-child(3) { animation-delay: .24s; }
+        .dashboard-stat:nth-child(4) { animation-delay: .32s; }
+
+        .dashboard-stat:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 14px 30px rgba(43, 41, 38, .08);
+          border-color: #BBA88F;
+        }
+
+        .dashboard-stat-icon {
+          transition:
+            transform .35s ease,
+            background .3s ease,
+            color .3s ease;
+        }
+
+        .dashboard-stat:hover .dashboard-stat-icon {
+          transform: rotate(-7deg) scale(1.1);
+          background: #E8DCCB;
+          color: #6F5235;
+        }
+
+        .dashboard-panel {
+          animation: dashboardFadeUp .65s .18s both;
+          transition: box-shadow .3s ease;
+        }
+
+        .dashboard-panel:hover {
+          box-shadow: 0 12px 28px rgba(43, 41, 38, .055);
+        }
+
+        .dashboard-action {
+          transition:
+            transform .25s ease,
+            background .25s ease,
+            border-color .25s ease,
+            box-shadow .25s ease;
+        }
+
+        .dashboard-action:hover {
+          transform: translateX(4px);
+          border-color: #BBA88F;
+          box-shadow: 0 5px 14px rgba(43, 41, 38, .045);
+        }
+
+        .dashboard-action-arrow {
+          transition: transform .25s ease;
+        }
+
+        .dashboard-action:hover .dashboard-action-arrow {
+          transform: translateX(4px);
+        }
+
+        .dashboard-primary {
+          position: relative;
+          overflow: hidden;
+          transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            background .25s ease;
+        }
+
+        .dashboard-primary::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -120%;
+          width: 65%;
+          height: 100%;
+          background: linear-gradient(
+            110deg,
+            transparent,
+            rgba(255,255,255,.2),
+            transparent
+          );
+          transform: skewX(-20deg);
+        }
+
+        .dashboard-primary:hover::after {
+          animation: dashboardShine .7s ease;
+        }
+
+        .dashboard-primary:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 9px 20px rgba(43, 41, 38, .16);
+        }
+
+        .dashboard-primary:active {
+          transform: translateY(-1px) scale(.98);
+        }
+
+        .dashboard-refresh {
+          transition:
+            transform .3s ease,
+            background .25s ease,
+            border-color .25s ease;
+        }
+
+        .dashboard-refresh:hover {
+          transform: translateY(-2px);
+          border-color: #BBA88F;
+        }
+
+        .dashboard-avatar {
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .dashboard-avatar:hover {
+          transform: scale(1.08);
+          box-shadow: 0 0 0 4px rgba(154, 121, 88, .15);
+        }
+
+        .dashboard-chart-bar {
+          animation: dashboardBarGrow .9s ease both;
+          transform-origin: bottom;
+          transition:
+            filter .3s ease,
+            background .3s ease;
+        }
+
+        .dashboard-chart-bar:hover {
+          filter: brightness(1.15);
+        }
+
+        .dashboard-chart-column {
+          transition: transform .3s ease;
+        }
+
+        .dashboard-chart-column:hover {
+          transform: translateY(-4px);
+        }
+
+        .dashboard-order-row {
+          animation: dashboardFadeUp .5s ease both;
+          transition: background .25s ease;
+        }
+
+        .dashboard-order-row:hover {
+          background: #F8F4ED;
+        }
+
+        .dashboard-order-row:nth-child(1) { animation-delay: .05s; }
+        .dashboard-order-row:nth-child(2) { animation-delay: .12s; }
+        .dashboard-order-row:nth-child(3) { animation-delay: .19s; }
+        .dashboard-order-row:nth-child(4) { animation-delay: .26s; }
+        .dashboard-order-row:nth-child(5) { animation-delay: .33s; }
+
+        .dashboard-payment-badge {
+          transition: background .25s ease, transform .25s ease;
+        }
+
+        .dashboard-order-row:hover .dashboard-payment-badge {
+          transform: scale(1.04);
+          background: #E8DCCB;
+        }
+
+        .dashboard-empty {
+          animation: dashboardFadeUp .55s ease both;
+        }
+
+        .dashboard-footer {
+          animation: dashboardFade .8s .25s both;
+        }
+
+        .dashboard-view-all {
+          transition: color .25s ease;
+        }
+
+        .dashboard-view-all:hover {
+          color: #6F5235;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vendor-dashboard *,
+          .vendor-dashboard *::before,
+          .vendor-dashboard *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+      `}</style>
 
       <VendorSidebar
         sidebarOpen={sidebarOpen}
@@ -362,17 +621,17 @@ function VendorDashboard() {
         vendorName={vendorName}
       />
 
-      <main className="min-h-screen lg:ml-72">
+      <main className="dashboard-main min-h-screen lg:ml-72">
 
         {/* HEADER */}
-        <header className="sticky top-0 z-30 border-b border-[#DED5C8] bg-[#FDFBF7]/95 backdrop-blur">
+        <header className="dashboard-header sticky top-0 z-30 border-b border-[#DED5C8] bg-[#FDFBF7]/95 backdrop-blur">
           <div className="flex min-h-[76px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-10">
 
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setSidebarOpen(true)}
-                className="flex h-10 w-10 items-center justify-center border border-[#DED5C8] bg-white lg:hidden"
+                className="flex h-10 w-10 items-center justify-center border border-[#DED5C8] bg-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#F5F0E8] lg:hidden"
                 aria-label="Open sidebar"
               >
                 <FiMenu size={20} />
@@ -394,7 +653,7 @@ function VendorDashboard() {
                 type="button"
                 onClick={handleRefresh}
                 disabled={refreshing}
-                className="flex h-10 w-10 items-center justify-center border border-[#DED5C8] bg-white transition hover:bg-[#F5F0E8] disabled:opacity-50"
+                className="dashboard-refresh flex h-10 w-10 items-center justify-center border border-[#DED5C8] bg-white disabled:opacity-50"
                 title="Refresh dashboard"
               >
                 <FiRefreshCw
@@ -408,7 +667,7 @@ function VendorDashboard() {
                 <p className="text-xs text-gray-400">Vendor</p>
               </div>
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2B2926] font-serif text-lg text-white">
+              <div className="dashboard-avatar flex h-10 w-10 items-center justify-center rounded-full bg-[#2B2926] font-serif text-lg text-white">
                 {vendorName.charAt(0).toUpperCase()}
               </div>
 
@@ -421,7 +680,7 @@ function VendorDashboard() {
           <div className="mx-auto max-w-7xl">
 
             {/* WELCOME */}
-            <section className="mb-9 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <section className="dashboard-welcome mb-9 flex flex-col justify-between gap-5 md:flex-row md:items-end">
 
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[3px] text-[#9A7958]">
@@ -440,7 +699,7 @@ function VendorDashboard() {
 
               <Link
                 to="/vaddProduct"
-                className="inline-flex h-12 items-center justify-center gap-2 bg-[#2B2926] px-6 text-sm font-medium text-white transition hover:bg-[#51483E]"
+                className="dashboard-primary inline-flex h-12 items-center justify-center gap-2 bg-[#2B2926] px-6 text-sm font-medium text-white hover:bg-[#51483E]"
               >
                 <FiPlusCircle size={17} />
                 Add New Product
@@ -449,10 +708,10 @@ function VendorDashboard() {
             </section>
 
             {/* SUBSCRIPTION */}
-            <section className="mb-8 flex flex-col justify-between gap-4 border border-[#D8C8B3] bg-[#EEE5D8] p-5 sm:flex-row sm:items-center sm:p-6">
+            <section className="dashboard-subscription mb-8 flex flex-col justify-between gap-4 border border-[#D8C8B3] bg-[#EEE5D8] p-5 sm:flex-row sm:items-center sm:p-6">
 
               <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center bg-[#FDFBF7] text-[#9A7958]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center bg-[#FDFBF7] text-[#9A7958] transition duration-300 hover:rotate-6 hover:scale-110">
                   <FiCreditCard size={20} />
                 </div>
 
@@ -488,7 +747,7 @@ function VendorDashboard() {
               <button
                 type="button"
                 onClick={() => navigate('/sellerPlans')}
-                className="inline-flex items-center gap-2 self-start border border-[#BBA88F] bg-[#FDFBF7] px-4 py-3 text-xs font-semibold transition hover:bg-white sm:self-auto"
+                className="dashboard-action inline-flex items-center gap-2 self-start border border-[#BBA88F] bg-[#FDFBF7] px-4 py-3 text-xs font-semibold sm:self-auto"
               >
                 View Plans
                 <FiArrowUpRight size={15} />
@@ -498,7 +757,7 @@ function VendorDashboard() {
 
             {/* ERROR MESSAGE */}
             {error && (
-              <div className="mb-6 border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+              <div className="mb-6 animate-pulse border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
                 {error}
               </div>
             )}
@@ -530,14 +789,14 @@ function VendorDashboard() {
                   return (
                     <div
                       key={stat.title}
-                      className="border border-[#DED5C8] bg-[#FDFBF7] p-5 transition duration-300 hover:-translate-y-1 hover:border-[#BBA88F]"
+                      className="dashboard-stat border border-[#DED5C8] bg-[#FDFBF7] p-5"
                     >
                       <div className="flex items-center justify-between">
                         <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
                           {stat.title}
                         </p>
 
-                        <div className="flex h-10 w-10 items-center justify-center bg-[#F0EAE0] text-[#8C7155]">
+                        <div className="dashboard-stat-icon flex h-10 w-10 items-center justify-center bg-[#F0EAE0] text-[#8C7155]">
                           <Icon size={19} />
                         </div>
                       </div>
@@ -560,7 +819,7 @@ function VendorDashboard() {
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
               {/* QUICK ACTIONS */}
-              <section className="border border-[#DED5C8] bg-[#FDFBF7] p-6">
+              <section className="dashboard-panel border border-[#DED5C8] bg-[#FDFBF7] p-6">
 
                 <p className="text-[10px] uppercase tracking-[2px] text-gray-400">
                   Manage your store
@@ -574,42 +833,42 @@ function VendorDashboard() {
 
                   <Link
                     to="/vaddProduct"
-                    className="flex items-center justify-between border border-[#DED5C8] p-4 transition hover:bg-[#F5F0E8]"
+                    className="dashboard-action flex items-center justify-between border border-[#DED5C8] p-4"
                   >
                     <span className="flex items-center gap-3 text-sm font-medium">
                       <FiPlusCircle size={18} className="text-[#9A7958]" />
                       Add a product
                     </span>
-                    <FiChevronRight size={17} />
+                    <FiChevronRight className="dashboard-action-arrow" size={17} />
                   </Link>
 
                   <Link
                     to="/vmanageProducts"
-                    className="flex items-center justify-between border border-[#DED5C8] p-4 transition hover:bg-[#F5F0E8]"
+                    className="dashboard-action flex items-center justify-between border border-[#DED5C8] p-4"
                   >
                     <span className="flex items-center gap-3 text-sm font-medium">
                       <FiPackage size={18} className="text-[#9A7958]" />
                       Manage products
                     </span>
-                    <FiChevronRight size={17} />
+                    <FiChevronRight className="dashboard-action-arrow" size={17} />
                   </Link>
 
                   <Link
                     to="/vendorOrders"
-                    className="flex items-center justify-between border border-[#DED5C8] p-4 transition hover:bg-[#F5F0E8]"
+                    className="dashboard-action flex items-center justify-between border border-[#DED5C8] p-4"
                   >
                     <span className="flex items-center gap-3 text-sm font-medium">
                       <FiShoppingBag size={18} className="text-[#9A7958]" />
                       View orders
                     </span>
-                    <FiChevronRight size={17} />
+                    <FiChevronRight className="dashboard-action-arrow" size={17} />
                   </Link>
 
                 </div>
               </section>
 
               {/* SALES OVERVIEW */}
-              <section className="border border-[#DED5C8] bg-[#FDFBF7] p-6 xl:col-span-2">
+              <section className="dashboard-panel border border-[#DED5C8] bg-[#FDFBF7] p-6 xl:col-span-2">
 
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -626,17 +885,17 @@ function VendorDashboard() {
                     </p>
                   </div>
 
-                  <div className="flex h-10 w-10 items-center justify-center bg-[#F0EAE0] text-[#9A7958]">
+                  <div className="flex h-10 w-10 items-center justify-center bg-[#F0EAE0] text-[#9A7958] transition duration-300 hover:rotate-12 hover:scale-110">
                     <FiTrendingUp size={20} />
                   </div>
                 </div>
 
                 <div className="mt-8 grid grid-cols-6 items-end gap-3">
 
-                  {monthlySales.map((month) => (
+                  {monthlySales.map((month, index) => (
                     <div
                       key={`${month.month}-${month.year}`}
-                      className="flex flex-col items-center"
+                      className="dashboard-chart-column flex flex-col items-center"
                     >
                       <p className="mb-2 text-[10px] text-gray-500">
                         {month.sales > 0
@@ -646,14 +905,15 @@ function VendorDashboard() {
 
                       <div className="flex h-36 w-full items-end justify-center bg-[#F5F0E8]">
                         <div
-                          className="w-full max-w-10 bg-[#9A7958] transition-all duration-500"
+                          className="dashboard-chart-bar w-full max-w-10 bg-[#9A7958]"
                           style={{
                             height: `${month.sales > 0
                               ? Math.max(
                                   (month.sales / maximumSales) * 100,
                                   5
                                 )
-                              : 2}%`
+                              : 2}%`,
+                            animationDelay: `${index * 100}ms`
                           }}
                         />
                       </div>
@@ -694,7 +954,7 @@ function VendorDashboard() {
             </div>
 
             {/* RECENT ORDERS */}
-            <section className="mt-8 border border-[#DED5C8] bg-[#FDFBF7] p-6">
+            <section className="dashboard-panel mt-8 border border-[#DED5C8] bg-[#FDFBF7] p-6">
 
               <div className="mb-5 flex items-center justify-between">
                 <div>
@@ -709,18 +969,18 @@ function VendorDashboard() {
 
                 <Link
                   to="/vendorOrders"
-                  className="text-xs font-semibold text-[#9A7958] hover:underline"
+                  className="dashboard-view-all text-xs font-semibold text-[#9A7958]"
                 >
                   View All
                 </Link>
               </div>
 
               {loading ? (
-                <p className="py-8 text-center text-sm text-gray-400">
+                <p className="dashboard-empty py-8 text-center text-sm text-gray-400">
                   Loading orders...
                 </p>
               ) : vendorOrders.length === 0 ? (
-                <div className="py-10 text-center">
+                <div className="dashboard-empty py-10 text-center">
                   <FiShoppingBag
                     size={30}
                     className="mx-auto text-[#BBA88F]"
@@ -765,7 +1025,7 @@ function VendorDashboard() {
                           return (
                             <tr
                               key={order._id}
-                              className="border-b border-[#EEE8DE] text-sm last:border-0"
+                              className="dashboard-order-row border-b border-[#EEE8DE] text-sm last:border-0"
                             >
                               <td className="px-3 py-4 font-medium">
                                 #{getOrderNumber(order)}
@@ -784,7 +1044,7 @@ function VendorDashboard() {
                               </td>
 
                               <td className="px-3 py-4">
-                                <span className="bg-[#F0EAE0] px-2 py-1 text-xs capitalize">
+                                <span className="dashboard-payment-badge inline-block bg-[#F0EAE0] px-2 py-1 text-xs capitalize">
                                   {order.paymentStatus || 'Pending'}
                                 </span>
                               </td>
@@ -800,9 +1060,9 @@ function VendorDashboard() {
             </section>
 
             {/* FOOTER */}
-            <footer className="mt-10 border-t border-[#DED5C8] py-6 text-center">
+            <footer className="dashboard-footer mt-10 border-t border-[#DED5C8] py-6 text-center">
 
-              <p className="font-serif text-lg tracking-wider">
+              <p className="font-serif text-lg tracking-wider transition duration-300 hover:tracking-[4px]">
                 VELAURA
               </p>
 

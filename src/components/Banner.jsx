@@ -14,13 +14,67 @@ function Banner() {
         relative
         h-[430px]
         sm:h-[480px]
-   md:h-[520px]
+        md:h-[520px]
         lg:h-[560px]
         overflow-hidden
       "
     >
 
+      <style>{`
+        @keyframes bannerZoom {
+          from {
+            transform: scale(1.08);
+            opacity: 0.8;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
 
+        @keyframes bannerFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(25px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .banner-image-animation {
+          animation: bannerZoom 1.4s ease-out both;
+        }
+
+        .banner-label-animation {
+          animation: bannerFadeUp 0.8s ease-out 0.2s both;
+        }
+
+        .banner-heading-animation {
+          animation: bannerFadeUp 0.9s ease-out 0.4s both;
+        }
+
+        .banner-description-animation {
+          animation: bannerFadeUp 0.9s ease-out 0.6s both;
+        }
+
+        .banner-button-animation {
+          animation: bannerFadeUp 0.9s ease-out 0.8s both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .banner-image-animation,
+          .banner-label-animation,
+          .banner-heading-animation,
+          .banner-description-animation,
+          .banner-button-animation {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      {/* Banner Image */}
 
       <img
         src={banner1}
@@ -30,9 +84,9 @@ function Banner() {
           w-full
           object-cover
           object-center
+          banner-image-animation
         "
       />
-
 
       {/* Soft Overlay */}
 
@@ -43,7 +97,6 @@ function Banner() {
           bg-white/15
         "
       ></div>
-
 
       {/* Content */}
 
@@ -62,7 +115,6 @@ function Banner() {
 
         <div className="max-w-xl">
 
-
           {/* Small Label */}
 
           <p
@@ -73,11 +125,11 @@ function Banner() {
               uppercase
               tracking-[3px]
               text-black/70
+              banner-label-animation
             "
           >
             TIMELESS ACCESSORIES
           </p>
-
 
           {/* Main Heading */}
 
@@ -92,13 +144,13 @@ function Banner() {
               leading-[1.05]
               tracking-tight
               text-black
+              banner-heading-animation
             "
           >
             Small Details.
             <br />
             Big Impact.
           </h1>
-
 
           {/* Description */}
 
@@ -111,12 +163,12 @@ function Banner() {
               sm:text-base
               leading-relaxed
               text-black/75
+              banner-description-animation
             "
           >
             Discover accessories that complete your look
             and tell your story.
           </p>
-
 
           {/* Button */}
 
@@ -133,21 +185,33 @@ function Banner() {
               text-sm
               font-medium
               text-white
-              transition
+              transition-all
               duration-300
+              ease-out
               hover:bg-black
+              hover:-translate-y-1
+              hover:shadow-lg
+              active:scale-95
+              banner-button-animation
+              group
             "
           >
             Shop Now
-            <FiArrowRight size={15} />
-          </button>
 
+            <FiArrowRight
+              size={15}
+              className="
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+              "
+            />
+
+          </button>
 
         </div>
 
       </div>
-
-
 
     </section>
   )

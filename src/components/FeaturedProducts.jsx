@@ -1,8 +1,6 @@
-
 import React, { useEffect, useState } from 'react'
 import { FiHeart, FiArrowUpRight, FiAlertTriangle } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
-
 
 import API from '../services/axios'
 import {
@@ -12,7 +10,6 @@ import {
 } from '../services/api'
 import { toast } from 'react-toastify'
 
-
 function FeaturedProducts() {
 
     const navigate = useNavigate()
@@ -20,14 +17,10 @@ function FeaturedProducts() {
     const [products, setProducts] = useState([])
     const [wishlistStatus, setWishlistStatus] = useState({})
 
-
-
     useEffect(() => {
 
         const fetchProducts = async () => {
-
             try {
-
                 const res = await API.get('/product/getProducts')
 
                 console.log("FEATURED PRODUCTS:", res.data)
@@ -37,27 +30,21 @@ function FeaturedProducts() {
                 setProducts(productData.slice(0, 4))
 
             } catch (error) {
-
                 console.log(
                     "FEATURED PRODUCTS ERROR:",
                     error.response?.data || error
                 )
-
             }
-
         }
 
         fetchProducts()
 
     }, [])
 
-
     useEffect(() => {
 
         const fetchWishlist = async () => {
-
             try {
-
                 const res = await getWishlist()
 
                 const wishlistProducts =
@@ -81,28 +68,24 @@ function FeaturedProducts() {
                 setWishlistStatus(status)
 
             } catch (error) {
-
                 console.log(
                     "WISHLIST ERROR:",
                     error.response?.data || error
                 )
-
             }
-
         }
 
         fetchWishlist()
 
     }, [])
 
-
-
     const handleWishlist = async (productId) => {
 
         const token = localStorage.getItem("token")
+
         if (!token) {
-            toast.warn("please login to add products to your wishlist",{
-                icon: <FiAlertTriangle size={21} color='#9A7958'/>
+            toast.warn("please login to add products to your wishlist", {
+                icon: <FiAlertTriangle size={21} color='#9A7958' />
             })
             return
         }
@@ -110,24 +93,17 @@ function FeaturedProducts() {
         const isWishlisted =
             wishlistStatus[productId] || false
 
-
-
         setWishlistStatus((prev) => ({
             ...prev,
             [productId]: !isWishlisted
         }))
 
-
         try {
 
             if (isWishlisted) {
-
                 await removeWishlist(productId)
-
             } else {
-
                 await addWishlist(productId)
-
             }
 
         } catch (error) {
@@ -137,22 +113,19 @@ function FeaturedProducts() {
                 error.response?.data || error
             )
 
-
-
             setWishlistStatus((prev) => ({
                 ...prev,
                 [productId]: isWishlisted
             }))
 
         }
-
     }
-
 
     return (
 
         <section
             className="
+                featured-section
                 px-5
                 sm:px-8
                 md:px-10
@@ -165,11 +138,11 @@ function FeaturedProducts() {
 
             <div className="max-w-6xl mx-auto">
 
-
                 {/* Section Heading */}
 
                 <div
                     className="
+                        featured-heading
                         flex
                         items-end
                         justify-between
@@ -182,6 +155,7 @@ function FeaturedProducts() {
 
                         <p
                             className="
+                                featured-label
                                 text-[10px]
                                 sm:text-xs
                                 uppercase
@@ -195,6 +169,7 @@ function FeaturedProducts() {
 
                         <h2
                             className="
+                                featured-title
                                 font-serif
                                 text-2xl
                                 sm:text-3xl
@@ -208,12 +183,12 @@ function FeaturedProducts() {
 
                     </div>
 
-
                     {/* View All */}
 
                     <button
                         onClick={() => navigate('/shop')}
                         className="
+                            featured-view-all
                             hidden
                             sm:flex
                             items-center
@@ -224,17 +199,21 @@ function FeaturedProducts() {
                             border-b
                             border-[#2B2926]
                             pb-1
-                            transition
+                            transition-all
                             duration-300
                             hover:opacity-60
                         "
                     >
                         View All Products
-                        <FiArrowUpRight size={14} />
+
+                        <FiArrowUpRight
+                            className="view-arrow"
+                            size={14}
+                        />
+
                     </button>
 
                 </div>
-
 
                 {/* Product Grid */}
 
@@ -251,17 +230,21 @@ function FeaturedProducts() {
                     "
                 >
 
-                    {products.map((product) => (
+                    {products.map((product, index) => (
 
                         <div
                             key={product._id}
-                            className="group"
+                            className="featured-card group"
+                            style={{
+                                animationDelay: `${index * 150}ms`
+                            }}
                         >
 
                             {/* Image */}
 
                             <div
                                 className="
+                                    featured-image-wrapper
                                     relative
                                     overflow-hidden
                                     aspect-[4/5]
@@ -275,20 +258,36 @@ function FeaturedProducts() {
                                     src={product.image}
                                     alt={product.title}
                                     className="
+                                        featured-product-image
                                         h-full
                                         w-full
                                         object-cover
-                                        transition
-                                        duration-500
-                                        group-hover:scale-105
                                     "
                                 />
+
+                                {/* Offer Badge */}
+
                                 {product.isOffer && (
-                                    <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font medium text-white'>
+
+                                    <span
+                                        className="
+                                            offer-badge
+                                            absolute
+                                            left-3
+                                            top-3
+                                            rounded-full
+                                            bg-[#2B2926]
+                                            px-3
+                                            py-1
+                                            text-xs
+                                            font-medium
+                                            text-white
+                                        "
+                                    >
                                         {product.offerPercentage}% OFF
                                     </span>
-                                )}
 
+                                )}
 
                                 {/* Wishlist */}
 
@@ -296,7 +295,9 @@ function FeaturedProducts() {
                                     onClick={() =>
                                         handleWishlist(product._id)
                                     }
+                                    aria-label="Toggle wishlist"
                                     className="
+                                        wishlist-button
                                         absolute
                                         right-3
                                         top-3
@@ -307,9 +308,6 @@ function FeaturedProducts() {
                                         justify-center
                                         rounded-full
                                         bg-white/90
-                                        transition
-                                        duration-300
-                                        hover:scale-105
                                     "
                                 >
 
@@ -318,8 +316,8 @@ function FeaturedProducts() {
                                         strokeWidth={1.5}
                                         className={
                                             wishlistStatus[product._id]
-                                                ? "fill-red-500 text-red-500"
-                                                : "text-[#2B2926]"
+                                                ? "wishlist-heart active-heart fill-red-500 text-red-500"
+                                                : "wishlist-heart text-[#2B2926]"
                                         }
                                     />
 
@@ -327,11 +325,11 @@ function FeaturedProducts() {
 
                             </div>
 
-
                             {/* Product Info */}
 
                             <div
                                 className="
+                                    featured-product-info
                                     border-x
                                     border-b
                                     border-[#DED5C8]
@@ -344,6 +342,7 @@ function FeaturedProducts() {
 
                                 <h3
                                     className="
+                                        featured-product-name
                                         line-clamp-1
                                         text-xs
                                         sm:text-sm
@@ -354,24 +353,31 @@ function FeaturedProducts() {
                                     {product.title}
                                 </h3>
 
+                                {/* Price */}
 
-                                <div>
+                                <div className="product-price">
+
                                     {product.isOffer ? (
+
                                         <>
                                             <p className='text-sm text-gray-600 line-through'>
                                                 ₹{product.price}
                                             </p>
-                                            <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+
+                                            <p className='text-sm sm:text-base font-semibold text-[#2B2926]'>
                                                 ₹{product.offerPrice}
                                             </p>
                                         </>
+
                                     ) : (
+
                                         <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
                                             ₹{product.price}
                                         </p>
-                                    )}
-                                </div>
 
+                                    )}
+
+                                </div>
 
                                 {/* Rating */}
 
@@ -386,6 +392,7 @@ function FeaturedProducts() {
 
                                     <span
                                         className="
+                                            product-rating
                                             text-xs
                                             tracking-[1px]
                                             text-[#B7791F]
@@ -403,12 +410,14 @@ function FeaturedProducts() {
                                         (124)
                                     </span>
 
+                                    {/* View Button */}
 
                                     <button
                                         onClick={() =>
                                             navigate(`/product/${product._id}`)
                                         }
                                         className="
+                                            product-view-button
                                             flex
                                             items-center
                                             gap-1
@@ -419,13 +428,15 @@ function FeaturedProducts() {
                                             sm:text-sm
                                             font-medium
                                             text-[#2B2926]
-                                            transition
-                                            duration-300
-                                            hover:opacity-60
                                         "
                                     >
+
                                         View
-                                        <FiArrowUpRight size={14} />
+
+                                        <FiArrowUpRight
+                                            className="view-arrow"
+                                            size={14}
+                                        />
 
                                     </button>
 
@@ -439,7 +450,6 @@ function FeaturedProducts() {
 
                 </div>
 
-
                 {/* Mobile View All */}
 
                 <div className="flex justify-center mt-8 sm:hidden">
@@ -447,6 +457,7 @@ function FeaturedProducts() {
                     <button
                         onClick={() => navigate('/shop')}
                         className="
+                            featured-view-all
                             flex
                             items-center
                             gap-1
@@ -457,13 +468,295 @@ function FeaturedProducts() {
                             font-medium
                         "
                     >
+
                         View All Products
-                        <FiArrowUpRight size={14} />
+
+                        <FiArrowUpRight
+                            className="view-arrow"
+                            size={14}
+                        />
+
                     </button>
 
                 </div>
 
             </div>
+
+            {/* Animation Styles */}
+
+            <style>{`
+
+                /* Section Animation */
+
+                .featured-section {
+                    animation: sectionReveal 0.8s ease both;
+                }
+
+                @keyframes sectionReveal {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                /* Heading Animation */
+
+                .featured-heading {
+                    animation: headingReveal 0.8s ease both;
+                }
+
+                @keyframes headingReveal {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .featured-label {
+                    animation: labelReveal 1s ease both;
+                }
+
+                @keyframes labelReveal {
+                    from {
+                        opacity: 0;
+                        letter-spacing: 6px;
+                    }
+                    to {
+                        opacity: 1;
+                        letter-spacing: 3px;
+                    }
+                }
+
+                .featured-title {
+                    transition: letter-spacing 0.4s ease;
+                }
+
+                .featured-heading:hover .featured-title {
+                    letter-spacing: 0.5px;
+                }
+
+                /* Product Card Entrance */
+
+                .featured-card {
+                    opacity: 0;
+                    animation: productReveal 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                    transition:
+                        transform 0.45s ease,
+                        box-shadow 0.45s ease;
+                }
+
+                @keyframes productReveal {
+                    from {
+                        opacity: 0;
+                        transform: translateY(35px) scale(0.97);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                /* Card Hover */
+
+                .featured-card:hover {
+                    transform: translateY(-9px);
+                    box-shadow: 0 15px 30px rgba(43, 41, 38, 0.10);
+                }
+
+                /* Product Image */
+
+                .featured-image-wrapper {
+                    transition:
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease;
+                }
+
+                .featured-card:hover .featured-image-wrapper {
+                    border-color: #B9AA98;
+                    box-shadow: 0 8px 20px rgba(43, 41, 38, 0.10);
+                }
+
+                .featured-product-image {
+                    transition:
+                        transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+                        filter 0.6s ease;
+                }
+
+                .featured-card:hover .featured-product-image {
+                    transform: scale(1.09);
+                    filter: brightness(1.04);
+                }
+
+                /* Product Info */
+
+                .featured-product-info {
+                    transition:
+                        background-color 0.4s ease,
+                        border-color 0.4s ease;
+                }
+
+                .featured-card:hover .featured-product-info {
+                    border-color: #C9BBAA;
+                    background-color: #FCFAF7;
+                }
+
+                .featured-product-name {
+                    transition:
+                        color 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .featured-card:hover .featured-product-name {
+                    color: #9A7958;
+                    transform: translateX(2px);
+                }
+
+                .product-price p {
+                    transition: transform 0.3s ease;
+                }
+
+                .featured-card:hover .product-price p {
+                    transform: translateX(2px);
+                }
+
+                /* Offer Badge */
+
+                .offer-badge {
+                    animation: badgeReveal 0.6s ease both;
+                    transition:
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                @keyframes badgeReveal {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-12px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                .featured-card:hover .offer-badge {
+                    transform: scale(1.07);
+                    box-shadow: 0 4px 12px rgba(43, 41, 38, 0.2);
+                }
+
+                /* Wishlist Button */
+
+                .wishlist-button {
+                    transition:
+                        transform 0.35s ease,
+                        background-color 0.35s ease,
+                        box-shadow 0.35s ease;
+                }
+
+                .wishlist-button:hover {
+                    transform: scale(1.15) rotate(5deg);
+                    background-color: white;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+                }
+
+                .wishlist-button:active {
+                    transform: scale(0.85);
+                }
+
+                .wishlist-heart {
+                    transition:
+                        transform 0.3s ease,
+                        color 0.3s ease;
+                }
+
+                .wishlist-button:hover .wishlist-heart {
+                    transform: scale(1.15);
+                }
+
+                .active-heart {
+                    animation: heartPop 0.4s ease;
+                }
+
+                @keyframes heartPop {
+                    0% {
+                        transform: scale(1);
+                    }
+                    40% {
+                        transform: scale(1.5);
+                    }
+                    70% {
+                        transform: scale(0.85);
+                    }
+                    100% {
+                        transform: scale(1);
+                    }
+                }
+
+                /* Rating */
+
+                .product-rating {
+                    transition: transform 0.3s ease;
+                }
+
+                .featured-card:hover .product-rating {
+                    transform: scale(1.08);
+                }
+
+                /* View Buttons */
+
+                .featured-view-all,
+                .product-view-button {
+                    transition:
+                        color 0.3s ease,
+                        opacity 0.3s ease,
+                        gap 0.3s ease;
+                }
+
+                .featured-view-all:hover,
+                .product-view-button:hover {
+                    color: #9A7958;
+                    gap: 8px;
+                }
+
+                .view-arrow {
+                    transition: transform 0.35s ease;
+                }
+
+                .featured-view-all:hover .view-arrow,
+                .product-view-button:hover .view-arrow {
+                    transform: translate(3px, -3px);
+                }
+
+                /* Accessibility */
+
+                @media (prefers-reduced-motion: reduce) {
+                    .featured-section,
+                    .featured-heading,
+                    .featured-label,
+                    .featured-card,
+                    .offer-badge,
+                    .active-heart {
+                        animation: none !important;
+                        opacity: 1 !important;
+                    }
+
+                    .featured-card,
+                    .featured-product-image,
+                    .featured-product-info,
+                    .wishlist-button,
+                    .wishlist-heart,
+                    .view-arrow {
+                        transition: none !important;
+                    }
+                }
+
+            `}</style>
 
         </section>
     )

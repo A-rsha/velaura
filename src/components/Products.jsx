@@ -175,7 +175,7 @@ function Products({ selectedCategory }) {
           "
         >
 
-          {/* Product Image */}
+         
 
           <div
             className="

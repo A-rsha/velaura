@@ -7,7 +7,6 @@ import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
-
 function Wishlist() {
 
     const [products, setProducts] = useState([])
@@ -15,7 +14,6 @@ function Wishlist() {
     const [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
-
 
     useEffect(() => {
 
@@ -26,12 +24,16 @@ function Wishlist() {
                 const res = await getWishlist()
 
                 console.log("WISHLIST RESPONSE:", res.data)
+
                 const wishlistProducts =
                     res.data?.wishlist || []
+
                 setProducts(wishlistProducts)
 
                 const status = {}
+
                 wishlistProducts.forEach((product) => {
+
                     const productId =
                         product.productId?._id ||
                         product.productId ||
@@ -40,8 +42,11 @@ function Wishlist() {
                     if (productId) {
                         status[productId] = true
                     }
+
                 })
+
                 setWishlistStatus(status)
+
             } catch (error) {
 
                 console.error(
@@ -75,9 +80,11 @@ function Wishlist() {
         setProducts((prev) =>
             prev.filter(
                 (product) => product._id !== productId
-            ))
+            )
+        )
 
         try {
+
             if (isWishlisted) {
                 await removeWishlist(productId)
             }
@@ -95,16 +102,21 @@ function Wishlist() {
             }))
 
             try {
+
                 const res = await getWishlist()
+
                 setProducts(
                     res.data?.wishlist || []
                 )
-            } catch (error) {
+
+            } catch (fetchError) {
+
                 console.error(
                     "Wishlist Restore Error:",
                     fetchError.response?.data ||
                     fetchError.message
                 )
+
             }
 
         }
@@ -113,10 +125,10 @@ function Wishlist() {
 
 
     return (
-        <div className="bg-white text-[#2B2926]">
+
+        <div className="wishlist-page bg-white text-[#2B2926]">
 
             <Navbar />
-
 
             <main className="min-h-screen pt-24 sm:pt-28 pb-16">
 
@@ -133,10 +145,11 @@ function Wishlist() {
 
                     {/* Heading */}
 
-                    <div className="mb-10 sm:mb-12">
+                    <div className="wishlist-heading mb-10 sm:mb-12">
 
                         <p
                             className="
+                                wishlist-subtitle
                                 mb-2
                                 text-[10px]
                                 sm:text-xs
@@ -150,6 +163,7 @@ function Wishlist() {
 
                         <h1
                             className="
+                                wishlist-title
                                 font-serif
                                 text-3xl
                                 sm:text-4xl
@@ -162,6 +176,7 @@ function Wishlist() {
 
                         <p
                             className="
+                                wishlist-description
                                 mt-3
                                 max-w-md
                                 text-sm
@@ -180,11 +195,17 @@ function Wishlist() {
 
                     {loading && (
 
-                        <div className="flex justify-center py-20">
+                        <div className="wishlist-loading flex justify-center py-20">
 
-                            <p className="text-sm text-gray-500">
-                                Loading wishlist...
-                            </p>
+                            <div className="flex flex-col items-center gap-4">
+
+                                <div className="wishlist-loader"></div>
+
+                                <p className="text-sm text-gray-500">
+                                    Loading wishlist...
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -195,22 +216,17 @@ function Wishlist() {
 
                     {!loading && products.length === 0 && (
 
-                        <div
-                            className="
-                                border
-                                border-[#DED5C8]
-                                bg-[#F5F0E8]
-                                px-6
-                                py-20
-                                text-center
-                            "
-                        >
+                        <div className="wishlist-empty border border-[#DED5C8] bg-[#F5F0E8] px-6 py-20 text-center">
 
-                            <FiHeart
-                                size={28}
-                                strokeWidth={1}
-                                className="mx-auto text-gray-500"
-                            />
+                            <div className="empty-heart-wrapper">
+
+                                <FiHeart
+                                    size={28}
+                                    strokeWidth={1}
+                                    className="mx-auto text-gray-500"
+                                />
+
+                            </div>
 
                             <h2
                                 className="
@@ -236,6 +252,7 @@ function Wishlist() {
                             <button
                                 onClick={() => navigate('/shop')}
                                 className="
+                                    wishlist-explore-btn
                                     mt-6
                                     border
                                     border-[#2B2926]
@@ -276,17 +293,21 @@ function Wishlist() {
                             "
                         >
 
-                            {products.map((product) => (
+                            {products.map((product, index) => (
 
                                 <div
                                     key={product._id}
-                                    className="group"
+                                    className="wishlist-product group"
+                                    style={{
+                                        '--card-index': index
+                                    }}
                                 >
 
                                     {/* Product Image */}
 
                                     <div
                                         className="
+                                            wishlist-image-wrapper
                                             relative
                                             aspect-[4/5]
                                             overflow-hidden
@@ -302,6 +323,7 @@ function Wishlist() {
                                                 src={product.image}
                                                 alt={product.title}
                                                 className="
+                                                    wishlist-product-image
                                                     h-full
                                                     w-full
                                                     object-cover
@@ -327,10 +349,30 @@ function Wishlist() {
                                             </div>
 
                                         )}
+
+
+                                        {/* Offer Badge */}
+
                                         {product.isOffer && (
-                                            <span className='absolute left-3 top-3 rounded-full  bg-[#2B2926] px-3 py-1 text-xs font medium text-white'>
+
+                                            <span
+                                                className="
+                                                    wishlist-offer
+                                                    absolute
+                                                    left-3
+                                                    top-3
+                                                    rounded-full
+                                                    bg-[#2B2926]
+                                                    px-3
+                                                    py-1
+                                                    text-xs
+                                                    font-medium
+                                                    text-white
+                                                "
+                                            >
                                                 {product.offerPercentage}% OFF
                                             </span>
+
                                         )}
 
 
@@ -340,7 +382,9 @@ function Wishlist() {
                                             onClick={() =>
                                                 handleWishlist(product._id)
                                             }
+                                            aria-label="Remove from wishlist"
                                             className="
+                                                wishlist-heart-btn
                                                 absolute
                                                 right-3
                                                 top-3
@@ -363,7 +407,7 @@ function Wishlist() {
                                                 className={
                                                     wishlistStatus[product._id]
                                                         ? "fill-red-500 text-red-500"
-                                                        : " text-[#2B2926]"
+                                                        : "text-[#2B2926]"
                                                 }
                                             />
 
@@ -376,6 +420,7 @@ function Wishlist() {
 
                                     <div
                                         className="
+                                            wishlist-details
                                             border-x
                                             border-b
                                             border-[#DED5C8]
@@ -386,6 +431,7 @@ function Wishlist() {
 
                                         <h2
                                             className="
+                                                wishlist-product-title
                                                 line-clamp-1
                                                 text-sm
                                                 sm:text-base
@@ -421,26 +467,33 @@ function Wishlist() {
                                                 justify-between
                                                 gap-2
                                             "
-                                        > <div>
+                                        >
+
+                                            <div className="wishlist-price">
+
                                                 {product.isOffer ? (
+
                                                     <>
-                                                        <p className='text-sm text-gray-600 line-through'>
+
+                                                        <p className="text-sm text-gray-600 line-through">
                                                             ₹{product.price}
                                                         </p>
-                                                        <p className='text-sm sm:text-base font-semibold text-[#2B2926] '>
+
+                                                        <p className="text-sm sm:text-base font-semibold text-[#2B2926]">
                                                             ₹{product.offerPrice}
                                                         </p>
+
                                                     </>
 
                                                 ) : (
-                                                    <p className='text-sm sm:text-base font-medium text-[#2B2926]'>
+
+                                                    <p className="text-sm sm:text-base font-medium text-[#2B2926]">
                                                         ₹{product.price}
                                                     </p>
+
                                                 )}
+
                                             </div>
-
-
-
 
 
                                             <button
@@ -450,6 +503,7 @@ function Wishlist() {
                                                     )
                                                 }
                                                 className="
+                                                    wishlist-view-btn
                                                     flex
                                                     items-center
                                                     gap-1
@@ -466,7 +520,12 @@ function Wishlist() {
                                                 "
                                             >
                                                 View
-                                                <FiArrowUpRight size={14} />
+
+                                                <FiArrowUpRight
+                                                    className="wishlist-view-arrow"
+                                                    size={14}
+                                                />
+
                                             </button>
 
                                         </div>
@@ -488,9 +547,351 @@ function Wishlist() {
 
             <Footer />
 
-        </div>
-    )
-}
 
+            {/* Wishlist Animations */}
+
+            <style>{`
+
+                /* Main Page */
+
+                .wishlist-page {
+                    animation: wishlistPageEnter 0.7s ease both;
+                }
+
+                @keyframes wishlistPageEnter {
+                    from {
+                        opacity: 0;
+                    }
+
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+
+                /* Heading */
+
+                .wishlist-heading {
+                    animation: wishlistHeadingEnter 0.8s ease both;
+                }
+
+                .wishlist-subtitle {
+                    animation: wishlistTextEnter 0.7s ease both;
+                }
+
+                .wishlist-title {
+                    animation: wishlistTextEnter 0.8s ease both;
+                    animation-delay: 0.1s;
+                    animation-fill-mode: both;
+                }
+
+                .wishlist-description {
+                    animation: wishlistTextEnter 0.8s ease both;
+                    animation-delay: 0.2s;
+                    animation-fill-mode: both;
+                }
+
+                @keyframes wishlistHeadingEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes wishlistTextEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(15px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+
+                /* Product Cards */
+
+                .wishlist-product {
+                    opacity: 0;
+                    animation: wishlistCardEnter 0.65s ease forwards;
+                    animation-delay: calc(var(--card-index) * 100ms);
+                    transition:
+                        transform 0.4s ease,
+                        box-shadow 0.4s ease;
+                }
+
+                @keyframes wishlistCardEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(35px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .wishlist-product:hover {
+                    transform: translateY(-7px);
+                }
+
+
+                /* Product Image */
+
+                .wishlist-image-wrapper {
+                    transition:
+                        box-shadow 0.4s ease,
+                        border-color 0.4s ease;
+                }
+
+                .wishlist-product:hover .wishlist-image-wrapper {
+                    border-color: #b8a995;
+                    box-shadow: 0 12px 30px rgba(43, 41, 38, 0.13);
+                }
+
+                .wishlist-product-image {
+                    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+                }
+
+                .wishlist-product:hover .wishlist-product-image {
+                    transform: scale(1.09);
+                }
+
+
+                /* Offer Badge */
+
+                .wishlist-offer {
+                    animation: offerBadgeEnter 0.6s ease both;
+                    transition:
+                        transform 0.3s ease,
+                        background 0.3s ease;
+                }
+
+                .wishlist-product:hover .wishlist-offer {
+                    transform: translateY(-3px);
+                    background: #51483d;
+                }
+
+                @keyframes offerBadgeEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-12px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+
+                /* Heart Button */
+
+                .wishlist-heart-btn {
+                    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+                    transition:
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .wishlist-heart-btn:hover {
+                    transform: scale(1.13);
+                    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.16);
+                }
+
+                .wishlist-heart-btn:active {
+                    transform: scale(0.88);
+                }
+
+                .wishlist-heart-btn svg {
+                    transition:
+                        transform 0.35s ease,
+                        color 0.3s ease;
+                }
+
+                .wishlist-heart-btn:hover svg {
+                    transform: rotate(-12deg) scale(1.15);
+                }
+
+
+                /* Product Details */
+
+                .wishlist-details {
+                    transition:
+                        background 0.35s ease,
+                        border-color 0.35s ease;
+                }
+
+                .wishlist-product:hover .wishlist-details {
+                    background: #fcfaf7;
+                    border-color: #c8bba9;
+                }
+
+                .wishlist-product-title {
+                    transition:
+                        color 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .wishlist-product:hover .wishlist-product-title {
+                    color: #8a7054;
+                    transform: translateX(2px);
+                }
+
+
+                /* Price */
+
+                .wishlist-price {
+                    transition: transform 0.3s ease;
+                }
+
+                .wishlist-product:hover .wishlist-price {
+                    transform: translateY(-2px);
+                }
+
+
+                /* View Button */
+
+                .wishlist-view-btn {
+                    transition:
+                        gap 0.3s ease,
+                        opacity 0.3s ease,
+                        color 0.3s ease;
+                }
+
+                .wishlist-view-btn:hover {
+                    gap: 7px;
+                    color: #927858;
+                }
+
+                .wishlist-view-arrow {
+                    transition: transform 0.3s ease;
+                }
+
+                .wishlist-view-btn:hover .wishlist-view-arrow {
+                    transform: translate(3px, -3px);
+                }
+
+
+                /* Empty Wishlist */
+
+                .wishlist-empty {
+                    animation: emptyWishlistEnter 0.8s ease both;
+                }
+
+                @keyframes emptyWishlistEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px) scale(0.98);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                .empty-heart-wrapper {
+                    animation: emptyHeartFloat 2.5s ease-in-out infinite;
+                }
+
+                @keyframes emptyHeartFloat {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+
+                    50% {
+                        transform: translateY(-7px);
+                    }
+                }
+
+
+                /* Explore Button */
+
+                .wishlist-explore-btn {
+                    transition:
+                        background 0.3s ease,
+                        color 0.3s ease,
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .wishlist-explore-btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 7px 18px rgba(43, 41, 38, 0.15);
+                }
+
+                .wishlist-explore-btn:active {
+                    transform: scale(0.96);
+                }
+
+
+                /* Loading */
+
+                .wishlist-loader {
+                    width: 32px;
+                    height: 32px;
+                    border: 2px solid #DED5C8;
+                    border-top-color: #2B2926;
+                    border-radius: 50%;
+                    animation: wishlistSpin 0.8s linear infinite;
+                }
+
+                @keyframes wishlistSpin {
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .wishlist-loading {
+                    animation: wishlistTextEnter 0.5s ease both;
+                }
+
+
+                /* Accessibility */
+
+                @media (prefers-reduced-motion: reduce) {
+
+                    .wishlist-page,
+                    .wishlist-heading,
+                    .wishlist-subtitle,
+                    .wishlist-title,
+                    .wishlist-description,
+                    .wishlist-product,
+                    .wishlist-empty,
+                    .empty-heart-wrapper,
+                    .wishlist-offer,
+                    .wishlist-loading,
+                    .wishlist-loader {
+                        animation: none !important;
+                        opacity: 1 !important;
+                        transform: none !important;
+                    }
+
+                    .wishlist-product,
+                    .wishlist-product-image,
+                    .wishlist-details,
+                    .wishlist-heart-btn,
+                    .wishlist-view-btn {
+                        transition: none !important;
+                    }
+
+                }
+
+            `}</style>
+
+        </div>
+
+    )
+
+}
 
 export default Wishlist

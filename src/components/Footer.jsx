@@ -2,14 +2,15 @@ import React from 'react'
 
 function Footer() {
   return (
-    <footer className="bg-[#F5F0E8] text-[#2B2926] px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-14 mt-12">
+    <footer className="bg-[#F5F0E8] text-[#2B2926] px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-14 mt-12 animate-footer">
 
       {/* Footer Content */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12">
 
         {/* Brand */}
-        <div>
-          <h1 className=" font-serif text-2xl sm:text-3xl font-medium tracking-wide">
+        <div className="footer-column">
+
+          <h1 className="footer-logo font-serif text-2xl sm:text-3xl font-medium tracking-wide">
             VELAURA
           </h1>
 
@@ -20,66 +21,178 @@ function Footer() {
           <p className="mt-5 max-w-[240px] text-sm leading-relaxed text-gray-600">
             Thoughtfully chosen accessories to complete your everyday style.
           </p>
+
         </div>
 
-
         {/* Shop */}
-        <div>
-          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
+        <div className="footer-column">
+
+          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
             SHOP
           </h2>
 
           <div className="space-y-2.5 text-sm text-gray-600">
-            <p>Jewelry</p>
-            <p>Watches</p>
-            <p>Bags</p>
-            <p>Sunglasses</p>
-            <p>Wallets</p>
-            <p>Hair Accessories</p>
-            <p>Beauty Accessories</p>
+            <p className="footer-link">Jewelry</p>
+            <p className="footer-link">Watches</p>
+            <p className="footer-link">Bags</p>
+            <p className="footer-link">Sunglasses</p>
+            <p className="footer-link">Wallets</p>
+            <p className="footer-link">Hair Accessories</p>
+            <p className="footer-link">Beauty Accessories</p>
           </div>
+
         </div>
 
-
         {/* Quick Links */}
-        <div>
-          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
+        <div className="footer-column">
+
+          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
             QUICK LINKS
           </h2>
 
           <div className="space-y-2.5 text-sm text-gray-600">
-            <p>Home</p>
-            <p>Shop</p>
-            <p>About</p>
-            <p>Wishlist</p>
-            <p>Cart</p>
+            <p className="footer-link">Home</p>
+            <p className="footer-link">Shop</p>
+            <p className="footer-link">About</p>
+            <p className="footer-link">Wishlist</p>
+            <p className="footer-link">Cart</p>
           </div>
+
         </div>
 
+        {/* Help */}
+        <div className="footer-column">
 
-        
-        <div>
-          <h2 className="mb-5 text-xs tracking-[2px] font-medium">
+          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
             HELP
           </h2>
 
           <div className="space-y-2.5 text-sm text-gray-600">
-            <p>Contact</p>
-            <p>FAQ</p>
-            <p>Shipping</p>
-            <p>Returns</p>
+            <p className="footer-link">Contact</p>
+            <p className="footer-link">FAQ</p>
+            <p className="footer-link">Shipping</p>
+            <p className="footer-link">Returns</p>
           </div>
+
         </div>
 
       </div>
 
+      {/* Copyright */}
+      <div className="footer-bottom border-t border-[#DCCFBE] mt-10 pt-6">
 
-      
-      <div className="border-t border-[#DCCFBE] mt-10 pt-6">
         <p className="text-center text-xs sm:text-sm text-gray-500">
           © 2026 VELAURA. All rights reserved.
         </p>
+
       </div>
+
+      {/* Footer Animations */}
+      <style>{`
+
+        @keyframes footerEntrance {
+          from {
+            opacity: 0;
+            transform: translateY(25px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes footerColumnEntrance {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes footerBottomEntrance {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .animate-footer {
+          animation: footerEntrance 0.8s ease-out both;
+        }
+
+        .footer-column {
+          animation: footerColumnEntrance 0.7s ease-out both;
+        }
+
+        .footer-column:nth-child(1) {
+          animation-delay: 0.1s;
+        }
+
+        .footer-column:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .footer-column:nth-child(3) {
+          animation-delay: 0.3s;
+        }
+
+        .footer-column:nth-child(4) {
+          animation-delay: 0.4s;
+        }
+
+        .footer-logo {
+          transition: letter-spacing 0.4s ease, color 0.4s ease;
+        }
+
+        .footer-logo:hover {
+          letter-spacing: 0.12em;
+          color: #9A7958;
+        }
+
+        .footer-heading {
+          transition: color 0.3s ease;
+        }
+
+        .footer-column:hover .footer-heading {
+          color: #9A7958;
+        }
+
+        .footer-link {
+          width: fit-content;
+          cursor: default;
+          transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .footer-link:hover {
+          color: #9A7958;
+          transform: translateX(5px);
+        }
+
+        .footer-bottom {
+          animation: footerBottomEntrance 1s ease-out both;
+          animation-delay: 0.5s;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-footer,
+          .footer-column,
+          .footer-bottom {
+            animation: none !important;
+          }
+
+          .footer-logo,
+          .footer-link,
+          .footer-heading {
+            transition: none !important;
+          }
+        }
+
+      `}</style>
 
     </footer>
   )

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/axios";
@@ -91,14 +90,14 @@ function MyOrder() {
 
     const canReturnOrder = (order) => {
         if (order.orderStatus !== "delivered" || !order.deliveredAt) {
-            return false
+            return false;
         }
 
         const deliveredTime = new Date(order.deliveredAt).getTime();
-        const returnDeadline = deliveredTime + 48 * 60 * 60 * 1000
+        const returnDeadline = deliveredTime + 48 * 60 * 60 * 1000;
 
-        return Date.now() <= returnDeadline
-    }
+        return Date.now() <= returnDeadline;
+    };
 
     const getCompletedSteps = (order) => {
         const status = order.orderStatus || "placed";
@@ -160,25 +159,25 @@ function MyOrder() {
         return "";
     };
 
-    // Find the return request for a specific order item, regardless of status.
+    // Find return request for an order item
     const getItemReturnRequest = (order, item) => {
         return myReturns.find((returnRequest) => {
             const returnOrderId =
                 returnRequest.orderId?._id || returnRequest.orderId;
 
-            const sameOrder = String(returnOrderId) === String(order._id);
+            const sameOrder =
+                String(returnOrderId) === String(order._id);
 
             const sameItem = returnRequest.items?.some((returnItem) => {
                 const returnItemId =
-                    returnItem.orderItemId?._id || returnItem.orderItemId;
+                    returnItem.orderItemId?._id ||
+                    returnItem.orderItemId;
 
                 return String(returnItemId) === String(item._id);
             });
 
-            return sameOrder && sameItem
+            return sameOrder && sameItem;
         });
-
-
     };
 
     const getReturnBadgeClass = (status) => {
@@ -265,7 +264,6 @@ function MyOrder() {
                 setReturnComments("");
                 setSelectedReturnOrder(null);
 
-                // Refresh orders and return requests after submission.
                 await fetchOrders();
             }
         } catch (error) {
@@ -279,11 +277,168 @@ function MyOrder() {
     };
 
     return (
-        <div className="min-h-screen bg-[#F5F0E8] px-4 py-10 sm:px-5">
+        <div className="my-orders-page min-h-screen bg-[#F5F0E8] px-4 py-10 sm:px-5">
+
+            {/* Premium Animations */}
+            <style>{`
+                @keyframes myOrdersFadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(22px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes myOrdersFadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes myOrdersPop {
+                    0% {
+                        opacity: 0;
+                        transform: scale(.86);
+                    }
+                    70% {
+                        transform: scale(1.04);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                @keyframes myOrdersModalIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(18px) scale(.97);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                .my-orders-page .my-orders-heading {
+                    animation: myOrdersFadeUp .7s cubic-bezier(.2,.7,.2,1) both;
+                }
+
+                .my-orders-page .my-order-card {
+                    animation: myOrdersFadeUp .65s cubic-bezier(.2,.7,.2,1) both;
+                    transition:
+                        transform .35s ease,
+                        box-shadow .35s ease,
+                        border-color .35s ease;
+                    will-change: transform;
+                }
+
+                .my-orders-page .my-order-card:hover {
+                    transform: translateY(-5px);
+                    border-color: #c8b69f;
+                    box-shadow: 0 18px 38px rgba(43,41,38,.11);
+                }
+
+                .my-orders-page .my-tracking-step {
+                    animation: myOrdersPop .55s ease both;
+                    transition: transform .25s ease;
+                }
+
+                .my-orders-page .my-tracking-step:hover {
+                    transform: translateY(-4px);
+                }
+
+                .my-orders-page .my-tracking-step > div:first-child {
+                    transition:
+                        transform .3s ease,
+                        box-shadow .3s ease;
+                }
+
+                .my-orders-page .my-tracking-step:hover > div:first-child {
+                    transform: scale(1.12);
+                    box-shadow: 0 7px 16px rgba(128,99,71,.2);
+                }
+
+                .my-orders-page .my-order-product-row {
+                    transition: background-color .3s ease;
+                }
+
+                .my-orders-page .my-order-product-image {
+                    transition:
+                        transform .45s cubic-bezier(.2,.7,.2,1),
+                        box-shadow .35s ease;
+                }
+
+                .my-orders-page .my-order-product-link:hover .my-order-product-image {
+                    transform: scale(1.07) rotate(-1deg);
+                    box-shadow: 0 10px 22px rgba(43,41,38,.16);
+                }
+
+                .my-orders-page button,
+                .my-orders-page a {
+                    transition-property:
+                        color,
+                        background-color,
+                        border-color,
+                        box-shadow,
+                        transform,
+                        opacity;
+                    transition-duration: .25s;
+                }
+
+                .my-orders-page button:hover:not(:disabled) {
+                    box-shadow: 0 7px 18px rgba(43,41,38,.13);
+                }
+
+                .my-orders-page button:active:not(:disabled) {
+                    transform: scale(.97);
+                }
+
+                .my-orders-page .my-return-backdrop {
+                    animation: myOrdersFadeIn .25s ease both;
+                    backdrop-filter: blur(5px);
+                }
+
+                .my-orders-page .my-return-modal {
+                    animation: myOrdersModalIn .35s cubic-bezier(.2,.7,.2,1) both;
+                }
+
+                .my-orders-page .my-return-option {
+                    transition:
+                        transform .25s ease,
+                        border-color .25s ease,
+                        background-color .25s ease,
+                        box-shadow .25s ease;
+                }
+
+                .my-orders-page .my-return-option:hover {
+                    transform: translateX(4px);
+                    border-color: #b99d7c;
+                    box-shadow: 0 5px 15px rgba(43,41,38,.07);
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .my-orders-page *,
+                    .my-orders-page *::before,
+                    .my-orders-page *::after {
+                        animation-duration: .01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: .01ms !important;
+                        scroll-behavior: auto !important;
+                    }
+                }
+            `}</style>
+
             <div className="mx-auto max-w-5xl">
 
                 {/* Page Header */}
-                <div className="mb-8">
+                <div className="my-orders-heading mb-8">
                     <h1 className="font-serif text-3xl text-[#2B2926]">
                         My Orders
                     </h1>
@@ -324,7 +479,7 @@ function MyOrder() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        {orders.map((order) => {
+                        {orders.map((order, orderIndex) => {
                             const currentStep = getCompletedSteps(order);
                             const estimatedDelivery =
                                 getEstimatedDelivery(order);
@@ -335,7 +490,10 @@ function MyOrder() {
                             return (
                                 <div
                                     key={order._id}
-                                    className="overflow-hidden rounded-xl border border-[#DED7CC] bg-white"
+                                    className="my-order-card overflow-hidden rounded-xl border border-[#DED7CC] bg-white"
+                                    style={{
+                                        animationDelay: `${orderIndex * 110}ms`,
+                                    }}
                                 >
                                     {/* Order Header */}
                                     <div className="flex flex-col gap-3 border-b border-[#E5DED4] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -373,12 +531,13 @@ function MyOrder() {
                                             </p>
 
                                             <span
-                                                className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${order.paymentStatus === "success"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : order.paymentStatus === "failed"
-                                                        ? "bg-red-100 text-red-700"
-                                                        : "bg-yellow-100 text-yellow-700"
-                                                    }`}
+                                                className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
+                                                    order.paymentStatus === "success"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : order.paymentStatus === "failed"
+                                                            ? "bg-red-100 text-red-700"
+                                                            : "bg-yellow-100 text-yellow-700"
+                                                }`}
                                             >
                                                 Payment:{" "}
                                                 {formatStatus(order.paymentStatus)}
@@ -394,10 +553,11 @@ function MyOrder() {
                                             </h2>
 
                                             <span
-                                                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${isCancelled
-                                                    ? "bg-red-100 text-red-700"
-                                                    : "bg-[#F5F0E8] text-[#806347]"
-                                                    }`}
+                                                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
+                                                    isCancelled
+                                                        ? "bg-red-100 text-red-700"
+                                                        : "bg-[#F5F0E8] text-[#806347]"
+                                                }`}
                                             >
                                                 {formatStatus(order.orderStatus)}
                                             </span>
@@ -421,13 +581,17 @@ function MyOrder() {
                                                     return (
                                                         <div
                                                             key={step.status}
-                                                            className="relative flex flex-col items-center text-center"
+                                                            className="my-tracking-step relative flex flex-col items-center text-center"
+                                                            style={{
+                                                                animationDelay: `${index * 90}ms`,
+                                                            }}
                                                         >
                                                             <div
-                                                                className={`flex h-10 w-10 items-center justify-center rounded-full text-lg ${completed
-                                                                    ? "bg-[#9A7958] text-white"
-                                                                    : "bg-gray-100 text-gray-400"
-                                                                    }`}
+                                                                className={`flex h-10 w-10 items-center justify-center rounded-full text-lg ${
+                                                                    completed
+                                                                        ? "bg-[#9A7958] text-white"
+                                                                        : "bg-gray-100 text-gray-400"
+                                                                }`}
                                                             >
                                                                 {completed
                                                                     ? "✓"
@@ -435,10 +599,11 @@ function MyOrder() {
                                                             </div>
 
                                                             <p
-                                                                className={`mt-2 text-xs font-medium ${completed
-                                                                    ? "text-[#2B2926]"
-                                                                    : "text-gray-400"
-                                                                    }`}
+                                                                className={`mt-2 text-xs font-medium ${
+                                                                    completed
+                                                                        ? "text-[#2B2926]"
+                                                                        : "text-gray-400"
+                                                                }`}
                                                             >
                                                                 {step.label}
                                                             </p>
@@ -451,13 +616,14 @@ function MyOrder() {
 
                                                             {index <
                                                                 trackingSteps.length - 1 && (
-                                                                    <div
-                                                                        className={`absolute left-[calc(50%+24px)] top-5 hidden h-[2px] w-[calc(100%-28px)] sm:block ${currentStep > index
+                                                                <div
+                                                                    className={`absolute left-[calc(50%+24px)] top-5 hidden h-[2px] w-[calc(100%-28px)] sm:block ${
+                                                                        currentStep > index
                                                                             ? "bg-[#9A7958]"
                                                                             : "bg-gray-200"
-                                                                            }`}
-                                                                    />
-                                                                )}
+                                                                    }`}
+                                                                />
+                                                            )}
                                                         </div>
                                                     );
                                                 })}
@@ -505,11 +671,11 @@ function MyOrder() {
                                             return (
                                                 <div
                                                     key={item._id}
-                                                    className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center"
+                                                    className="my-order-product-row flex flex-col gap-4 p-5 sm:flex-row sm:items-center"
                                                 >
                                                     <Link
                                                         to={`/product/${item.productId?._id}`}
-                                                        className="flex min-w-0 flex-1 gap-4 transition hover:bg-[#FAF7F2]"
+                                                        className="my-order-product-link flex min-w-0 flex-1 gap-4 transition hover:bg-[#FAF7F2]"
                                                     >
                                                         <img
                                                             src={item.productId?.image}
@@ -517,7 +683,7 @@ function MyOrder() {
                                                                 item.productId?.title ||
                                                                 "Product"
                                                             }
-                                                            className="h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
+                                                            className="my-order-product-image h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
                                                         />
 
                                                         <div className="flex flex-col justify-center">
@@ -547,6 +713,7 @@ function MyOrder() {
                                                             >
                                                                 Return: {formatStatus(returnRequest.status)}
                                                             </span>
+
                                                             {returnRequest.status === "approved" &&
                                                                 returnRequest.pickupEstimatedDate && (
                                                                     <p className="text-xs text-[#806347]">
@@ -559,14 +726,14 @@ function MyOrder() {
                                                                             year: "numeric",
                                                                         })}
                                                                     </p>
-                                                                )
-                                                            }
+                                                                )}
 
                                                             {returnRequest.status === "approved" && (
                                                                 <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
                                                                     <p className="text-xs font-semibold text-amber-800">
                                                                         Refund Information
                                                                     </p>
+
                                                                     <p className="mt-1 text-xs text-amber-700">
                                                                         Refund is expected to be credited within 2 hours after product pickup.
                                                                     </p>
@@ -676,8 +843,8 @@ function MyOrder() {
 
             {/* Return Request Modal */}
             {showReturnModal && selectedReturnOrder && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
+                <div className="my-return-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    <div className="my-return-modal max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
                         <h2 className="font-serif text-2xl text-[#2B2926]">
                             Request a Return
                         </h2>
@@ -692,7 +859,7 @@ function MyOrder() {
                                 {selectedReturnOrder.items?.map((item) => (
                                     <label
                                         key={item._id}
-                                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#DED7CC] p-3 transition hover:bg-[#FAF7F2]"
+                                        className="my-return-option flex cursor-pointer items-center gap-3 rounded-xl border border-[#DED7CC] p-3 transition hover:bg-[#FAF7F2]"
                                     >
                                         <input
                                             type="checkbox"
@@ -743,18 +910,23 @@ function MyOrder() {
                                     required
                                 >
                                     <option value="">Select a reason</option>
+
                                     <option value="Damaged item">
                                         Damaged item
                                     </option>
+
                                     <option value="Wrong item received">
                                         Wrong item received
                                     </option>
+
                                     <option value="Item not as described">
                                         Item not as described
                                     </option>
+
                                     <option value="Quality issue">
                                         Quality issue
                                     </option>
+
                                     <option value="Other">Other</option>
                                 </select>
                             </div>

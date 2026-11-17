@@ -13,8 +13,6 @@ import { useNavigate } from "react-router-dom"
 import Footer from "../components/Footer"
 import API from "../services/axios"
 
-
-
 function Payments() {
 
     const [cart, setCart] = useState(null)
@@ -24,7 +22,7 @@ function Payments() {
     const [ShippingAddress, setShippingAddress] = useState("")
 
     const [selectedMethod, setSelectedMethod] = useState("UPI")
-    const [addressError,setAddressError]=useState("")
+    const [addressError, setAddressError] = useState("")
 
     const paymentMethods = [
         {
@@ -44,7 +42,6 @@ function Payments() {
         },
     ]
 
-
     useEffect(() => {
 
         const fetchCart = async () => {
@@ -56,12 +53,14 @@ function Payments() {
                 console.log("CART RESPONSE:", res.data)
 
                 const cartData = res.data.cart
+
                 console.log("PAYMENT CART ITEMS:", cartData.items)
 
                 setCart(cartData)
 
                 const total = cartData.items.reduce(
                     (total, item) => {
+
                         const price = item.productId?.isOffer
                             ? item.productId?.offerPrice
                             : item.price
@@ -85,10 +84,291 @@ function Payments() {
 
     }, [])
 
-
     return (
 
-        <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+        <div className="payment-page min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+
+            <style>{`
+
+                /* Page entrance */
+
+                .payment-page {
+                    animation: paymentPageEnter 0.7s ease-out both;
+                }
+
+                @keyframes paymentPageEnter {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                /* Back button */
+
+                .payment-back {
+                    animation: paymentSlideLeft 0.7s ease-out both;
+                    transition: all 0.3s ease;
+                }
+
+                .payment-back:hover {
+                    transform: translateX(-6px);
+                    color: #000;
+                }
+
+                @keyframes paymentSlideLeft {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                /* Main container */
+
+                .payment-container {
+                    animation: paymentContainerEnter 0.9s ease-out both;
+                    animation-delay: 0.1s;
+                    transition: box-shadow 0.4s ease;
+                }
+
+                .payment-container:hover {
+                    box-shadow: 0 18px 45px rgba(43, 41, 38, 0.08);
+                }
+
+                @keyframes paymentContainerEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Heading animations */
+
+                .payment-heading {
+                    animation: paymentFadeUp 0.7s ease-out both;
+                    animation-delay: 0.2s;
+                }
+
+                .payment-heading h1 {
+                    transition: letter-spacing 0.4s ease;
+                }
+
+                .payment-heading h1:hover {
+                    letter-spacing: 0.5px;
+                }
+
+                @keyframes paymentFadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Payment method cards */
+
+                .payment-method {
+                    position: relative;
+                    overflow: hidden;
+                    animation: paymentFadeUp 0.6s ease-out both;
+                    transition:
+                        transform 0.35s ease,
+                        box-shadow 0.35s ease,
+                        border-color 0.35s ease,
+                        background 0.35s ease;
+                }
+
+                .payment-method:nth-child(1) {
+                    animation-delay: 0.3s;
+                }
+
+                .payment-method:nth-child(2) {
+                    animation-delay: 0.4s;
+                }
+
+                .payment-method:nth-child(3) {
+                    animation-delay: 0.5s;
+                }
+
+                .payment-method::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: -120%;
+                    width: 70%;
+                    height: 100%;
+                    background: linear-gradient(
+                        110deg,
+                        transparent,
+                        rgba(255,255,255,0.55),
+                        transparent
+                    );
+                    transition: left 0.7s ease;
+                    pointer-events: none;
+                }
+
+                .payment-method:hover::before {
+                    left: 140%;
+                }
+
+                .payment-method:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 10px 22px rgba(43, 41, 38, 0.09);
+                }
+
+                .payment-method-icon {
+                    transition:
+                        transform 0.4s ease,
+                        background 0.4s ease,
+                        border-color 0.4s ease;
+                }
+
+                .payment-method:hover .payment-method-icon {
+                    transform: rotate(-8deg) scale(1.1);
+                    border-color: #2B2926;
+                }
+
+                .payment-check {
+                    animation: paymentCheckPop 0.35s ease-out both;
+                }
+
+                @keyframes paymentCheckPop {
+                    0% {
+                        opacity: 0;
+                        transform: scale(0.3);
+                    }
+                    70% {
+                        transform: scale(1.2);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                /* Address textarea */
+
+                .payment-address {
+                    transition:
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease,
+                        transform 0.3s ease;
+                }
+
+                .payment-address:hover {
+                    border-color: #8F877D;
+                }
+
+                .payment-address:focus {
+                    border-color: #2B2926;
+                    box-shadow: 0 0 0 4px rgba(43, 41, 38, 0.08);
+                    transform: translateY(-2px);
+                }
+
+                /* Address error */
+
+                .payment-error {
+                    animation: paymentError 0.3s ease-out both;
+                }
+
+                @keyframes paymentError {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-5px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Security note */
+
+                .payment-security {
+                    animation: paymentFadeUp 0.8s ease-out both;
+                    animation-delay: 0.7s;
+                }
+
+                .payment-security svg {
+                    transition: transform 0.4s ease;
+                }
+
+                .payment-security:hover svg {
+                    transform: rotate(15deg) scale(1.2);
+                }
+
+                /* Order summary */
+
+                .payment-summary {
+                    animation: paymentSummaryEnter 0.9s ease-out both;
+                    animation-delay: 0.3s;
+                }
+
+                @keyframes paymentSummaryEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateX(25px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                .payment-summary-row {
+                    transition: transform 0.3s ease;
+                }
+
+                .payment-summary-row:hover {
+                    transform: translateX(5px);
+                }
+
+                .payment-total {
+                    transition: transform 0.3s ease;
+                }
+
+                .payment-total:hover {
+                    transform: scale(1.04);
+                }
+
+                .payment-summary-note {
+                    animation: paymentFadeUp 0.7s ease-out both;
+                    animation-delay: 0.7s;
+                    transition:
+                        transform 0.35s ease,
+                        box-shadow 0.35s ease;
+                }
+
+                .payment-summary-note:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 8px 20px rgba(43, 41, 38, 0.07);
+                }
+
+                /* Reduced motion */
+
+                @media (prefers-reduced-motion: reduce) {
+                    .payment-page *,
+                    .payment-page *::before,
+                    .payment-page *::after {
+                        animation-duration: 0.01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: 0.01ms !important;
+                    }
+                }
+
+            `}</style>
 
             <main
                 className="
@@ -104,11 +384,11 @@ function Payments() {
 
                 <div className="max-w-6xl mx-auto">
 
-
                     {/* Back */}
 
                     <button
                         className="
+                            payment-back
                             mb-7
                             flex
                             items-center
@@ -130,6 +410,7 @@ function Payments() {
 
                     <div
                         className="
+                            payment-container
                             grid
                             grid-cols-1
                             lg:grid-cols-[1fr_360px]
@@ -138,7 +419,6 @@ function Payments() {
                             bg-white
                         "
                     >
-
 
                         {/* Payment Section */}
 
@@ -152,7 +432,7 @@ function Payments() {
 
                             {/* Heading */}
 
-                            <div className="mb-8">
+                            <div className="payment-heading mb-8">
 
                                 <p
                                     className="
@@ -205,6 +485,7 @@ function Payments() {
                                             setSelectedMethod(method.name)
                                         }
                                         className={`
+                                            payment-method
                                             w-full
                                             flex
                                             items-center
@@ -213,8 +494,6 @@ function Payments() {
                                             p-4
                                             sm:p-5
                                             text-left
-                                            transition
-                                            duration-300
                                             ${selectedMethod === method.name
                                                 ? "border-[#2B2926] bg-[#F5F0E8]"
                                                 : "border-[#DED5C8] bg-white hover:border-[#8F877D]"
@@ -226,6 +505,7 @@ function Payments() {
 
                                         <div
                                             className="
+                                                payment-method-icon
                                                 flex
                                                 h-10
                                                 w-10
@@ -277,7 +557,9 @@ function Payments() {
                                         {selectedMethod === method.name && (
 
                                             <div
+                                                key={selectedMethod}
                                                 className="
+                                                    payment-check
                                                     flex
                                                     h-5
                                                     w-5
@@ -300,41 +582,60 @@ function Payments() {
                                 ))}
 
                             </div>
-            <div className="mt-8 w-full">
-    <textarea
-        value={ShippingAddress}
-        className={`w-full rounded-lg border p-3 text-left text-black outline-none ${
-            addressError
-                ? "border-red-500"
-                : "border-[#DED5C8]"
-        }`}
-        placeholder="Enter delivery address"
-        onChange={(e) => {
-            setShippingAddress(e.target.value)
 
-            if (e.target.value.trim()) {
-                setAddressError("")
-            }
-        }}
-    />
 
-    {addressError && (
-        <p className="mt-1 text-sm text-red-500">
-            {addressError}
-        </p>
-    )}
-</div>
+                            {/* Shipping Address */}
+
+                            <div className="mt-8 w-full">
+
+                                <textarea
+                                    value={ShippingAddress}
+                                    className={`
+                                        payment-address
+                                        w-full
+                                        rounded-lg
+                                        border
+                                        p-3
+                                        text-left
+                                        text-black
+                                        outline-none
+                                        ${addressError
+                                            ? "border-red-500"
+                                            : "border-[#DED5C8]"
+                                        }
+                                    `}
+                                    placeholder="Enter delivery address"
+                                    onChange={(e) => {
+
+                                        setShippingAddress(e.target.value)
+
+                                        if (e.target.value.trim()) {
+                                            setAddressError("")
+                                        }
+
+                                    }}
+                                />
+
+                                {addressError && (
+
+                                    <p className="payment-error mt-1 text-sm text-red-500">
+                                        {addressError}
+                                    </p>
+
+                                )}
+
+                            </div>
 
 
                             {/* Payment Button */}
-
 
                             <div className="mt-8">
 
                                 <PaymentButton
                                     shippingAddress={ShippingAddress}
                                     selectedMethod={selectedMethod}
-                                    setAddressError={setAddressError} />
+                                    setAddressError={setAddressError}
+                                />
 
                             </div>
 
@@ -343,6 +644,7 @@ function Payments() {
 
                             <div
                                 className="
+                                    payment-security
                                     mt-6
                                     flex
                                     items-center
@@ -363,6 +665,7 @@ function Payments() {
 
                         <aside
                             className="
+                                payment-summary
                                 border-t
                                 lg:border-t-0
                                 lg:border-l
@@ -403,7 +706,7 @@ function Payments() {
 
                                 {/* Subtotal */}
 
-                                <div className="flex justify-between">
+                                <div className="payment-summary-row flex justify-between">
 
                                     <span className="text-gray-500">
                                         Subtotal
@@ -418,7 +721,7 @@ function Payments() {
 
                                 {/* Shipping */}
 
-                                <div className="flex justify-between">
+                                <div className="payment-summary-row flex justify-between">
 
                                     <span className="text-gray-500">
                                         Shipping
@@ -456,6 +759,7 @@ function Payments() {
 
                                         <span
                                             className="
+                                                payment-total
                                                 text-xl
                                                 font-medium
                                             "
@@ -474,6 +778,7 @@ function Payments() {
 
                             <div
                                 className="
+                                    payment-summary-note
                                     mt-8
                                     border
                                     border-[#DCCFBE]

@@ -1,38 +1,76 @@
-import React from 'react'
-
-
+import React, { useState, useEffect } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
-import { useState,useEffect} from 'react'
 import API from '../services/axios'
-
-
 
 function Category() {
 
     const navigate = useNavigate()
-   const [categories,setCategories]=useState([])
+
+    const [categories, setCategories] = useState([])
 
     const handleCategoryClick = (category) => {
         navigate(`/shop?category=${category}`)
     }
 
-    const fetchCategories =async()=>{
+    const fetchCategories = async () => {
         try {
-                       const response = await API.get('/category/getCategories')
-                       setCategories(response.data.data)
+            const response = await API.get('/category/getCategories')
+            setCategories(response.data.data)
         } catch (error) {
             console.log(error)
         }
     }
-    useEffect(()=>{
-     fetchCategories()
-    },[])
 
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
     return (
 
         <section className="bg-white">
+
+            <style>{`
+                @keyframes categoryFadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(25px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes categoryFadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                .category-heading-animation {
+                    animation: categoryFadeUp 0.7s ease-out both;
+                }
+
+                .category-card-animation {
+                    animation: categoryFadeUp 0.65s ease-out both;
+                }
+
+                .category-section-animation {
+                    animation: categoryFadeIn 0.8s ease-out both;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .category-heading-animation,
+                    .category-card-animation,
+                    .category-section-animation {
+                        animation: none;
+                    }
+                }
+            `}</style>
 
             <div
                 className="
@@ -45,6 +83,7 @@ function Category() {
                     py-12
                     sm:py-14
                     md:py-16
+                    category-section-animation
                 "
             >
 
@@ -69,6 +108,7 @@ function Category() {
                                 uppercase
                                 tracking-[3px]
                                 text-gray-500
+                                category-heading-animation
                             "
                         >
                             SHOP BY CATEGORY
@@ -82,13 +122,14 @@ function Category() {
                                 md:text-4xl
                                 font-medium
                                 text-[#2B2926]
+                                category-heading-animation
                             "
+                            style={{ animationDelay: '0.15s' }}
                         >
                             Find Your Perfect Match
                         </h2>
 
                     </div>
-
 
                     {/* View All */}
 
@@ -105,17 +146,29 @@ function Category() {
                             border-b
                             border-[#2B2926]
                             pb-1
-                            transition
+                            transition-all
                             duration-300
                             hover:opacity-60
+                            hover:translate-x-1
+                            active:scale-95
+                            group
                         "
                     >
                         View All
-                        <FiArrowUpRight size={14} />
+
+                        <FiArrowUpRight
+                            size={14}
+                            className="
+                                transition-transform
+                                duration-300
+                                group-hover:translate-x-1
+                                group-hover:-translate-y-1
+                            "
+                        />
+
                     </button>
 
                 </div>
-
 
                 {/* Categories */}
 
@@ -132,7 +185,7 @@ function Category() {
                     "
                 >
 
-                    {categories.map((category) => (
+                    {categories.map((category, index) => (
 
                         <div
                             key={category.name}
@@ -147,7 +200,16 @@ function Category() {
                                 items-center
                                 text-center
                                 lg:w-[120px]
+                                transition-all
+                                duration-300
+                                ease-out
+                                hover:-translate-y-2
+                                active:scale-95
+                                category-card-animation
                             "
+                            style={{
+                                animationDelay: `${0.2 + index * 0.12}s`
+                            }}
                         >
 
                             {/* Image */}
@@ -165,6 +227,10 @@ function Category() {
                                     overflow-hidden
                                     rounded-full
                                     bg-[#F5F0E8]
+                                    transition-all
+                                    duration-500
+                                    ease-out
+                                    group-hover:shadow-md
                                 "
                             >
 
@@ -175,14 +241,14 @@ function Category() {
                                         h-full
                                         w-full
                                         object-cover
-                                        transition
-                                        duration-500
-                                        group-hover:scale-105
+                                        transition-transform
+                                        duration-700
+                                        ease-out
+                                        group-hover:scale-110
                                     "
                                 />
 
                             </div>
-
 
                             {/* Category Name */}
 
@@ -193,7 +259,7 @@ function Category() {
                                     sm:text-sm
                                     font-medium
                                     text-[#2B2926]
-                                    transition
+                                    transition-all
                                     duration-300
                                     group-hover:opacity-60
                                 "
@@ -206,7 +272,6 @@ function Category() {
                     ))}
 
                 </div>
-
 
                 {/* Mobile View All */}
 
@@ -224,10 +289,25 @@ function Category() {
                             text-sm
                             font-medium
                             text-[#2B2926]
+                            transition-all
+                            duration-300
+                            hover:opacity-60
+                            active:scale-95
+                            group
                         "
                     >
                         View All
-                        <FiArrowUpRight size={14} />
+
+                        <FiArrowUpRight
+                            size={14}
+                            className="
+                                transition-transform
+                                duration-300
+                                group-hover:translate-x-1
+                                group-hover:-translate-y-1
+                            "
+                        />
+
                     </button>
 
                 </div>

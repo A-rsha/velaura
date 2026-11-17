@@ -21,13 +21,10 @@ function VendorRegistration() {
     const [loading, setLoading] = useState(false)
 
     const [formData, setFormData] = useState({
-        // Account details
         name: '',
         email: '',
         password: '',
         confirmPassword: '',
-
-        // Store details
         storeName: '',
         businessDescription: '',
         phone: '',
@@ -123,24 +120,233 @@ function VendorRegistration() {
     }
 
     const inputClass =
-        "w-full h-12 border border-[#DED5C8] bg-transparent pl-11 pr-4 text-sm outline-none transition focus:border-[#2B2926]"
+        "w-full h-12 border border-[#DED5C8] bg-transparent pl-11 pr-4 text-sm outline-none transition-all duration-300 focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)] hover:border-[#A99B87]"
 
     const labelClass =
         "block mb-2 text-xs font-medium uppercase tracking-[1px] text-[#2B2926]"
 
     return (
 
-        <div className="min-h-screen bg-[#F5F0E8] py-10 px-4 sm:px-6">
+        <div className="vendor-register-page min-h-screen bg-[#F5F0E8] py-10 px-4 sm:px-6">
+
+            <style>{`
+
+                .vendor-register-page {
+                    animation: registerPageEnter 0.7s ease both;
+                }
+
+                @keyframes registerPageEnter {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                .register-logo {
+                    animation: registerLogo 0.8s ease both;
+                }
+
+                @keyframes registerLogo {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-18px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .register-heading {
+                    animation: registerHeading 0.8s ease both;
+                    animation-delay: 0.15s;
+                }
+
+                @keyframes registerHeading {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .register-form {
+                    animation: registerForm 0.85s ease both;
+                    animation-delay: 0.25s;
+                    transition: box-shadow 0.35s ease;
+                }
+
+                .register-form:hover {
+                    box-shadow: 0 18px 45px rgba(43, 41, 38, 0.07);
+                }
+
+                @keyframes registerForm {
+                    from {
+                        opacity: 0;
+                        transform: translateY(28px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .register-section {
+                    animation: registerSection 0.7s ease both;
+                }
+
+                .register-section:nth-of-type(2) {
+                    animation-delay: 0.15s;
+                }
+
+                @keyframes registerSection {
+                    from {
+                        opacity: 0;
+                        transform: translateY(18px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .register-section-icon {
+                    transition: transform 0.35s ease,
+                                background 0.35s ease,
+                                box-shadow 0.35s ease;
+                }
+
+                .register-section-heading:hover .register-section-icon {
+                    transform: rotate(-5deg) scale(1.08);
+                    box-shadow: 0 6px 15px rgba(43, 41, 38, 0.18);
+                }
+
+                .register-field {
+                    animation: registerField 0.55s ease both;
+                }
+
+                @keyframes registerField {
+                    from {
+                        opacity: 0;
+                        transform: translateY(12px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .register-input-icon {
+                    transition: color 0.3s ease,
+                                transform 0.3s ease;
+                }
+
+                .register-input-wrapper:focus-within .register-input-icon {
+                    color: #2B2926;
+                    transform: scale(1.12);
+                }
+
+                .register-submit {
+                    position: relative;
+                    overflow: hidden;
+                    transition: background 0.3s ease,
+                                transform 0.3s ease,
+                                box-shadow 0.3s ease;
+                }
+
+                .register-submit::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: -120%;
+                    width: 60%;
+                    height: 100%;
+                    background: linear-gradient(
+                        110deg,
+                        transparent,
+                        rgba(255,255,255,0.18),
+                        transparent
+                    );
+                    transform: skewX(-20deg);
+                    transition: left 0.6s ease;
+                }
+
+                .register-submit:hover::before {
+                    left: 140%;
+                }
+
+                .register-submit:hover:not(:disabled) {
+                    transform: translateY(-3px);
+                    background: #49443F;
+                    box-shadow: 0 9px 22px rgba(43, 41, 38, 0.2);
+                }
+
+                .register-submit:active:not(:disabled) {
+                    transform: translateY(-1px) scale(0.99);
+                }
+
+                .register-link {
+                    transition: color 0.3s ease;
+                }
+
+                .register-link:hover {
+                    color: #9A7950;
+                }
+
+                .register-back {
+                    transition: color 0.3s ease,
+                                transform 0.3s ease;
+                }
+
+                .register-back:hover {
+                    transform: translateX(-4px);
+                    color: #2B2926;
+                }
+
+                .register-logo-link {
+                    transition: transform 0.3s ease;
+                }
+
+                .register-logo-link:hover {
+                    transform: scale(1.04);
+                }
+
+                .register-logo-text {
+                    transition: letter-spacing 0.35s ease;
+                }
+
+                .register-logo-link:hover .register-logo-text {
+                    letter-spacing: 3px;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .vendor-register-page *,
+                    .vendor-register-page *::before,
+                    .vendor-register-page *::after {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+                }
+
+            `}</style>
 
             <div className="mx-auto max-w-3xl">
 
                 {/* LOGO */}
 
-                <div className="mb-10 text-center">
+                <div className="register-logo mb-10 text-center">
 
-                    <Link to="/" className="inline-flex flex-col items-center">
+                    <Link
+                        to="/"
+                        className="register-logo-link inline-flex flex-col items-center"
+                    >
 
-                        <span className="font-serif text-3xl sm:text-4xl font-medium tracking-wide">
+                        <span className="register-logo-text font-serif text-3xl sm:text-4xl font-medium tracking-wide">
                             VELAURA
                         </span>
 
@@ -155,7 +361,7 @@ function VendorRegistration() {
 
                 {/* HEADING */}
 
-                <div className="mb-10 text-center">
+                <div className="register-heading mb-10 text-center">
 
                     <p className="mb-3 text-[10px] uppercase tracking-[3px] text-gray-500">
                         VELAURA PARTNER PROGRAM
@@ -176,16 +382,16 @@ function VendorRegistration() {
 
                 <form
                     onSubmit={handleSubmit}
-                    className="border border-[#DED5C8] bg-[#F9F6F0] p-6 sm:p-10"
+                    className="register-form border border-[#DED5C8] bg-[#F9F6F0] p-6 sm:p-10"
                 >
 
                     {/* ACCOUNT DETAILS */}
 
-                    <div className="mb-10">
+                    <div className="register-section mb-10">
 
-                        <div className="mb-7 flex items-center gap-3">
+                        <div className="register-section-heading mb-7 flex items-center gap-3">
 
-                            <div className="flex h-10 w-10 items-center justify-center bg-[#2B2926] text-white">
+                            <div className="register-section-icon flex h-10 w-10 items-center justify-center bg-[#2B2926] text-white">
                                 <FiUser size={18} />
                             </div>
 
@@ -204,15 +410,15 @@ function VendorRegistration() {
 
                         {/* FULL NAME */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Full Name *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiUser className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="text"
@@ -231,15 +437,15 @@ function VendorRegistration() {
 
                         {/* EMAIL */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Email Address *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiMail className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="email"
@@ -258,15 +464,15 @@ function VendorRegistration() {
 
                         {/* PASSWORD */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Password *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiLock className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="password"
@@ -286,15 +492,15 @@ function VendorRegistration() {
 
                         {/* CONFIRM PASSWORD */}
 
-                        <div>
+                        <div className="register-field">
 
                             <label className={labelClass}>
                                 Confirm Password *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiLock className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="password"
@@ -315,11 +521,11 @@ function VendorRegistration() {
 
                     {/* STORE DETAILS */}
 
-                    <div>
+                    <div className="register-section">
 
-                        <div className="mb-7 flex items-center gap-3">
+                        <div className="register-section-heading mb-7 flex items-center gap-3">
 
-                            <div className="flex h-10 w-10 items-center justify-center bg-[#2B2926] text-white">
+                            <div className="register-section-icon flex h-10 w-10 items-center justify-center bg-[#2B2926] text-white">
                                 <FiShoppingBag size={18} />
                             </div>
 
@@ -338,15 +544,15 @@ function VendorRegistration() {
 
                         {/* STORE NAME */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Store Name *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiShoppingBag className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiShoppingBag className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="text"
@@ -365,15 +571,15 @@ function VendorRegistration() {
 
                         {/* BUSINESS DESCRIPTION */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Business Description *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiFileText className="absolute left-4 top-4 text-gray-400" />
+                                <FiFileText className="register-input-icon absolute left-4 top-4 text-gray-400" />
 
                                 <textarea
                                     name="businessDescription"
@@ -381,7 +587,7 @@ function VendorRegistration() {
                                     onChange={handleChange}
                                     placeholder="Tell us about your store and products"
                                     rows={4}
-                                    className="w-full resize-none border border-[#DED5C8] bg-transparent py-3 pl-11 pr-4 text-sm outline-none focus:border-[#2B2926]"
+                                    className="w-full resize-none border border-[#DED5C8] bg-transparent py-3 pl-11 pr-4 text-sm outline-none transition-all duration-300 hover:border-[#A99B87] focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)]"
                                     required
                                 />
 
@@ -392,15 +598,15 @@ function VendorRegistration() {
 
                         {/* PHONE */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Phone Number *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <FiPhone className="register-input-icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                                 <input
                                     type="tel"
@@ -420,15 +626,15 @@ function VendorRegistration() {
 
                         {/* ADDRESS */}
 
-                        <div className="mb-5">
+                        <div className="register-field mb-5">
 
                             <label className={labelClass}>
                                 Business Address *
                             </label>
 
-                            <div className="relative">
+                            <div className="register-input-wrapper relative">
 
-                                <FiMapPin className="absolute left-4 top-4 text-gray-400" />
+                                <FiMapPin className="register-input-icon absolute left-4 top-4 text-gray-400" />
 
                                 <textarea
                                     name="address"
@@ -436,7 +642,7 @@ function VendorRegistration() {
                                     onChange={handleChange}
                                     placeholder="Enter your business address"
                                     rows={2}
-                                    className="w-full resize-none border border-[#DED5C8] bg-transparent py-3 pl-11 pr-4 text-sm outline-none focus:border-[#2B2926]"
+                                    className="w-full resize-none border border-[#DED5C8] bg-transparent py-3 pl-11 pr-4 text-sm outline-none transition-all duration-300 hover:border-[#A99B87] focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)]"
                                     required
                                 />
 
@@ -447,7 +653,7 @@ function VendorRegistration() {
 
                         {/* CITY AND STATE */}
 
-                        <div className="mb-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div className="register-field mb-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
                             <div>
 
@@ -461,7 +667,7 @@ function VendorRegistration() {
                                     value={formData.city}
                                     onChange={handleChange}
                                     placeholder="Enter city"
-                                    className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none focus:border-[#2B2926]"
+                                    className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none transition-all duration-300 hover:border-[#A99B87] focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)]"
                                     required
                                 />
 
@@ -480,7 +686,7 @@ function VendorRegistration() {
                                     value={formData.state}
                                     onChange={handleChange}
                                     placeholder="Enter state"
-                                    className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none focus:border-[#2B2926]"
+                                    className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none transition-all duration-300 hover:border-[#A99B87] focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)]"
                                     required
                                 />
 
@@ -491,7 +697,7 @@ function VendorRegistration() {
 
                         {/* PINCODE */}
 
-                        <div>
+                        <div className="register-field">
 
                             <label className={labelClass}>
                                 Pincode *
@@ -504,7 +710,7 @@ function VendorRegistration() {
                                 onChange={handleChange}
                                 placeholder="Enter 6-digit pincode"
                                 maxLength={6}
-                                className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none focus:border-[#2B2926]"
+                                className="h-12 w-full border border-[#DED5C8] bg-transparent px-4 text-sm outline-none transition-all duration-300 hover:border-[#A99B87] focus:border-[#2B2926] focus:bg-white/60 focus:shadow-[0_0_0_3px_rgba(43,41,38,0.06)]"
                                 required
                             />
 
@@ -520,12 +726,14 @@ function VendorRegistration() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="h-14 w-full bg-[#2B2926] px-6 text-xs font-medium uppercase tracking-[2px] text-white transition hover:bg-[#49443F] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="register-submit h-14 w-full bg-[#2B2926] px-6 text-xs font-medium uppercase tracking-[2px] text-white disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {loading
-                                ? 'Creating Your Account...'
-                                : 'Complete Vendor Registration'
-                            }
+                            <span className="relative z-10">
+                                {loading
+                                    ? 'Creating Your Account...'
+                                    : 'Complete Vendor Registration'
+                                }
+                            </span>
                         </button>
 
                         <p className="mt-4 text-center text-xs leading-relaxed text-gray-500">
@@ -547,7 +755,7 @@ function VendorRegistration() {
 
                         <Link
                             to="/vendorLogin"
-                            className="font-medium text-[#2B2926] underline underline-offset-4"
+                            className="register-link font-medium text-[#2B2926] underline underline-offset-4"
                         >
                             Vendor Login
                         </Link>
@@ -563,7 +771,7 @@ function VendorRegistration() {
 
                     <Link
                         to="/"
-                        className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-[#2B2926]"
+                        className="register-back inline-flex items-center gap-2 text-xs text-gray-500"
                     >
                         <FiArrowLeft />
                         Back to Home

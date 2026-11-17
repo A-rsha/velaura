@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react'
 import API from '../services/axios'
 import AdminSidebar from './AdminSidebar'
@@ -19,7 +18,7 @@ const MAX_IMAGES = 6
 const MIN_IMAGES = 3
 
 const inputClass =
-  'w-full rounded-lg border border-[#D9D0C3] bg-white px-4 py-3 text-sm text-[#2B2926] outline-none transition focus:border-[#8A7660] focus:ring-2 focus:ring-[#8A7660]/10'
+  'w-full rounded-lg border border-[#D9D0C3] bg-white px-4 py-3 text-sm text-[#2B2926] outline-none transition duration-300 focus:border-[#8A7660] focus:ring-2 focus:ring-[#8A7660]/10 hover:border-[#B7A58E]'
 
 const labelClass = 'mb-2 block text-sm font-medium text-[#403A33]'
 
@@ -66,7 +65,6 @@ function ManageProducts() {
 
   const [formData, setFormData] = useState(emptyForm())
 
-  // Edit form keeps existing image URLs and newly selected File objects.
   const [editData, setEditData] = useState({
     title: '',
     description: '',
@@ -120,7 +118,6 @@ function ManageProducts() {
     }))
   }
 
-  // ADD PRODUCT: select multiple images or add more later.
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files || [])
     e.target.value = ''
@@ -255,7 +252,6 @@ function ManageProducts() {
     }
   }
 
-  // Open edit form and load existing images.
   const handleEdit = (product) => {
     const images =
       Array.isArray(product.images) && product.images.length
@@ -291,7 +287,6 @@ function ManageProducts() {
     }))
   }
 
-  // Add new images to the edit form.
   const handleEditImagesChange = (e) => {
     const selectedFiles = Array.from(e.target.files || [])
     e.target.value = ''
@@ -419,19 +414,16 @@ function ManageProducts() {
         )
       )
 
-      // Existing URLs retained by the user.
       data.append(
         'existingImages',
         JSON.stringify(editData.existingImages)
       )
 
-      // Images removed by the user.
       data.append(
         'removedImages',
         JSON.stringify(editData.removedImages)
       )
 
-      // Newly uploaded images.
       editData.newImages.forEach((file) => {
         data.append('images', file)
       })
@@ -500,15 +492,18 @@ function ManageProducts() {
     onRemove,
     key,
   }) => (
-    <div key={key} className="relative">
+    <div key={key} className="image-preview-card relative">
       <div
-        className={`overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${main ? 'h-56 sm:h-64' : 'aspect-square'
-          }`}
+        className={`image-preview-frame overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${
+          main ? 'h-56 sm:h-64' : 'aspect-square'
+        }`}
       >
         <img
           src={src}
           alt={alt}
-          className={`h-full w-full ${main ? 'object-contain' : 'object-cover'}`}
+          className={`h-full w-full transition duration-500 ${
+            main ? 'object-contain' : 'object-cover'
+          }`}
         />
       </div>
 
@@ -522,7 +517,7 @@ function ManageProducts() {
         type="button"
         onClick={onRemove}
         title="Remove image"
-        className="absolute right-2 top-2 rounded-full bg-white p-2 text-red-600 shadow hover:bg-red-50"
+        className="image-remove-button absolute right-2 top-2 rounded-full bg-white p-2 text-red-600 shadow"
       >
         <FiX size={14} />
       </button>
@@ -530,12 +525,355 @@ function ManageProducts() {
   )
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+    <div className="manage-products-page min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+      <style>{`
+        /* PAGE ANIMATION */
+        .manage-products-page main > div {
+          animation: managePageEnter 0.7s ease both;
+        }
+
+        @keyframes managePageEnter {
+          from {
+            opacity: 0;
+            transform: translateY(22px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* HEADER */
+        .manage-products-page main > div > div:first-child {
+          animation: manageHeaderEnter 0.8s ease both;
+        }
+
+        @keyframes manageHeaderEnter {
+          from {
+            opacity: 0;
+            transform: translateY(-15px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* BUTTON EFFECTS */
+        .manage-products-page button {
+          transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            background-color 0.3s ease,
+            border-color 0.3s ease;
+        }
+
+        .manage-products-page button:not(:disabled):active {
+          transform: scale(0.96);
+        }
+
+        .manage-products-page button:disabled {
+          cursor: not-allowed;
+        }
+
+        .manage-add-button,
+        .manage-submit-button {
+          position: relative;
+          overflow: hidden;
+          isolation: isolate;
+        }
+
+        .manage-add-button::before,
+        .manage-submit-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -120%;
+          width: 70%;
+          height: 100%;
+          transform: skewX(-25deg);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.22),
+            transparent
+          );
+          transition: left 0.65s ease;
+          z-index: -1;
+        }
+
+        .manage-add-button:hover::before,
+        .manage-submit-button:hover::before {
+          left: 150%;
+        }
+
+        .manage-add-button:hover,
+        .manage-submit-button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 22px rgba(43,41,38,0.18);
+        }
+
+        /* STAT CARDS */
+        .manage-stat-card {
+          animation: statCardEnter 0.65s ease both;
+          transition:
+            transform 0.35s ease,
+            box-shadow 0.35s ease,
+            border-color 0.35s ease;
+        }
+
+        .manage-stat-card:nth-child(1) {
+          animation-delay: 0.12s;
+        }
+
+        .manage-stat-card:nth-child(2) {
+          animation-delay: 0.22s;
+        }
+
+        .manage-stat-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 14px 30px rgba(43,41,38,0.09);
+          border-color: #C9B9A5;
+        }
+
+        .manage-stat-card .manage-stat-icon {
+          transition:
+            transform 0.4s ease,
+            background-color 0.3s ease;
+        }
+
+        .manage-stat-card:hover .manage-stat-icon {
+          transform: rotate(-8deg) scale(1.1);
+          background-color: #EDE5D9;
+        }
+
+        @keyframes statCardEnter {
+          from {
+            opacity: 0;
+            transform: translateY(24px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* PRODUCT TABLE */
+        .manage-product-table {
+          animation: tableEnter 0.7s ease 0.2s both;
+        }
+
+        @keyframes tableEnter {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .manage-product-row {
+          animation: rowEnter 0.45s ease both;
+          transition: background-color 0.3s ease;
+        }
+
+        .manage-product-row:hover {
+          background-color: #FCFAF7;
+        }
+
+        @keyframes rowEnter {
+          from {
+            opacity: 0;
+            transform: translateX(-12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        .manage-product-image {
+          transition:
+            transform 0.45s ease,
+            box-shadow 0.45s ease;
+        }
+
+        .manage-product-row:hover .manage-product-image {
+          transform: scale(1.08);
+          box-shadow: 0 6px 15px rgba(43,41,38,0.14);
+        }
+
+        /* ACTION BUTTONS */
+        .manage-edit-button:hover {
+          transform: translateY(-3px) rotate(-5deg);
+          background-color: #F5F0E8;
+          box-shadow: 0 5px 12px rgba(43,41,38,0.1);
+        }
+
+        .manage-delete-button:hover {
+          transform: translateY(-3px) rotate(5deg);
+          background-color: #FEF2F2;
+          box-shadow: 0 5px 12px rgba(220,38,38,0.1);
+        }
+
+        /* MODAL BACKDROP AND PANEL */
+        .manage-modal-backdrop {
+          animation: backdropEnter 0.3s ease both;
+          backdrop-filter: blur(5px);
+        }
+
+        .manage-modal-panel {
+          animation: modalEnter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+          transform-origin: center;
+        }
+
+        @keyframes backdropEnter {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes modalEnter {
+          from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        /* MODAL CLOSE BUTTON */
+        .manage-close-button:hover {
+          transform: rotate(90deg);
+          background-color: #EDE5D9;
+        }
+
+        /* FORM FIELDS */
+        .manage-products-page input:not([type="checkbox"]),
+        .manage-products-page textarea,
+        .manage-products-page select {
+          transition:
+            border-color 0.3s ease,
+            box-shadow 0.3s ease,
+            transform 0.3s ease;
+        }
+
+        .manage-products-page input:not([type="checkbox"]):focus,
+        .manage-products-page textarea:focus,
+        .manage-products-page select:focus {
+          transform: translateY(-1px);
+          box-shadow: 0 0 0 3px rgba(138,118,96,0.12);
+        }
+
+        /* IMAGE PREVIEWS */
+        .image-preview-card {
+          animation: previewEnter 0.4s ease both;
+        }
+
+        @keyframes previewEnter {
+          from {
+            opacity: 0;
+            transform: scale(0.92);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .image-preview-frame img {
+          transition: transform 0.5s ease;
+        }
+
+        .image-preview-card:hover .image-preview-frame img {
+          transform: scale(1.06);
+        }
+
+        .image-remove-button {
+          transition:
+            transform 0.3s ease,
+            background-color 0.3s ease;
+        }
+
+        .image-remove-button:hover {
+          transform: rotate(90deg) scale(1.1);
+          background-color: #FEF2F2;
+        }
+
+        /* IMAGE UPLOAD BUTTON */
+        .manage-upload-button:hover {
+          transform: translateY(-3px);
+          border-color: #8A7660;
+          background-color: #F5F0E8;
+          box-shadow: 0 6px 15px rgba(43,41,38,0.06);
+        }
+
+        .manage-upload-button:hover svg {
+          animation: uploadBounce 0.7s ease infinite alternate;
+        }
+
+        @keyframes uploadBounce {
+          from {
+            transform: translateY(0);
+          }
+          to {
+            transform: translateY(-4px);
+          }
+        }
+
+        /* OFFER SECTION */
+        .manage-offer-section {
+          transition:
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+        }
+
+        .manage-offer-section:hover {
+          border-color: #C9B9A5;
+          box-shadow: 0 5px 16px rgba(43,41,38,0.04);
+        }
+
+        /* EMPTY STATE */
+        .manage-empty-state {
+          animation: emptyEnter 0.6s ease both;
+        }
+
+        @keyframes emptyEnter {
+          from {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .manage-products-page *,
+          .manage-products-page *::before,
+          .manage-products-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+      `}</style>
+
       <AdminSidebar />
 
       <main className="min-h-screen px-4 py-6 sm:px-6 lg:ml-64 lg:px-8">
         <div className="mx-auto max-w-7xl">
 
+          {/* HEADER */}
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#8A7660]">
@@ -557,16 +895,17 @@ function ManageProducts() {
                 setFormData(emptyForm())
                 setShowModal(true)
               }}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-5 py-3 text-sm font-medium text-white hover:bg-[#49443D]"
+              className="manage-add-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-5 py-3 text-sm font-medium text-white hover:bg-[#49443D]"
             >
               <FiPlus size={18} />
               Add Product
             </button>
           </div>
 
+          {/* STATISTICS */}
           <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
-              <div className="rounded-lg bg-[#F5F0E8] p-3">
+            <div className="manage-stat-card flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="manage-stat-icon rounded-lg bg-[#F5F0E8] p-3">
                 <FiPackage size={22} />
               </div>
 
@@ -578,8 +917,8 @@ function ManageProducts() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
-              <div className="rounded-lg bg-[#F5F0E8] p-3">
+            <div className="manage-stat-card flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="manage-stat-icon rounded-lg bg-[#F5F0E8] p-3">
                 <FiTag size={22} />
               </div>
 
@@ -592,7 +931,8 @@ function ManageProducts() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-[#E5DDD1] bg-white">
+          {/* PRODUCT LIST */}
+          <div className="manage-product-table overflow-hidden rounded-xl border border-[#E5DDD1] bg-white">
             <div className="border-b border-[#EAE3D9] px-5 py-4 sm:px-6">
               <h2 className="font-semibold">Product List</h2>
               <p className="mt-1 text-xs text-[#777067]">
@@ -601,7 +941,7 @@ function ManageProducts() {
             </div>
 
             {products.length === 0 ? (
-              <div className="px-6 py-16 text-center">
+              <div className="manage-empty-state px-6 py-16 text-center">
                 <FiPackage
                   size={36}
                   className="mx-auto mb-3 text-[#B5AA9B]"
@@ -625,14 +965,18 @@ function ManageProducts() {
                   </thead>
 
                   <tbody className="divide-y divide-[#EEE7DD]">
-                    {products.map((item) => (
-                      <tr key={item._id} className="hover:bg-[#FCFAF7]">
+                    {products.map((item, index) => (
+                      <tr
+                        key={item._id}
+                        style={{ animationDelay: `${index * 0.06}s` }}
+                        className="manage-product-row"
+                      >
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
                             <img
                               src={item.image}
                               alt={item.title}
-                              className="h-14 w-14 rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] object-cover"
+                              className="manage-product-image h-14 w-14 rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] object-cover"
                             />
 
                             <div className="max-w-[220px]">
@@ -688,7 +1032,7 @@ function ManageProducts() {
                               type="button"
                               onClick={() => handleEdit(item)}
                               title="Edit product"
-                              className="rounded-lg border border-[#E5DDD1] p-2 hover:bg-[#F5F0E8]"
+                              className="manage-edit-button rounded-lg border border-[#E5DDD1] p-2"
                             >
                               <FiEdit2 size={16} />
                             </button>
@@ -697,7 +1041,7 @@ function ManageProducts() {
                               type="button"
                               onClick={() => handleDelete(item._id)}
                               title="Delete product"
-                              className="rounded-lg border border-red-100 p-2 text-red-600 hover:bg-red-50"
+                              className="manage-delete-button rounded-lg border border-red-100 p-2 text-red-600"
                             >
                               <FiTrash2 size={16} />
                             </button>
@@ -715,8 +1059,8 @@ function ManageProducts() {
 
       {/* ADD PRODUCT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
-          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+        <div className="manage-modal-backdrop fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="manage-modal-panel my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
               <div>
                 <h2 className="text-lg font-semibold sm:text-xl">
@@ -733,7 +1077,7 @@ function ManageProducts() {
                   setShowModal(false)
                   setFormData(emptyForm())
                 }}
-                className="rounded-full p-2 hover:bg-[#EDE5D9]"
+                className="manage-close-button rounded-full p-2"
               >
                 <FiX size={21} />
               </button>
@@ -781,7 +1125,6 @@ function ManageProducts() {
                       </option>
                     ))}
                   </select>
-
                 </div>
 
                 <div>
@@ -862,7 +1205,7 @@ function ManageProducts() {
                   type="button"
                   disabled={formData.images.length >= MAX_IMAGES}
                   onClick={() => addImageInputRef.current?.click()}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                  className="manage-upload-button mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium disabled:opacity-50"
                 >
                   <FiUploadCloud size={19} />
                   {formData.images.length ? 'Add More Images' : 'Choose Product Images'}
@@ -870,7 +1213,7 @@ function ManageProducts() {
               </div>
 
               {/* OFFER */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+              <div className="manage-offer-section rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
@@ -931,7 +1274,7 @@ function ManageProducts() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                  className="manage-submit-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
                 >
                   <FiPlus size={17} />
                   {loading ? 'Adding Product...' : 'Add Product'}
@@ -944,8 +1287,8 @@ function ManageProducts() {
 
       {/* EDIT PRODUCT MODAL */}
       {editProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
-          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+        <div className="manage-modal-backdrop fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="manage-modal-panel my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
               <div>
                 <h2 className="text-lg font-semibold sm:text-xl">
@@ -959,7 +1302,7 @@ function ManageProducts() {
               <button
                 type="button"
                 onClick={() => setEditProduct(null)}
-                className="rounded-full p-2 hover:bg-[#EDE5D9]"
+                className="manage-close-button rounded-full p-2"
               >
                 <FiX size={21} />
               </button>
@@ -1044,11 +1387,8 @@ function ManageProducts() {
                     </p>
                     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                       {editData.existingImages.map((url, index) => (
-                        <div key={url} className="relative">
-                          <div
-                            className={`overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${index === 0 ? 'aspect-square sm:col-span-1' : 'aspect-square'
-                              }`}
-                          >
+                        <div key={url} className="image-preview-card relative">
+                          <div className="image-preview-frame aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
                             <img
                               src={url}
                               alt={`Existing product image ${index + 1}`}
@@ -1066,7 +1406,7 @@ function ManageProducts() {
                             type="button"
                             onClick={() => removeExistingImage(url)}
                             title="Remove image"
-                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                            className="image-remove-button absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
                           >
                             <FiX size={13} />
                           </button>
@@ -1083,8 +1423,11 @@ function ManageProducts() {
                     </p>
                     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                       {editData.newImages.map((file, index) => (
-                        <div key={`${file.name}-${file.lastModified}-${index}`} className="relative">
-                          <div className="aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
+                        <div
+                          key={`${file.name}-${file.lastModified}-${index}`}
+                          className="image-preview-card relative"
+                        >
+                          <div className="image-preview-frame aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
                             <img
                               src={getPreviewUrl(file)}
                               alt={`New image ${index + 1}`}
@@ -1094,7 +1437,7 @@ function ManageProducts() {
                           <button
                             type="button"
                             onClick={() => removeNewEditImage(index)}
-                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                            className="image-remove-button absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
                           >
                             <FiX size={13} />
                           </button>
@@ -1119,7 +1462,7 @@ function ManageProducts() {
                     editData.existingImages.length + editData.newImages.length >= MAX_IMAGES
                   }
                   onClick={() => editImageInputRef.current?.click()}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                  className="manage-upload-button mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium disabled:opacity-50"
                 >
                   <FiUploadCloud size={18} />
                   Add More Images
@@ -1131,7 +1474,7 @@ function ManageProducts() {
               </div>
 
               {/* OFFER */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4">
+              <div className="manage-offer-section rounded-xl border border-[#E5DDD1] bg-white p-4">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
@@ -1189,7 +1532,7 @@ function ManageProducts() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                  className="manage-submit-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
                 >
                   <FiCheckCircle size={17} />
                   {loading ? 'Updating...' : 'Update Product'}

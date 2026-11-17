@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from 'react'
 import AdminSidebar from '../components/AdminSidebar'
 import API from '../services/axios'
@@ -187,14 +186,329 @@ function ReviewManagement() {
     ]
 
     return (
-        <div className="min-h-screen bg-[#F5F0E8]">
+        <div className="review-management-page min-h-screen bg-[#F5F0E8]">
+
+            <style>{`
+                /* PAGE ENTRANCE */
+                .review-management-page {
+                    animation: reviewPageEnter 0.65s ease both;
+                }
+
+                @keyframes reviewPageEnter {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                /* HEADER */
+                .review-header {
+                    animation: reviewHeaderEnter 0.7s ease both;
+                }
+
+                @keyframes reviewHeaderEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* BUTTON */
+                .review-refresh-btn {
+                    position: relative;
+                    overflow: hidden;
+                    transition:
+                        transform 0.3s ease,
+                        background 0.3s ease,
+                        color 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .review-refresh-btn:hover:not(:disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 7px 16px rgba(43,41,38,0.12);
+                }
+
+                .review-refresh-btn svg {
+                    transition: transform 0.4s ease;
+                }
+
+                .review-refresh-btn:hover:not(:disabled) svg {
+                    transform: rotate(90deg);
+                }
+
+                /* SUMMARY CARDS */
+                .review-stat-card {
+                    animation: reviewStatEnter 0.65s ease both;
+                    transition:
+                        transform 0.35s ease,
+                        box-shadow 0.35s ease,
+                        border-color 0.35s ease;
+                }
+
+                @keyframes reviewStatEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(22px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .review-stat-card:hover {
+                    transform: translateY(-6px);
+                    border-color: #CBB99F;
+                    box-shadow: 0 13px 28px rgba(43,41,38,0.08);
+                }
+
+                .review-stat-icon {
+                    transition:
+                        transform 0.4s ease,
+                        background 0.3s ease;
+                }
+
+                .review-stat-card:hover .review-stat-icon {
+                    transform: rotate(-8deg) scale(1.1);
+                    background: #EEE5D8;
+                }
+
+                .review-stat-value {
+                    transition: transform 0.3s ease;
+                }
+
+                .review-stat-card:hover .review-stat-value {
+                    transform: translateX(3px);
+                }
+
+                /* REVIEW SECTION */
+                .review-section {
+                    animation: reviewSectionEnter 0.7s ease 0.2s both;
+                    transition: box-shadow 0.35s ease;
+                }
+
+                @keyframes reviewSectionEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .review-section:hover {
+                    box-shadow: 0 14px 30px rgba(43,41,38,0.05);
+                }
+
+                /* SEARCH AND FILTER */
+                .review-search-input,
+                .review-rating-select {
+                    transition:
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease,
+                        background 0.3s ease;
+                }
+
+                .review-search-input:hover,
+                .review-rating-select:hover {
+                    border-color: #C7B49B;
+                }
+
+                .review-search-input:focus,
+                .review-rating-select:focus {
+                    border-color: #A58A6A;
+                    box-shadow: 0 0 0 3px rgba(165,138,106,0.12);
+                    background: white;
+                }
+
+                /* REVIEW CARDS */
+                .review-card {
+                    animation: reviewCardEnter 0.55s ease both;
+                    transition:
+                        transform 0.35s ease,
+                        border-color 0.35s ease,
+                        box-shadow 0.35s ease,
+                        background 0.35s ease;
+                }
+
+                @keyframes reviewCardEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .review-card:hover {
+                    transform: translateY(-4px);
+                    border-color: #D8C6AF;
+                    box-shadow: 0 10px 24px rgba(43,41,38,0.06);
+                    background: #FFFEFC;
+                }
+
+                /* CUSTOMER AVATAR */
+                .review-avatar {
+                    transition:
+                        transform 0.35s ease,
+                        box-shadow 0.35s ease;
+                }
+
+                .review-card:hover .review-avatar {
+                    transform: scale(1.08);
+                    box-shadow: 0 5px 12px rgba(154,121,88,0.15);
+                }
+
+                /* STARS */
+                .review-stars svg {
+                    transition: transform 0.25s ease;
+                }
+
+                .review-card:hover .review-stars svg {
+                    transform: scale(1.12);
+                }
+
+                .review-stars svg:nth-child(2) {
+                    transition-delay: 0.03s;
+                }
+
+                .review-stars svg:nth-child(3) {
+                    transition-delay: 0.06s;
+                }
+
+                .review-stars svg:nth-child(4) {
+                    transition-delay: 0.09s;
+                }
+
+                .review-stars svg:nth-child(5) {
+                    transition-delay: 0.12s;
+                }
+
+                /* PRODUCT */
+                .review-product-image {
+                    transition: transform 0.4s ease;
+                }
+
+                .review-product:hover .review-product-image {
+                    transform: scale(1.08);
+                }
+
+                .review-product {
+                    transition: transform 0.3s ease;
+                }
+
+                .review-product:hover {
+                    transform: translateX(3px);
+                }
+
+                /* DELETE BUTTON */
+                .review-delete-btn {
+                    transition:
+                        background 0.3s ease,
+                        color 0.3s ease,
+                        border-color 0.3s ease,
+                        transform 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .review-delete-btn:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    background: #FEE2E2;
+                    border-color: #FCA5A5;
+                    color: #B91C1C;
+                    box-shadow: 0 5px 12px rgba(185,28,28,0.08);
+                }
+
+                .review-delete-btn:active:not(:disabled) {
+                    transform: scale(0.97);
+                }
+
+                /* EMPTY / ERROR / LOADING */
+                .review-state {
+                    animation: reviewStateEnter 0.55s ease both;
+                }
+
+                @keyframes reviewStateEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(15px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .review-empty-icon {
+                    transition: transform 0.4s ease;
+                }
+
+                .review-state:hover .review-empty-icon {
+                    transform: scale(1.08) rotate(-5deg);
+                }
+
+                /* TRY AGAIN */
+                .review-retry-btn {
+                    transition:
+                        transform 0.3s ease,
+                        background 0.3s ease,
+                        box-shadow 0.3s ease;
+                }
+
+                .review-retry-btn:hover {
+                    transform: translateY(-3px);
+                    background: #403D39;
+                    box-shadow: 0 6px 14px rgba(43,41,38,0.15);
+                }
+
+                /* CLEAR FILTERS */
+                .review-clear-btn {
+                    transition:
+                        color 0.3s ease,
+                        letter-spacing 0.3s ease;
+                }
+
+                .review-clear-btn:hover {
+                    color: #2B2926;
+                    letter-spacing: 0.3px;
+                }
+
+                /* FOOTER */
+                .review-footer {
+                    animation: reviewStateEnter 0.6s ease both;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .review-management-page *,
+                    .review-management-page *::before,
+                    .review-management-page *::after {
+                        animation-duration: 0.01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: 0.01ms !important;
+                    }
+                }
+            `}</style>
+
             <AdminSidebar />
 
             <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-8 lg:ml-64 lg:px-10">
+
                 <div className="mx-auto max-w-7xl">
 
                     {/* PAGE HEADER */}
-                    <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="review-header mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+
                         <div>
                             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#9A7958]">
                                 VELAURA ADMINISTRATION
@@ -214,7 +528,7 @@ function ReviewManagement() {
                             type="button"
                             onClick={fetchReviews}
                             disabled={loading}
-                            className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-[#D8CEC0] bg-white px-4 py-3 text-sm font-medium text-[#2B2926] transition hover:bg-[#EEE8DE] disabled:cursor-not-allowed disabled:opacity-60 sm:self-auto"
+                            className="review-refresh-btn inline-flex items-center justify-center gap-2 self-start rounded-lg border border-[#D8CEC0] bg-white px-4 py-3 text-sm font-medium text-[#2B2926] hover:bg-[#EEE8DE] disabled:cursor-not-allowed disabled:opacity-60 sm:self-auto"
                         >
                             <FiRefreshCw
                                 size={16}
@@ -222,25 +536,30 @@ function ReviewManagement() {
                             />
                             Refresh Reviews
                         </button>
+
                     </div>
 
                     {/* SUMMARY CARDS */}
                     <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                        {stats.map((stat) => {
+
+                        {stats.map((stat, index) => {
                             const Icon = stat.icon
 
                             return (
                                 <div
                                     key={stat.title}
-                                    className="rounded-2xl border border-[#E4DCCF] bg-white p-5 sm:p-6"
+                                    style={{ animationDelay: `${index * 0.12}s` }}
+                                    className="review-stat-card rounded-2xl border border-[#E4DCCF] bg-white p-5 sm:p-6"
                                 >
+
                                     <div className="flex items-start justify-between gap-4">
+
                                         <div>
                                             <p className="text-sm text-[#82796F]">
                                                 {stat.title}
                                             </p>
 
-                                            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#2B2926]">
+                                            <h2 className="review-stat-value mt-3 text-3xl font-semibold tracking-tight text-[#2B2926]">
                                                 {stat.value}
 
                                                 {stat.title === 'Average Rating' && (
@@ -251,9 +570,10 @@ function ReviewManagement() {
                                             </h2>
                                         </div>
 
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F5F0E8] text-[#9A7958]">
+                                        <div className="review-stat-icon flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F5F0E8] text-[#9A7958]">
                                             <Icon size={22} />
                                         </div>
+
                                     </div>
 
                                     <p className="mt-4 text-xs text-[#9A9187]">
@@ -261,23 +581,27 @@ function ReviewManagement() {
                                     </p>
 
                                     {stat.title === 'Average Rating' && totalReviews > 0 && (
-                                        <div className="mt-3">
+                                        <div className="review-stars mt-3">
                                             {renderStars(
                                                 Math.round(Number(averageRating))
                                             )}
                                         </div>
                                     )}
+
                                 </div>
                             )
                         })}
+
                     </div>
 
                     {/* REVIEWS SECTION */}
-                    <section className="overflow-hidden rounded-2xl border border-[#E4DCCF] bg-white">
+                    <section className="review-section overflow-hidden rounded-2xl border border-[#E4DCCF] bg-white">
 
                         {/* SECTION HEADER */}
                         <div className="border-b border-[#EEE8DE] p-5 sm:p-6">
+
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+
                                 <div>
                                     <h2 className="text-lg font-semibold text-[#2B2926]">
                                         Customer Feedback
@@ -288,17 +612,20 @@ function ReviewManagement() {
                                     </p>
                                 </div>
 
-                                <span className="inline-flex w-fit items-center rounded-full bg-[#F5F0E8] px-3 py-1.5 text-xs font-medium text-[#8B6F4E]">
+                                <span className="inline-flex w-fit items-center rounded-full bg-[#F5F0E8] px-3 py-1.5 text-xs font-medium text-[#8B6F4E] transition duration-300 hover:bg-[#EEE5D8]">
                                     {filteredReviews.length} of {totalReviews} reviews
                                 </span>
+
                             </div>
 
                             {/* SEARCH AND FILTER */}
                             <div className="mt-5 flex flex-col gap-3 md:flex-row">
+
                                 <div className="relative flex-1">
+
                                     <FiSearch
                                         size={18}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A39A90]"
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A39A90] transition duration-300"
                                     />
 
                                     <input
@@ -306,11 +633,13 @@ function ReviewManagement() {
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         placeholder="Search customer, product, or comment..."
-                                        className="w-full rounded-lg border border-[#E2D9CD] bg-[#FDFBF8] py-3 pl-11 pr-4 text-sm text-[#2B2926] outline-none transition placeholder:text-[#AAA197] focus:border-[#A58A6A]"
+                                        className="review-search-input w-full rounded-lg border border-[#E2D9CD] bg-[#FDFBF8] py-3 pl-11 pr-4 text-sm text-[#2B2926] outline-none placeholder:text-[#AAA197]"
                                     />
+
                                 </div>
 
                                 <div className="relative md:w-52">
+
                                     <FiFilter
                                         size={16}
                                         className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8178]"
@@ -319,7 +648,7 @@ function ReviewManagement() {
                                     <select
                                         value={selectedRating}
                                         onChange={(e) => setSelectedRating(e.target.value)}
-                                        className="w-full appearance-none rounded-lg border border-[#E2D9CD] bg-[#FDFBF8] py-3 pl-9 pr-4 text-sm text-[#2B2926] outline-none focus:border-[#A58A6A]"
+                                        className="review-rating-select w-full appearance-none rounded-lg border border-[#E2D9CD] bg-[#FDFBF8] py-3 pl-9 pr-4 text-sm text-[#2B2926] outline-none"
                                     >
                                         <option value="all">All Ratings</option>
                                         <option value="5">5 Stars</option>
@@ -328,8 +657,11 @@ function ReviewManagement() {
                                         <option value="2">2 Stars</option>
                                         <option value="1">1 Star</option>
                                     </select>
+
                                 </div>
+
                             </div>
+
                         </div>
 
                         {/* REVIEW CONTENT */}
@@ -337,7 +669,8 @@ function ReviewManagement() {
 
                             {/* LOADING */}
                             {loading && (
-                                <div className="flex flex-col items-center justify-center py-16 text-center">
+                                <div className="review-state flex flex-col items-center justify-center py-16 text-center">
+
                                     <FiRefreshCw
                                         size={28}
                                         className="animate-spin text-[#9A7958]"
@@ -346,12 +679,14 @@ function ReviewManagement() {
                                     <p className="mt-4 text-sm text-[#82796F]">
                                         Loading customer reviews...
                                     </p>
+
                                 </div>
                             )}
 
                             {/* ERROR */}
                             {!loading && error && (
-                                <div className="flex flex-col items-center justify-center py-12 text-center">
+                                <div className="review-state flex flex-col items-center justify-center py-12 text-center">
+
                                     <FiAlertCircle
                                         size={32}
                                         className="text-red-500"
@@ -364,17 +699,19 @@ function ReviewManagement() {
                                     <button
                                         type="button"
                                         onClick={fetchReviews}
-                                        className="mt-4 rounded-lg bg-[#2B2926] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#403D39]"
+                                        className="review-retry-btn mt-4 rounded-lg bg-[#2B2926] px-5 py-2.5 text-sm font-medium text-white"
                                     >
                                         Try Again
                                     </button>
+
                                 </div>
                             )}
 
                             {/* EMPTY STATE */}
                             {!loading && !error && filteredReviews.length === 0 && (
-                                <div className="flex flex-col items-center justify-center py-16 text-center">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F0E8] text-[#9A7958]">
+                                <div className="review-state flex flex-col items-center justify-center py-16 text-center">
+
+                                    <div className="review-empty-icon flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F0E8] text-[#9A7958]">
                                         <FiMessageSquare size={28} />
                                     </div>
 
@@ -397,18 +734,21 @@ function ReviewManagement() {
                                                 setSearch('')
                                                 setSelectedRating('all')
                                             }}
-                                            className="mt-4 text-sm font-medium text-[#8B6F4E] underline underline-offset-4 hover:text-[#2B2926]"
+                                            className="review-clear-btn mt-4 text-sm font-medium text-[#8B6F4E] underline underline-offset-4"
                                         >
                                             Clear filters
                                         </button>
                                     )}
+
                                 </div>
                             )}
 
                             {/* REVIEW CARDS */}
                             {!loading && !error && filteredReviews.length > 0 && (
                                 <div className="space-y-4">
-                                    {filteredReviews.map((review) => {
+
+                                    {filteredReviews.map((review, index) => {
+
                                         const customerName =
                                             review.userId?.name || 'Customer'
 
@@ -418,13 +758,16 @@ function ReviewManagement() {
                                         return (
                                             <article
                                                 key={review._id}
-                                                className="rounded-xl border border-[#EEE8DE] bg-[#FFFEFC] p-4 transition hover:border-[#D8C6AF] sm:p-5"
+                                                style={{ animationDelay: `${index * 0.08}s` }}
+                                                className="review-card rounded-xl border border-[#EEE8DE] bg-[#FFFEFC] p-4 sm:p-5"
                                             >
+
                                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
 
                                                     {/* CUSTOMER DETAILS */}
                                                     <div className="flex min-w-0 items-center gap-3 lg:w-56 lg:shrink-0">
-                                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#E4D6C4] bg-[#F5F0E8] font-serif text-lg text-[#8B6F4E]">
+
+                                                        <div className="review-avatar flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#E4D6C4] bg-[#F5F0E8] font-serif text-lg text-[#8B6F4E]">
                                                             {initial}
                                                         </div>
 
@@ -437,32 +780,41 @@ function ReviewManagement() {
                                                                 {formatDate(review.createdAt)}
                                                             </p>
                                                         </div>
+
                                                     </div>
 
                                                     {/* RATING AND COMMENT */}
                                                     <div className="min-w-0 flex-1">
-                                                        <div className="flex flex-wrap items-center gap-3">
-                                                            {renderStars(review.rating)}
 
-                                                            <span className="rounded-md bg-[#F5F0E8] px-2 py-1 text-xs font-semibold text-[#8B6F4E]">
+                                                        <div className="flex flex-wrap items-center gap-3">
+
+                                                            <div className="review-stars">
+                                                                {renderStars(review.rating)}
+                                                            </div>
+
+                                                            <span className="rounded-md bg-[#F5F0E8] px-2 py-1 text-xs font-semibold text-[#8B6F4E] transition duration-300 hover:bg-[#EEE5D8]">
                                                                 {Number(review.rating) || 0}.0 / 5
                                                             </span>
+
                                                         </div>
 
                                                         <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[#655F58]">
                                                             {review.comment || 'No written comment.'}
                                                         </p>
+
                                                     </div>
 
                                                     {/* PRODUCT DETAILS */}
-                                                    <div className="border-t border-[#EEE8DE] pt-4 lg:w-56 lg:shrink-0 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+                                                    <div className="review-product border-t border-[#EEE8DE] pt-4 lg:w-56 lg:shrink-0 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+
                                                         {review.productId ? (
                                                             <div className="flex items-center gap-3">
+
                                                                 {review.productId.image ? (
                                                                     <img
                                                                         src={review.productId.image}
                                                                         alt={review.productId.title || 'Product'}
-                                                                        className="h-14 w-14 shrink-0 rounded-lg border border-[#EEE8DE] bg-[#F5F0E8] object-cover"
+                                                                        className="review-product-image h-14 w-14 shrink-0 rounded-lg border border-[#EEE8DE] bg-[#F5F0E8] object-cover"
                                                                     />
                                                                 ) : (
                                                                     <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#F5F0E8] text-[#9A7958]">
@@ -471,6 +823,7 @@ function ReviewManagement() {
                                                                 )}
 
                                                                 <div className="min-w-0">
+
                                                                     <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#A08A72]">
                                                                         Product
                                                                     </p>
@@ -478,7 +831,9 @@ function ReviewManagement() {
                                                                     <p className="mt-1 break-words text-sm font-medium text-[#2B2926]">
                                                                         {review.productId.title || 'VELAURA Product'}
                                                                     </p>
+
                                                                 </div>
+
                                                             </div>
                                                         ) : (
                                                             <div className="flex items-center gap-2 text-sm text-[#9A9187]">
@@ -486,17 +841,21 @@ function ReviewManagement() {
                                                                 Product unavailable
                                                             </div>
                                                         )}
+
                                                     </div>
+
                                                 </div>
 
                                                 {/* DELETE BUTTON */}
                                                 <div className="mt-4 flex justify-end border-t border-[#EEE8DE] pt-4">
+
                                                     <button
                                                         type="button"
                                                         onClick={() => handleDeleteReview(review._id)}
                                                         disabled={deletingId === review._id}
-                                                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                                                        className="review-delete-btn inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
                                                     >
+
                                                         {deletingId === review._id ? (
                                                             <FiRefreshCw
                                                                 size={16}
@@ -509,27 +868,35 @@ function ReviewManagement() {
                                                         {deletingId === review._id
                                                             ? 'Deleting...'
                                                             : 'Delete Review'}
+
                                                     </button>
+
                                                 </div>
+
                                             </article>
                                         )
                                     })}
+
                                 </div>
                             )}
+
                         </div>
+
                     </section>
 
                     {/* FOOTER NOTE */}
                     {!loading && !error && totalReviews > 0 && (
-                        <p className="mt-5 text-center text-xs text-[#9A9187]">
+                        <p className="review-footer mt-5 text-center text-xs text-[#9A9187]">
                             Showing {filteredReviews.length} customer reviews from your VELAURA store.
                         </p>
                     )}
+
                 </div>
+
             </main>
+
         </div>
     )
 }
 
 export default ReviewManagement
-

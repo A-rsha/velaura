@@ -4,7 +4,7 @@ import {
   FiCheckCircle,
   FiImage,
   FiPlus,
-  FiTag, 
+  FiTag,
   FiX,
   FiEdit2,
   FiTrash2,
@@ -18,7 +18,7 @@ const MAX_IMAGES = 6
 const MIN_IMAGES = 3
 
 const inputClass =
-  'w-full rounded-lg border border-[#D9D0C3] bg-white px-4 py-3 text-sm text-[#2B2926] outline-none transition focus:border-[#8A7660] focus:ring-2 focus:ring-[#8A7660]/10'
+  'vendor-input w-full rounded-lg border border-[#D9D0C3] bg-white px-4 py-3 text-sm text-[#2B2926] outline-none transition focus:border-[#8A7660] focus:ring-2 focus:ring-[#8A7660]/10'
 
 const labelClass = 'mb-2 block text-sm font-medium text-[#403A33]'
 
@@ -66,7 +66,9 @@ function VendorAddProducts() {
 
   const [formData, setFormData] = useState(emptyForm())
   const [sidebarOpen, setSidebarOpen] = useState(false)
-const vendorName = localStorage.getItem('userName') || 'Vendor'
+
+  const vendorName = localStorage.getItem('userName') || 'Vendor'
+
   const [editData, setEditData] = useState({
     title: '',
     description: '',
@@ -78,7 +80,6 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
     newImages: [],
   })
 
- 
   const fetchProducts = async () => {
     try {
       setFetching(true)
@@ -423,13 +424,11 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
         )
       )
 
-      // Keep the images that were not removed.
       data.append(
         'existingImages',
         JSON.stringify(editData.existingImages)
       )
 
-      // Upload only newly selected images.
       editData.newImages.forEach((file) => {
         data.append('images', file)
       })
@@ -504,7 +503,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
     onRemove,
     imageKey,
   }) => (
-    <div key={imageKey} className="relative">
+    <div key={imageKey} className="vendor-preview-card relative">
       <div
         className={`overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] ${
           main ? 'h-56 sm:h-64' : 'aspect-square'
@@ -513,7 +512,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
         <img
           src={src}
           alt={alt}
-          className={`h-full w-full ${
+          className={`vendor-preview-image h-full w-full ${
             main ? 'object-contain' : 'object-cover'
           }`}
         />
@@ -529,7 +528,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
         type="button"
         onClick={onRemove}
         title="Remove image"
-        className="absolute right-2 top-2 rounded-full bg-white p-2 text-red-600 shadow hover:bg-red-50"
+        className="vendor-remove-image absolute right-2 top-2 rounded-full bg-white p-2 text-red-600 shadow"
       >
         <FiX size={14} />
       </button>
@@ -537,17 +536,253 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
   )
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] text-[#2B2926]">
-       <VendorSidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              vendorName={vendorName}
-            />
+    <div className="vendor-products-page min-h-screen bg-[#F5F0E8] text-[#2B2926]">
+
+      <style>{`
+        .vendor-products-page {
+          animation: vendorPageEnter 0.65s ease both;
+        }
+
+        @keyframes vendorPageEnter {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .vendor-products-header {
+          animation: vendorFadeUp 0.7s ease both;
+        }
+
+        @keyframes vendorFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(22px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .vendor-stat-card {
+          animation: vendorFadeUp 0.65s ease both;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vendor-stat-card:nth-child(2) {
+          animation-delay: 0.12s;
+        }
+
+        .vendor-stat-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 25px rgba(43,41,38,0.08);
+        }
+
+        .vendor-stat-icon {
+          transition: transform 0.35s ease, background 0.35s ease;
+        }
+
+        .vendor-stat-card:hover .vendor-stat-icon {
+          transform: scale(1.1) rotate(-6deg);
+          background: #EDE3D5;
+        }
+
+        .vendor-add-button,
+        .vendor-action-button,
+        .vendor-modal-button {
+          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .vendor-add-button:hover,
+        .vendor-modal-button:hover:not(:disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 18px rgba(43,41,38,0.15);
+        }
+
+        .vendor-add-button:active,
+        .vendor-modal-button:active:not(:disabled) {
+          transform: scale(0.97);
+        }
+
+        .vendor-add-button svg {
+          transition: transform 0.3s ease;
+        }
+
+        .vendor-add-button:hover svg {
+          transform: rotate(90deg);
+        }
+
+        .vendor-list-section {
+          animation: vendorFadeUp 0.8s ease 0.15s both;
+        }
+
+        .vendor-table-row {
+          animation: vendorRowEnter 0.45s ease both;
+          transition: background 0.25s ease;
+        }
+
+        @keyframes vendorRowEnter {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .vendor-table-row:hover {
+          background: #FCFAF7;
+        }
+
+        .vendor-product-image {
+          transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .vendor-table-row:hover .vendor-product-image {
+          transform: scale(1.07);
+          box-shadow: 0 5px 12px rgba(43,41,38,0.12);
+        }
+
+        .vendor-action-button:hover {
+          transform: translateY(-2px);
+        }
+
+        .vendor-action-button svg {
+          transition: transform 0.25s ease;
+        }
+
+        .vendor-edit-button:hover svg {
+          transform: rotate(-8deg) scale(1.1);
+        }
+
+        .vendor-delete-button:hover svg {
+          transform: scale(1.12);
+        }
+
+        .vendor-input {
+          transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .vendor-input:hover {
+          border-color: #B7A58E;
+        }
+
+        .vendor-input:focus {
+          border-color: #8A7660;
+          box-shadow: 0 0 0 3px rgba(138,118,96,0.12);
+        }
+
+        .vendor-modal-backdrop {
+          animation: vendorBackdropIn 0.25s ease both;
+          backdrop-filter: blur(4px);
+        }
+
+        @keyframes vendorBackdropIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .vendor-modal-content {
+          animation: vendorModalIn 0.35s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        @keyframes vendorModalIn {
+          from {
+            opacity: 0;
+            transform: translateY(22px) scale(0.97);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .vendor-preview-card {
+          animation: vendorPreviewIn 0.35s ease both;
+        }
+
+        @keyframes vendorPreviewIn {
+          from {
+            opacity: 0;
+            transform: scale(0.94);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .vendor-preview-image {
+          transition: transform 0.4s ease;
+        }
+
+        .vendor-preview-card:hover .vendor-preview-image {
+          transform: scale(1.06);
+        }
+
+        .vendor-remove-image {
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .vendor-remove-image:hover {
+          transform: rotate(90deg) scale(1.08);
+          background: #FEE2E2;
+        }
+
+        .vendor-upload-button {
+          transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .vendor-upload-button:hover:not(:disabled) {
+          transform: translateY(-2px);
+          border-color: #8A7660;
+          background: #F5F0E8;
+        }
+
+        .vendor-upload-button svg {
+          transition: transform 0.3s ease;
+        }
+
+        .vendor-upload-button:hover:not(:disabled) svg {
+          transform: translateY(-3px);
+        }
+
+        .vendor-empty-state {
+          animation: vendorFadeUp 0.6s ease both;
+        }
+
+        .vendor-offer-box {
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vendor-offer-box:hover {
+          border-color: #C8B69F;
+          box-shadow: 0 5px 15px rgba(43,41,38,0.04);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vendor-products-page *,
+          .vendor-products-page *::before,
+          .vendor-products-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+      `}</style>
+
+      <VendorSidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        vendorName={vendorName}
+      />
+
       <main className="min-h-screen px-4 py-6 sm:px-6 lg:ml-64 lg:px-8">
         <div className="mx-auto max-w-7xl">
 
           {/* PAGE HEADER */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="vendor-products-header mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#8A7660]">
                 Velaura Seller Panel
@@ -568,7 +803,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                 resetAddForm()
                 setShowModal(true)
               }}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-5 py-3 text-sm font-medium text-white hover:bg-[#49443D]"
+              className="vendor-add-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-5 py-3 text-sm font-medium text-white hover:bg-[#49443D]"
             >
               <FiPlus size={18} />
               Add Product
@@ -577,8 +812,8 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
 
           {/* PRODUCT STATS */}
           <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
-              <div className="rounded-lg bg-[#F5F0E8] p-3">
+            <div className="vendor-stat-card flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="vendor-stat-icon rounded-lg bg-[#F5F0E8] p-3">
                 <FiPackage size={22} />
               </div>
 
@@ -590,8 +825,8 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               </div>
             </div>
 
-            <div className="flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
-              <div className="rounded-lg bg-[#F5F0E8] p-3">
+            <div className="vendor-stat-card flex items-center gap-4 rounded-xl border border-[#E5DDD1] bg-white p-5">
+              <div className="vendor-stat-icon rounded-lg bg-[#F5F0E8] p-3">
                 <FiTag size={22} />
               </div>
 
@@ -605,7 +840,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
           </div>
 
           {/* PRODUCT TABLE */}
-          <div className="overflow-hidden rounded-xl border border-[#E5DDD1] bg-white">
+          <div className="vendor-list-section overflow-hidden rounded-xl border border-[#E5DDD1] bg-white">
             <div className="border-b border-[#EAE3D9] px-5 py-4 sm:px-6">
               <h2 className="font-semibold">My Product List</h2>
               <p className="mt-1 text-xs text-[#777067]">
@@ -614,11 +849,11 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
             </div>
 
             {fetching ? (
-              <div className="px-6 py-16 text-center text-sm text-[#777067]">
+              <div className="vendor-empty-state px-6 py-16 text-center text-sm text-[#777067]">
                 Loading your products...
               </div>
             ) : products.length === 0 ? (
-              <div className="px-6 py-16 text-center">
+              <div className="vendor-empty-state px-6 py-16 text-center">
                 <FiPackage
                   size={36}
                   className="mx-auto mb-3 text-[#B5AA9B]"
@@ -644,14 +879,18 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                   </thead>
 
                   <tbody className="divide-y divide-[#EEE7DD]">
-                    {products.map((item) => (
-                      <tr key={item._id} className="hover:bg-[#FCFAF7]">
+                    {products.map((item, index) => (
+                      <tr
+                        key={item._id}
+                        style={{ animationDelay: `${index * 0.06}s` }}
+                        className="vendor-table-row"
+                      >
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
                             <img
                               src={item.image || item.images?.[0]}
                               alt={item.title}
-                              className="h-14 w-14 rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] object-cover"
+                              className="vendor-product-image h-14 w-14 rounded-lg border border-[#E5DDD1] bg-[#F5F0E8] object-cover"
                             />
 
                             <div className="max-w-[220px]">
@@ -694,7 +933,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
 
                         <td className="px-5 py-4">
                           {item.isOffer ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F1E7D8] px-3 py-1 text-xs font-medium text-[#735D43]">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F1E7D8] px-3 py-1 text-xs font-medium text-[#735D43] transition hover:scale-105">
                               <FiTag size={12} />
                               {item.offerPercentage}% OFF
                             </span>
@@ -711,7 +950,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                               type="button"
                               onClick={() => handleEdit(item)}
                               title="Edit product"
-                              className="rounded-lg border border-[#E5DDD1] p-2 hover:bg-[#F5F0E8]"
+                              className="vendor-action-button vendor-edit-button rounded-lg border border-[#E5DDD1] p-2 hover:bg-[#F5F0E8]"
                             >
                               <FiEdit2 size={16} />
                             </button>
@@ -720,7 +959,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                               type="button"
                               onClick={() => handleDelete(item._id)}
                               title="Delete product"
-                              className="rounded-lg border border-red-100 p-2 text-red-600 hover:bg-red-50"
+                              className="vendor-action-button vendor-delete-button rounded-lg border border-red-100 p-2 text-red-600 hover:bg-red-50"
                             >
                               <FiTrash2 size={16} />
                             </button>
@@ -738,8 +977,8 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
 
       {/* ADD PRODUCT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
-          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+        <div className="vendor-modal-backdrop fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="vendor-modal-content my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
 
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
               <div>
@@ -758,7 +997,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                   setShowModal(false)
                   resetAddForm()
                 }}
-                className="rounded-full p-2 hover:bg-[#EDE5D9]"
+                className="rounded-full p-2 transition hover:rotate-90 hover:bg-[#EDE5D9]"
               >
                 <FiX size={21} />
               </button>
@@ -829,7 +1068,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               </div>
 
               {/* PRODUCT IMAGES */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+              <div className="vendor-offer-box rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <h3 className="flex items-center gap-2 font-semibold">
@@ -895,7 +1134,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                   type="button"
                   disabled={formData.images.length >= MAX_IMAGES}
                   onClick={() => addImageInputRef.current?.click()}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                  className="vendor-upload-button mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
                 >
                   <FiUploadCloud size={19} />
                   {formData.images.length
@@ -905,7 +1144,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               </div>
 
               {/* OFFER */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+              <div className="vendor-offer-box rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
@@ -963,7 +1202,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                     setShowModal(false)
                     resetAddForm()
                   }}
-                  className="rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
+                  className="vendor-modal-button rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
                 >
                   Cancel
                 </button>
@@ -971,7 +1210,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                  className="vendor-modal-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
                 >
                   <FiPlus size={17} />
                   {loading ? 'Adding Product...' : 'Add Product'}
@@ -984,8 +1223,8 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
 
       {/* EDIT PRODUCT MODAL */}
       {editProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
-          <div className="my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
+        <div className="vendor-modal-backdrop fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-5">
+          <div className="vendor-modal-content my-auto max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#FAF8F4] shadow-2xl">
 
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5DDD1] bg-[#FAF8F4] px-5 py-4 sm:px-7">
               <div>
@@ -1001,7 +1240,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               <button
                 type="button"
                 onClick={() => setEditProduct(null)}
-                className="rounded-full p-2 hover:bg-[#EDE5D9]"
+                className="rounded-full p-2 transition hover:rotate-90 hover:bg-[#EDE5D9]"
               >
                 <FiX size={21} />
               </button>
@@ -1074,7 +1313,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               </div>
 
               {/* EXISTING IMAGES */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
+              <div className="vendor-offer-box rounded-xl border border-[#E5DDD1] bg-white p-4 sm:p-5">
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <h3 className="flex items-center gap-2 font-semibold">
@@ -1102,12 +1341,12 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
 
                     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                       {editData.existingImages.map((url, index) => (
-                        <div key={url} className="relative">
+                        <div key={url} className="vendor-preview-card relative">
                           <div className="aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
                             <img
                               src={url}
                               alt={`Existing product image ${index + 1}`}
-                              className="h-full w-full object-cover"
+                              className="vendor-preview-image h-full w-full object-cover"
                             />
                           </div>
 
@@ -1121,7 +1360,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                             type="button"
                             onClick={() => removeExistingImage(url)}
                             title="Remove image"
-                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                            className="vendor-remove-image absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
                           >
                             <FiX size={13} />
                           </button>
@@ -1141,20 +1380,20 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                       {editData.newImages.map((file, index) => (
                         <div
                           key={`${file.name}-${file.lastModified}-${index}`}
-                          className="relative"
+                          className="vendor-preview-card relative"
                         >
                           <div className="aspect-square overflow-hidden rounded-lg border border-[#E5DDD1] bg-[#F5F0E8]">
                             <img
                               src={getPreviewUrl(file)}
                               alt={`New image ${index + 1}`}
-                              className="h-full w-full object-cover"
+                              className="vendor-preview-image h-full w-full object-cover"
                             />
                           </div>
 
                           <button
                             type="button"
                             onClick={() => removeNewEditImage(index)}
-                            className="absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
+                            className="vendor-remove-image absolute right-1 top-1 rounded-full bg-white p-1.5 text-red-600 shadow"
                           >
                             <FiX size={13} />
                           </button>
@@ -1181,7 +1420,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                     MAX_IMAGES
                   }
                   onClick={() => editImageInputRef.current?.click()}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
+                  className="vendor-upload-button mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[#B7A58E] bg-[#FAF8F4] px-4 py-4 text-sm font-medium hover:bg-[#F5F0E8] disabled:opacity-50"
                 >
                   <FiUploadCloud size={18} />
                   Add More Images
@@ -1193,7 +1432,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
               </div>
 
               {/* OFFER */}
-              <div className="rounded-xl border border-[#E5DDD1] bg-white p-4">
+              <div className="vendor-offer-box rounded-xl border border-[#E5DDD1] bg-white p-4">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
@@ -1248,7 +1487,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                 <button
                   type="button"
                   onClick={() => setEditProduct(null)}
-                  className="rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
+                  className="vendor-modal-button rounded-lg border border-[#D9D0C3] px-5 py-3 text-sm font-medium hover:bg-[#F0E9DE]"
                 >
                   Cancel
                 </button>
@@ -1256,7 +1495,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
+                  className="vendor-modal-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#2B2926] px-6 py-3 text-sm font-medium text-white hover:bg-[#49443D] disabled:opacity-60"
                 >
                   <FiCheckCircle size={17} />
                   {loading ? 'Updating...' : 'Update Product'}
@@ -1266,6 +1505,7 @@ const vendorName = localStorage.getItem('userName') || 'Vendor'
           </div>
         </div>
       )}
+
     </div>
   )
 }

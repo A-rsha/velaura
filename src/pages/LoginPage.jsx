@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
@@ -30,7 +29,6 @@ function LoginPage() {
     const googleButtonRef = useRef(null)
     const [googleLoading, setGoogleLoading] = useState(false)
 
-
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -47,6 +45,7 @@ function LoginPage() {
             })
 
             const data = response.data
+
             if (
                 !data.success ||
                 !data.token ||
@@ -58,9 +57,9 @@ function LoginPage() {
             }
 
             if (data.user.role !== 'user') {
-                if(data.user.role === 'vendor'){
-                toast.error('Please use vendor login to access your account.')
-                }else{
+                if (data.user.role === 'vendor') {
+                    toast.error('Please use vendor login to access your account.')
+                } else {
                     toast.error('please use admin login to access your account')
                 }
                 return
@@ -75,9 +74,10 @@ function LoginPage() {
             toast.success('Google login successfull!')
             navigate('/')
         } catch (error) {
-            toast.error
-                (error.response?.data?.message ||
-                    'Google login failed. please try again')
+            toast.error(
+                error.response?.data?.message ||
+                'Google login failed. please try again'
+            )
         } finally {
             setGoogleLoading(false)
         }
@@ -131,7 +131,6 @@ function LoginPage() {
 
             console.log('LOGIN RESPONSE:', res.data)
 
-
             if (res.data.requiresOTP === true) {
                 setOtpStep(true)
                 setOtp(['', '', '', '', '', ''])
@@ -148,7 +147,6 @@ function LoginPage() {
                 return
             }
 
-            // Do not assume login succeeded if OTP is not required.
             toast.error(
                 res.data.message ||
                 'OTP was not sent. Please try again.'
@@ -226,7 +224,6 @@ function LoginPage() {
         otpRefs.current[focusIndex]?.focus()
     }
 
-   
     const handleVerifyOTP = async (e) => {
         e.preventDefault()
 
@@ -260,17 +257,16 @@ function LoginPage() {
                 return
             }
 
-            
-         if (res.data.user.role !== 'user') {
-    if (res.data.user.role === 'vendor') {
-        toast.warning('Please use Vendor Login to access your account.')
-    } else {
-        toast.warning('Please use Admin Login to access your account.')
-    }
+            if (res.data.user.role !== 'user') {
+                if (res.data.user.role === 'vendor') {
+                    toast.warning('Please use Vendor Login to access your account.')
+                } else {
+                    toast.warning('Please use Admin Login to access your account.')
+                }
 
-    setOtp(['', '', '', '', '', ''])
-    return
-}
+                setOtp(['', '', '', '', '', ''])
+                return
+            }
 
             // Store tokens only after successful OTP verification.
             localStorage.removeItem('token')
@@ -362,32 +358,112 @@ function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center px-4 py-10 sm:px-6">
+        <div className="login-page relative min-h-screen bg-[#F5F0E8] flex items-center justify-center px-4 py-10 sm:px-6 overflow-hidden">
 
-            <div className="w-full max-w-md">
+            {/* Decorative SVG Background */}
+            <div className="login-svg-decoration pointer-events-none absolute inset-0 overflow-hidden">
 
-                <div className="bg-white border border-[#DED5C8] shadow-[0_12px_45px_rgba(43,41,38,0.07)] px-6 py-8 sm:px-10 sm:py-10">
+                <svg
+                    className="login-svg login-svg-one absolute -top-20 -right-20 w-80 h-80 opacity-30"
+                    viewBox="0 0 300 300"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle
+                        cx="150"
+                        cy="150"
+                        r="110"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                    />
+
+                    <circle
+                        cx="150"
+                        cy="150"
+                        r="85"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                        strokeDasharray="4 8"
+                    />
+
+                    <circle
+                        cx="150"
+                        cy="150"
+                        r="55"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                    />
+
+                    <path
+                        d="M150 35C170 90 210 130 265 150C210 170 170 210 150 265C130 210 90 170 35 150C90 130 130 90 150 35Z"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                    />
+                </svg>
+
+                <svg
+                    className="login-svg login-svg-two absolute -bottom-24 -left-20 w-80 h-80 opacity-30"
+                    viewBox="0 0 300 300"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M150 20L170 110L260 150L170 190L150 280L130 190L40 150L130 110L150 20Z"
+                        stroke="#B8A48B"
+                        strokeWidth="1.2"
+                    />
+
+                    <circle
+                        cx="150"
+                        cy="150"
+                        r="90"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                        strokeDasharray="3 7"
+                    />
+
+                    <circle
+                        cx="150"
+                        cy="150"
+                        r="55"
+                        stroke="#B8A48B"
+                        strokeWidth="1"
+                    />
+                </svg>
+
+                <div className="login-floating-dot absolute top-[22%] left-[12%]" />
+                <div className="login-floating-dot login-floating-dot-two absolute bottom-[25%] right-[13%]" />
+
+                <span className="login-sparkle absolute top-[18%] right-[25%]">✧</span>
+                <span className="login-sparkle login-sparkle-two absolute bottom-[20%] left-[25%]">✦</span>
+
+            </div>
+
+            <div className="w-full max-w-md relative z-10">
+
+                <div className="login-card bg-white border border-[#DED5C8] shadow-[0_12px_45px_rgba(43,41,38,0.07)] px-6 py-8 sm:px-10 sm:py-10">
 
                     {/* VELAURA Logo */}
-                    <div className="text-center mb-9">
+                    <div className="text-center mb-9 login-logo">
                         <Link
                             to="/"
                             className="inline-flex flex-col items-center"
                         >
-                            <span className="font-serif text-3xl sm:text-4xl font-medium tracking-[3px] text-[#2B2926]">
+                            <span className="font-serif text-3xl sm:text-4xl font-medium tracking-[3px] text-[#2B2926] login-logo-text">
                                 VELAURA
                             </span>
 
-                            <span className="mt-1 text-[9px] tracking-[5px] text-gray-500">
+                            <span className="mt-1 text-[9px] tracking-[5px] text-gray-500 login-logo-subtitle">
                                 ACCESSORIES
                             </span>
                         </Link>
                     </div>
 
                     {!otpStep ? (
-                        <>
+                        <div className="login-screen" key="login-screen">
+
                             {/* LOGIN SCREEN */}
-                            <div className="text-center mb-8">
+                            <div className="text-center mb-8 login-heading">
                                 <p className="text-[10px] uppercase tracking-[3px] text-gray-500 mb-3">
                                     WELCOME BACK
                                 </p>
@@ -403,10 +479,10 @@ function LoginPage() {
 
                             <form
                                 onSubmit={handleSubmit}
-                                className="space-y-5"
+                                className="space-y-5 login-form"
                             >
                                 {/* Email */}
-                                <div>
+                                <div className="login-field">
                                     <label
                                         htmlFor="email"
                                         className="block mb-2 text-xs font-medium uppercase tracking-[1px] text-[#2B2926]"
@@ -415,7 +491,7 @@ function LoginPage() {
                                     </label>
 
                                     <div className="relative">
-                                        <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 login-input-icon" />
 
                                         <input
                                             id="email"
@@ -427,13 +503,13 @@ function LoginPage() {
                                             autoComplete="email"
                                             placeholder="Enter your email"
                                             disabled={loading}
-                                            className="w-full h-12 border border-[#DED5C8] bg-white pl-11 pr-4 text-sm text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-1 focus:ring-[#2B2926]/10 disabled:bg-gray-50"
+                                            className="login-input w-full h-12 border border-[#DED5C8] bg-white pl-11 pr-4 text-sm text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-1 focus:ring-[#2B2926]/10 disabled:bg-gray-50"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Password */}
-                                <div>
+                                <div className="login-field">
                                     <label
                                         htmlFor="password"
                                         className="block mb-2 text-xs font-medium uppercase tracking-[1px] text-[#2B2926]"
@@ -442,7 +518,7 @@ function LoginPage() {
                                     </label>
 
                                     <div className="relative">
-                                        <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 login-input-icon" />
 
                                         <input
                                             id="password"
@@ -454,7 +530,7 @@ function LoginPage() {
                                             autoComplete="current-password"
                                             placeholder="Enter your password"
                                             disabled={loading}
-                                            className="w-full h-12 border border-[#DED5C8] bg-white pl-11 pr-4 text-sm text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-1 focus:ring-[#2B2926]/10 disabled:bg-gray-50"
+                                            className="login-input w-full h-12 border border-[#DED5C8] bg-white pl-11 pr-4 text-sm text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-1 focus:ring-[#2B2926]/10 disabled:bg-gray-50"
                                         />
                                     </div>
                                 </div>
@@ -462,20 +538,29 @@ function LoginPage() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full h-12 bg-[#2B2926] text-white text-sm font-medium tracking-wide transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="login-main-button relative overflow-hidden w-full h-12 bg-[#2B2926] text-white text-sm font-medium tracking-wide transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
                                 >
-                                    {loading
-                                        ? 'Sending OTP...'
-                                        : 'Continue Securely'}
+                                    <span className="relative z-10">
+                                        {loading
+                                            ? 'Sending OTP...'
+                                            : 'Continue Securely'}
+                                    </span>
                                 </button>
 
-                                <div className="flex items-center justify-center gap-2 pt-1 text-xs text-gray-500">
+                                <div className="login-security flex items-center justify-center gap-2 pt-1 text-xs text-gray-500">
                                     <FiShield size={15} />
                                     <span>Email verification helps protect your account.</span>
                                 </div>
                             </form>
-                            {!otpStep && (<div className="mt-5"> <div className="mb-4 flex items-center gap-3"> <div className="h-px flex-1 bg-gray-200"></div> <span className="text-sm text-gray-500">OR</span> <div className="h-px flex-1 bg-gray-200"></div> </div>
 
+                            {/* Google Login */}
+                            <div className="mt-5 login-google">
+
+                                <div className="mb-4 flex items-center gap-3">
+                                    <div className="h-px flex-1 bg-gray-200"></div>
+                                    <span className="text-sm text-gray-500">OR</span>
+                                    <div className="h-px flex-1 bg-gray-200"></div>
+                                </div>
 
                                 {googleLoading && (
                                     <p className="mb-2 text-center text-sm text-gray-500">
@@ -485,15 +570,12 @@ function LoginPage() {
 
                                 <div
                                     ref={googleButtonRef}
-                                    className="flex justify-center"
+                                    className="flex justify-center login-google-button"
                                 ></div>
                             </div>
 
-                            )}
-
-
                             {/* Register Link */}
-                            <div className="mt-8 pt-6 border-t border-[#DED5C8] text-center">
+                            <div className="mt-8 pt-6 border-t border-[#DED5C8] text-center login-register">
                                 <p className="text-sm text-gray-500">
                                     Don't have an account?{' '}
                                     <Link
@@ -504,22 +586,24 @@ function LoginPage() {
                                     </Link>
                                 </p>
                             </div>
-                        </>
+
+                        </div>
                     ) : (
-                        <>
+                        <div className="otp-screen" key="otp-screen">
+
                             {/* OTP VERIFICATION SCREEN */}
                             <button
                                 type="button"
                                 onClick={handleBackToLogin}
                                 disabled={loading}
-                                className="inline-flex items-center gap-2 text-sm text-gray-600 transition hover:text-black disabled:opacity-50"
+                                className="otp-back inline-flex items-center gap-2 text-sm text-gray-600 transition hover:text-black disabled:opacity-50"
                             >
                                 <FiArrowLeft size={16} />
                                 Back to Login
                             </button>
 
-                            <div className="text-center mt-7 mb-8">
-                                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F0E8] text-[#2B2926]">
+                            <div className="text-center mt-7 mb-8 otp-heading">
+                                <div className="otp-icon mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F0E8] text-[#2B2926]">
                                     <FiMail size={28} strokeWidth={1.5} />
                                 </div>
 
@@ -541,12 +625,13 @@ function LoginPage() {
                             </div>
 
                             <form onSubmit={handleVerifyOTP}>
+
                                 <label className="block mb-3 text-xs font-medium uppercase tracking-[1px] text-[#2B2926] text-center">
                                     Enter Verification Code
                                 </label>
 
                                 {/* OTP Inputs */}
-                                <div className="flex justify-center gap-2 sm:gap-3 mb-5">
+                                <div className="flex justify-center gap-2 sm:gap-3 mb-5 otp-inputs">
                                     {otp.map((digit, index) => (
                                         <input
                                             key={index}
@@ -574,7 +659,10 @@ function LoginPage() {
                                             }
                                             onPaste={handleOtpPaste}
                                             disabled={loading}
-                                            className="h-12 w-10 sm:h-14 sm:w-12 border border-[#DED5C8] bg-[#FEFDFC] text-center text-lg font-semibold text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-2 focus:ring-[#2B2926]/10 disabled:bg-gray-100"
+                                            style={{
+                                                animationDelay: `${index * 0.08}s`
+                                            }}
+                                            className="otp-input h-12 w-10 sm:h-14 sm:w-12 border border-[#DED5C8] bg-[#FEFDFC] text-center text-lg font-semibold text-[#2B2926] outline-none transition focus:border-[#2B2926] focus:ring-2 focus:ring-[#2B2926]/10 disabled:bg-gray-100"
                                         />
                                     ))}
                                 </div>
@@ -589,7 +677,7 @@ function LoginPage() {
                                         loading ||
                                         otp.some((digit) => digit === '')
                                     }
-                                    className="flex w-full h-12 items-center justify-center gap-2 bg-[#2B2926] text-white text-sm font-medium tracking-wide transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="otp-verify-button flex w-full h-12 items-center justify-center gap-2 bg-[#2B2926] text-white text-sm font-medium tracking-wide transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {loading ? (
                                         <>
@@ -606,7 +694,7 @@ function LoginPage() {
                             </form>
 
                             {/* Resend OTP */}
-                            <div className="mt-6 text-center">
+                            <div className="mt-6 text-center otp-resend">
                                 <p className="text-sm text-gray-500">
                                     Didn't receive the code?
                                 </p>
@@ -630,7 +718,7 @@ function LoginPage() {
                                 </button>
                             </div>
 
-                            <div className="mt-7 border-t border-[#DED5C8] pt-5 text-center">
+                            <div className="mt-7 border-t border-[#DED5C8] pt-5 text-center otp-footer">
                                 <p className="text-xs leading-5 text-gray-500">
                                     Make sure you're using the email registered with your VELAURA account.
                                 </p>
@@ -644,17 +732,419 @@ function LoginPage() {
                                     Change email or password
                                 </button>
                             </div>
-                        </>
+
+                        </div>
                     )}
                 </div>
 
-                <p className="mt-5 text-center text-[10px] tracking-wide text-gray-500">
+                <p className="mt-5 text-center text-[10px] tracking-wide text-gray-500 login-copyright">
                     © {new Date().getFullYear()} VELAURA ACCESSORIES
                 </p>
             </div>
+
+            {/* Login Page Animations */}
+            <style>{`
+
+                /* Main Page */
+
+                .login-page {
+                    isolation: isolate;
+                }
+
+                .login-card {
+                    animation: loginCardEntrance 0.9s cubic-bezier(.22,1,.36,1) both;
+                    transform-origin: center;
+                    transition: box-shadow 0.4s ease, transform 0.4s ease;
+                }
+
+                .login-card:hover {
+                    box-shadow: 0 22px 65px rgba(43,41,38,0.12);
+                }
+
+                @keyframes loginCardEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(35px) scale(0.97);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                /* Logo */
+
+                .login-logo {
+                    animation: fadeDown 0.8s ease both;
+                }
+
+                .login-logo-text {
+                    transition: letter-spacing 0.4s ease, transform 0.4s ease;
+                }
+
+                .login-logo:hover .login-logo-text {
+                    letter-spacing: 5px;
+                    transform: translateY(-3px);
+                }
+
+                .login-logo-subtitle {
+                    transition: letter-spacing 0.4s ease;
+                }
+
+                .login-logo:hover .login-logo-subtitle {
+                    letter-spacing: 7px;
+                }
+
+                @keyframes fadeDown {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-15px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Background SVG */
+
+                .login-svg-one {
+                    animation: rotateDecoration 35s linear infinite;
+                    transform-origin: center;
+                }
+
+                .login-svg-two {
+                    animation: rotateDecorationReverse 40s linear infinite;
+                    transform-origin: center;
+                }
+
+                @keyframes rotateDecoration {
+                    from {
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                @keyframes rotateDecorationReverse {
+                    from {
+                        transform: rotate(360deg);
+                    }
+                    to {
+                        transform: rotate(0deg);
+                    }
+                }
+
+                .login-floating-dot {
+                    width: 9px;
+                    height: 9px;
+                    border: 1px solid #B8A48B;
+                    border-radius: 50%;
+                    animation: floatingDot 4s ease-in-out infinite;
+                }
+
+                .login-floating-dot-two {
+                    animation-delay: 1.5s;
+                }
+
+                @keyframes floatingDot {
+                    0%, 100% {
+                        transform: translateY(0) scale(1);
+                        opacity: 0.4;
+                    }
+                    50% {
+                        transform: translateY(-18px) scale(1.3);
+                        opacity: 0.9;
+                    }
+                }
+
+                .login-sparkle {
+                    color: #B8A48B;
+                    font-size: 25px;
+                    animation: sparkle 3s ease-in-out infinite;
+                }
+
+                .login-sparkle-two {
+                    animation-delay: 1s;
+                }
+
+                @keyframes sparkle {
+                    0%, 100% {
+                        opacity: 0.35;
+                        transform: scale(0.8) rotate(0deg);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.3) rotate(45deg);
+                    }
+                }
+
+                /* Login Screen */
+
+                .login-screen {
+                    animation: screenEntrance 0.6s ease both;
+                }
+
+                .login-heading {
+                    animation: fadeUp 0.7s 0.15s both;
+                }
+
+                .login-field:nth-child(1) {
+                    animation: fadeUp 0.6s 0.25s both;
+                }
+
+                .login-field:nth-child(2) {
+                    animation: fadeUp 0.6s 0.35s both;
+                }
+
+                .login-main-button {
+                    animation: fadeUp 0.6s 0.45s both;
+                }
+
+                .login-security {
+                    animation: fadeUp 0.6s 0.55s both;
+                }
+
+                .login-google {
+                    animation: fadeUp 0.6s 0.6s both;
+                }
+
+                .login-register {
+                    animation: fadeUp 0.6s 0.7s both;
+                }
+
+                @keyframes fadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(18px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes screenEntrance {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                /* Input Effects */
+
+                .login-input {
+                    transition: border-color 0.3s ease,
+                                box-shadow 0.3s ease,
+                                transform 0.3s ease;
+                }
+
+                .login-input:focus {
+                    border-color: #2B2926;
+                    box-shadow: 0 0 0 3px rgba(43,41,38,0.08);
+                    transform: translateY(-2px);
+                }
+
+                .login-input-icon {
+                    transition: color 0.3s ease, transform 0.3s ease;
+                }
+
+                .login-field:focus-within .login-input-icon {
+                    color: #2B2926;
+                    transform: translateY(-50%) scale(1.15);
+                }
+
+                /* Main Button */
+
+                .login-main-button,
+                .otp-verify-button {
+                    transition: transform 0.3s ease,
+                                box-shadow 0.3s ease,
+                                background 0.3s ease;
+                }
+
+                .login-main-button::before,
+                .otp-verify-button::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -120%;
+                    width: 70%;
+                    height: 100%;
+                    background: linear-gradient(
+                        110deg,
+                        transparent,
+                        rgba(255,255,255,0.22),
+                        transparent
+                    );
+                    transform: skewX(-20deg);
+                    transition: left 0.7s ease;
+                }
+
+                .login-main-button:hover::before,
+                .otp-verify-button:hover::before {
+                    left: 150%;
+                }
+
+                .login-main-button:hover,
+                .otp-verify-button:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 9px 22px rgba(43,41,38,0.2);
+                }
+
+                .login-main-button:active,
+                .otp-verify-button:active {
+                    transform: translateY(-1px) scale(0.98);
+                }
+
+                /* Google Button */
+
+                .login-google-button {
+                    transition: transform 0.3s ease;
+                }
+
+                .login-google-button:hover {
+                    transform: translateY(-2px);
+                }
+
+                /* Register Link */
+
+                .login-register a {
+                    transition: color 0.3s ease, border-color 0.3s ease;
+                }
+
+                .login-register a:hover {
+                    color: #9B7957;
+                    border-color: #9B7957;
+                }
+
+                /* OTP Screen */
+
+                .otp-screen {
+                    animation: otpEntrance 0.65s cubic-bezier(.22,1,.36,1) both;
+                }
+
+                @keyframes otpEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(22px) scale(0.98);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                .otp-icon {
+                    animation: otpIconEntrance 0.7s 0.15s both;
+                    transition: transform 0.4s ease, box-shadow 0.4s ease;
+                }
+
+                .otp-icon:hover {
+                    transform: rotate(-8deg) scale(1.1);
+                    box-shadow: 0 8px 20px rgba(43,41,38,0.12);
+                }
+
+                @keyframes otpIconEntrance {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.5) rotate(-20deg);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1) rotate(0);
+                    }
+                }
+
+                .otp-back {
+                    transition: transform 0.3s ease, color 0.3s ease;
+                }
+
+                .otp-back:hover {
+                    transform: translateX(-5px);
+                }
+
+                /* OTP Inputs */
+
+                .otp-input {
+                    animation: otpBoxEntrance 0.5s both;
+                    transition: border-color 0.25s ease,
+                                box-shadow 0.25s ease,
+                                transform 0.25s ease,
+                                background 0.25s ease;
+                }
+
+                @keyframes otpBoxEntrance {
+                    from {
+                        opacity: 0;
+                        transform: translateY(15px) scale(0.8);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                .otp-input:focus {
+                    transform: translateY(-4px) scale(1.06);
+                    border-color: #2B2926;
+                    background: #fff;
+                    box-shadow: 0 5px 15px rgba(43,41,38,0.12);
+                }
+
+                .otp-input:not(:placeholder-shown) {
+                    background: #F5F0E8;
+                }
+
+                /* OTP Resend */
+
+                .otp-resend button {
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                }
+
+                .otp-resend button:hover {
+                    transform: translateY(-2px);
+                }
+
+                .otp-footer {
+                    animation: fadeUp 0.6s 0.4s both;
+                }
+
+                .login-copyright {
+                    animation: fadeUp 0.8s 0.8s both;
+                }
+
+                /* Mobile */
+
+                @media (max-width: 640px) {
+                    .login-svg {
+                        opacity: 0.15;
+                    }
+
+                    .login-card {
+                        box-shadow: 0 10px 35px rgba(43,41,38,0.08);
+                    }
+                }
+
+                /* Accessibility */
+
+                @media (prefers-reduced-motion: reduce) {
+                    .login-page *,
+                    .login-page *::before,
+                    .login-page *::after {
+                        animation-duration: 0.01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: 0.01ms !important;
+                    }
+                }
+
+            `}</style>
+
         </div>
     )
 }
 
 export default LoginPage
-
