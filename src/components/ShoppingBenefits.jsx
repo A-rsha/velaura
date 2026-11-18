@@ -1,5 +1,6 @@
 import React from 'react'
 import { FiTruck, FiShield, FiGift, FiRefreshCw } from 'react-icons/fi'
+import ScrollReveal from './ScrollReveal'
 
 function ShoppingBenefits() {
     const benefits = [
@@ -30,6 +31,14 @@ function ShoppingBenefits() {
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4 md:gap-6">
 
                 {benefits.map((benefit, index) => (
+
+                     <ScrollReveal
+        key={benefit._id}
+        direction="up"
+        delay={index * 150}
+        duration={700}
+        once={false}
+    >
                     <div
                         key={index}
                         style={{ '--delay': `${index * 150}ms` }}
@@ -49,6 +58,9 @@ function ShoppingBenefits() {
                             </p>
                         </div>
                     </div>
+
+                     </ScrollReveal>
+        
                 ))}
 
             </div>

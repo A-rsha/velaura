@@ -8,6 +8,7 @@ import {
     removeWishlist
 } from '../services/api'
 import { toast } from 'react-toastify'
+import ScrollReveal from './ScrollReveal'
 
 function SpecialOffer() {
     const [products, setProducts] = useState([])
@@ -115,13 +116,15 @@ function SpecialOffer() {
                 {/* Section Heading */}
                 <div className="special-heading mb-7 flex items-end justify-between sm:mb-8">
                     <div>
-                        <p className="mb-2 text-[10px] uppercase tracking-[3px] text-gray-500 sm:text-xs">
-                            SPECIAL SELECTION
-                        </p>
+                        <ScrollReveal direction='left' elay={0} once={false}>
+                            <p className="mb-2 text-[10px] uppercase tracking-[3px] text-gray-500 sm:text-xs">
+                                SPECIAL SELECTION
+                            </p>
 
-                        <h2 className="font-serif text-2xl font-medium text-[#2B2926] sm:text-3xl md:text-4xl">
-                            Special Offers
-                        </h2>
+                            <h2 className="font-serif text-2xl font-medium text-[#2B2926] sm:text-3xl md:text-4xl">
+                                Special Offers
+                            </h2>
+                        </ScrollReveal>
                     </div>
 
                     {/* View All */}
@@ -178,128 +181,138 @@ function SpecialOffer() {
                     <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
 
                         {products.map((product, index) => (
-                            <div
+
+                            <ScrollReveal
                                 key={product._id}
-                                style={{
-                                    '--card-delay': `${index * 120}ms`
-                                }}
-                                className="offer-product-card group min-w-0 cursor-pointer"
+                                direction="up"
+                                delay={index * 120}
+                                duration={750}
+                                once={false}
                             >
-                                {/* Product Image */}
-                                <div className="offer-image-container relative aspect-[4/5] overflow-hidden border border-[#DED5C8] bg-[#F5F0E8]">
 
-                                    <img
-                                        src={product.image}
-                                        alt={product.title}
-                                        loading="lazy"
-                                        className="offer-product-image h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                                    />
+                                <div
+                                    key={product._id}
+                                    style={{
+                                        '--card-delay': `${index * 120}ms`
+                                    }}
+                                    className="offer-product-card group min-w-0 cursor-pointer"
+                                >
+                                    {/* Product Image */}
+                                    <div className="offer-image-container relative aspect-[4/5] overflow-hidden border border-[#DED5C8] bg-[#F5F0E8]">
 
-                                    {/* Image Shine */}
-                                    <div className="offer-image-shine pointer-events-none absolute inset-0" />
-
-                                    {/* Offer Badge */}
-                                    {product.isOffer && (
-                                        <span className="offer-badge absolute left-2 top-2 rounded-full bg-[#2B2926] px-2 py-1 text-[10px] font-medium text-white sm:left-3 sm:top-3 sm:px-3 sm:text-xs">
-                                            {product.offerPercentage}% OFF
-                                        </span>
-                                    )}
-
-                                    {/* Wishlist */}
-                                    <button
-                                        type="button"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleWishlist(product._id)
-                                        }}
-                                        aria-label="Add to wishlist"
-                                        className="wishlist-btn absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition duration-300 hover:bg-white"
-                                    >
-                                        <FiHeart
-                                            size={16}
-                                            strokeWidth={1.5}
-                                            className={
-                                                wishlistStatus[product._id]
-                                                    ? "wishlist-active fill-red-500 text-red-500"
-                                                    : "wishlist-heart text-[#2B2926]"
-                                            }
+                                        <img
+                                            src={product.image}
+                                            alt={product.title}
+                                            loading="lazy"
+                                            className="offer-product-image h-full w-full object-cover transition duration-700 group-hover:scale-110"
                                         />
-                                    </button>
-                                </div>
 
-                                {/* Product Details */}
-                                <div className="offer-product-details border-x border-b border-[#DED5C8] px-3 py-3 sm:px-4 sm:py-4">
+                                        {/* Image Shine */}
+                                        <div className="offer-image-shine pointer-events-none absolute inset-0" />
 
-                                    {/* Product Name */}
-                                    <h3 className="offer-product-title line-clamp-1 text-xs font-medium text-[#2B2926] transition-colors duration-300 sm:text-sm">
-                                        {product.title}
-                                    </h3>
-
-                                    {/* Product Price */}
-                                    <div className="mt-1">
-                                        {product.isOffer ? (
-                                            <>
-                                                <p className="text-xs text-gray-500 line-through sm:text-sm">
-                                                    ₹{product.price}
-                                                </p>
-
-                                                <p className="offer-price text-sm font-semibold text-[#2B2926] sm:text-base">
-                                                    ₹{product.offerPrice}
-                                                </p>
-                                            </>
-                                        ) : (
-                                            <p className="offer-price text-sm font-medium text-[#2B2926] sm:text-base">
-                                                ₹{product.price}
-                                            </p>
+                                        {/* Offer Badge */}
+                                        {product.isOffer && (
+                                            <span className="offer-badge absolute left-2 top-2 rounded-full bg-[#2B2926] px-2 py-1 text-[10px] font-medium text-white sm:left-3 sm:top-3 sm:px-3 sm:text-xs">
+                                                {product.offerPercentage}% OFF
+                                            </span>
                                         )}
-                                    </div>
 
-                                    {/* View Product */}
-                                    <div className="mt-1.5 flex items-center justify-between gap-1">
-
-                                        <span className="text-xs tracking-[1px] text-[#B7791F]">
-                                            ★★★★★
-                                        </span>
-
+                                        {/* Wishlist */}
                                         <button
                                             type="button"
                                             onClick={(e) => {
                                                 e.stopPropagation()
-                                                navigate(`/product/${product._id}`)
+                                                handleWishlist(product._id)
                                             }}
-                                            className="offer-view-btn inline-flex items-center gap-1 border-b border-[#2B2926] pb-0.5 text-xs font-medium text-[#2B2926] transition duration-300 sm:text-sm"
+                                            aria-label="Add to wishlist"
+                                            className="wishlist-btn absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition duration-300 hover:bg-white"
                                         >
-                                            View
-                                            <FiArrowUpRight
-                                                className="offer-arrow"
-                                                size={14}
+                                            <FiHeart
+                                                size={16}
+                                                strokeWidth={1.5}
+                                                className={
+                                                    wishlistStatus[product._id]
+                                                        ? "wishlist-active fill-red-500 text-red-500"
+                                                        : "wishlist-heart text-[#2B2926]"
+                                                }
                                             />
                                         </button>
                                     </div>
+
+                                    {/* Product Details */}
+                                    <div className="offer-product-details border-x border-b border-[#DED5C8] px-3 py-3 sm:px-4 sm:py-4">
+
+                                        {/* Product Name */}
+                                        <h3 className="offer-product-title line-clamp-1 text-xs font-medium text-[#2B2926] transition-colors duration-300 sm:text-sm">
+                                            {product.title}
+                                        </h3>
+
+                                        {/* Product Price */}
+                                        <div className="mt-1">
+                                            {product.isOffer ? (
+                                                <>
+                                                    <p className="text-xs text-gray-500 line-through sm:text-sm">
+                                                        ₹{product.price}
+                                                    </p>
+
+                                                    <p className="offer-price text-sm font-semibold text-[#2B2926] sm:text-base">
+                                                        ₹{product.offerPrice}
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <p className="offer-price text-sm font-medium text-[#2B2926] sm:text-base">
+                                                    ₹{product.price}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* View Product */}
+                                        <div className="mt-1.5 flex items-center justify-between gap-1">
+
+                                            <span className="text-xs tracking-[1px] text-[#B7791F]">
+                                                ★★★★★
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    navigate(`/product/${product._id}`)
+                                                }}
+                                                className="offer-view-btn inline-flex items-center gap-1 border-b border-[#2B2926] pb-0.5 text-xs font-medium text-[#2B2926] transition duration-300 sm:text-sm"
+                                            >
+                                                View
+                                                <FiArrowUpRight
+                                                    className="offer-arrow"
+                                                    size={14}
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                </ScrollReveal>
                         ))}
 
-                    </div>
-                )}
+                            </div>
+                        )}
 
-                {/* Mobile View All */}
-                {!loading && !error && products.length > 0 && (
-                    <div className="mt-8 flex justify-center sm:hidden">
-                        <button
-                            type="button"
-                            onClick={() => navigate('/shop')}
-                            className="view-all-btn flex items-center gap-1 border-b border-[#2B2926] pb-1 text-sm font-medium"
-                        >
-                            View All Products
-                            <FiArrowUpRight size={14} />
-                        </button>
+                        {/* Mobile View All */}
+                        {!loading && !error && products.length > 0 && (
+                            <div className="mt-8 flex justify-center sm:hidden">
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/shop')}
+                                    className="view-all-btn flex items-center gap-1 border-b border-[#2B2926] pb-1 text-sm font-medium"
+                                >
+                                    View All Products
+                                    <FiArrowUpRight size={14} />
+                                </button>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
 
             {/* Animations */}
-            <style>{`
+                <style>{`
                 .special-heading {
                     animation: offerHeading 0.8s ease both;
                 }

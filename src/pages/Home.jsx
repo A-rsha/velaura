@@ -9,6 +9,7 @@ import ReviewSection from '../components/ReviewSection'
 import ShoppingBenefits from '../components/ShoppingBenefits'
 import SpecialOffer from '../components/SpecialOffer'
 import NewArrivals from '../components/NewArrivals'
+import ScrollReveal from '../components/ScrollReveal'
 
 
 function Home() {
@@ -20,7 +21,10 @@ function Home() {
         <FeaturedProducts/>
         <SpecialOffer/>
         <NewArrivals/>
-        <AddBanner/>
+        <ScrollReveal direction='up' duration={800}>
+          <AddBanner/>
+        </ScrollReveal>
+        
         <ReviewSection/>
         <ShoppingBenefits/>
         

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import API from '../services/axios'
 import { toast } from 'react-toastify'
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi'
+import ScrollReveal from '../components/ScrollReveal'
 
 function Register() {
 
@@ -167,331 +168,374 @@ function Register() {
 
             {/* Register Card */}
 
-            <div className="
-                register-card
-                relative
-                z-10
-                w-full
-                max-w-md
-                border
-                border-[#DED5C8]
-                bg-white
-                px-6
-                py-8
-                sm:px-10
-                sm:py-10
-            ">
-
-                {/* Logo */}
-
-                <div className="text-center mb-8 register-logo">
-
-                    <Link
-                        to="/"
-                        className="inline-flex flex-col items-center"
-                    >
-
-                        <span className="
-                            font-serif
-                            text-3xl
-                            sm:text-4xl
-                            font-medium
-                            tracking-wide
-                            register-logo-text
-                        ">
-                            VELAURA
-                        </span>
-
-                        <span className="
-                            mt-1
-                            text-[8px]
-                            sm:text-[9px]
-                            tracking-[4px]
-                            text-gray-500
-                            register-logo-subtitle
-                        ">
-                            ACCESSORIES
-                        </span>
-
-                    </Link>
-
-                </div>
-
-
-                {/* Heading */}
-
-                <div className="text-center mb-8 register-heading">
-
-                    <p className="
-                        text-[10px]
-                        uppercase
-                        tracking-[3px]
-                        text-gray-500
-                        mb-2
-                    ">
-                        JOIN VELAURA
-                    </p>
-
-                    <h1 className="
-                        font-serif
-                        text-2xl
-                        sm:text-3xl
-                        font-medium
-                        text-[#2B2926]
-                    ">
-                        Create Your Account
-                    </h1>
-
-                    <p className="
-                        mt-2
-                        text-sm
-                        text-gray-500
-                    ">
-                        Create an account and start exploring our collection.
-                    </p>
-
-                </div>
-
-
-                {/* Form */}
-
-                <form
-                    onSubmit={handleSubmit}
-                    className="space-y-5 register-form"
-                >
-
-                    {/* Name */}
-
-                    <div className="register-field">
-
-                        <label
-                            htmlFor="name"
-                            className="
-                                block
-                                mb-2
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[1px]
-                                text-[#2B2926]
-                            "
-                        >
-                            Name
-                        </label>
-
-                        <input
-                            id="name"
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            placeholder="Enter your name"
-                            disabled={loading}
-                            className="
-                                register-input
-                                w-full
-                                h-12
-                                border
-                                border-[#DED5C8]
-                                bg-white
-                                px-4
-                                text-sm
-                                text-[#2B2926]
-                                outline-none
-                                transition
-                                duration-300
-                                placeholder:text-gray-400
-                                focus:border-[#2B2926]
-                                disabled:bg-gray-50
-                            "
-                        />
-
-                    </div>
-
-
-                    {/* Email */}
-
-                    <div className="register-field">
-
-                        <label
-                            htmlFor="email"
-                            className="
-                                block
-                                mb-2
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[1px]
-                                text-[#2B2926]
-                            "
-                        >
-                            Email
-                        </label>
-
-                        <input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            placeholder="Enter your email"
-                            disabled={loading}
-                            className="
-                                register-input
-                                w-full
-                                h-12
-                                border
-                                border-[#DED5C8]
-                                bg-white
-                                px-4
-                                text-sm
-                                text-[#2B2926]
-                                outline-none
-                                transition
-                                duration-300
-                                placeholder:text-gray-400
-                                focus:border-[#2B2926]
-                                disabled:bg-gray-50
-                            "
-                        />
-
-                    </div>
-
-
-                    {/* Password */}
-
-                    <div className="register-field">
-
-                        <label
-                            htmlFor="password"
-                            className="
-                                block
-                                mb-2
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[1px]
-                                text-[#2B2926]
-                            "
-                        >
-                            Password
-                        </label>
-
-                        <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="Create a password"
-                            disabled={loading}
-                            className="
-                                register-input
-                                w-full
-                                h-12
-                                border
-                                border-[#DED5C8]
-                                bg-white
-                                px-4
-                                text-sm
-                                text-[#2B2926]
-                                outline-none
-                                transition
-                                duration-300
-                                placeholder:text-gray-400
-                                focus:border-[#2B2926]
-                                disabled:bg-gray-50
-                            "
-                        />
-
-                    </div>
-
-
-                    {/* Create Account Button */}
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="
-                            register-button
-                            relative
-                            overflow-hidden
-                            w-full
-                            h-12
-                            bg-[#2B2926]
-                            text-white
-                            text-sm
-                            font-medium
-                            transition
-                            duration-300
-                            hover:bg-black
-                            disabled:cursor-not-allowed
-                            disabled:opacity-60
-                        "
-                    >
-
-                        <span className="relative z-10">
-
-                            {loading
-                                ? "Creating Account..."
-                                : "Create Account"
-                            }
-
-                        </span>
-
-                    </button>
-
-                </form>
-
-
-                {/* Login Link */}
+            <ScrollReveal
+                direction="zoom"
+                duration={850}
+                once={true}
+            >
 
                 <div className="
-                    register-login
-                    mt-7
-                    pt-6
-                    border-t
+                    register-card
+                    relative
+                    z-10
+                    w-full
+                    max-w-md
+                    border
                     border-[#DED5C8]
-                    text-center
+                    bg-white
+                    px-6
+                    py-8
+                    sm:px-10
+                    sm:py-10
                 ">
 
-                    <p className="text-sm text-gray-500">
+                    {/* Logo */}
 
-                        Already have an account?{" "}
+                    <ScrollReveal
+                        direction="down"
+                        delay={100}
+                        duration={700}
+                        once={true}
+                    >
 
-                        <Link
-                            to="/login"
-                            className="
+                        <div className="text-center mb-8 register-logo">
+
+                            <Link
+                                to="/"
+                                className="inline-flex flex-col items-center"
+                            >
+
+                                <span className="
+                                    font-serif
+                                    text-3xl
+                                    sm:text-4xl
+                                    font-medium
+                                    tracking-wide
+                                    register-logo-text
+                                ">
+                                    VELAURA
+                                </span>
+
+                                <span className="
+                                    mt-1
+                                    text-[8px]
+                                    sm:text-[9px]
+                                    tracking-[4px]
+                                    text-gray-500
+                                    register-logo-subtitle
+                                ">
+                                    ACCESSORIES
+                                </span>
+
+                            </Link>
+
+                        </div>
+
+                    </ScrollReveal>
+
+
+                    {/* Heading */}
+
+                    <ScrollReveal
+                        direction="up"
+                        delay={150}
+                        duration={750}
+                        once={true}
+                    >
+
+                        <div className="text-center mb-8 register-heading">
+
+                            <p className="
+                                text-[10px]
+                                uppercase
+                                tracking-[3px]
+                                text-gray-500
+                                mb-2
+                            ">
+                                JOIN VELAURA
+                            </p>
+
+                            <h1 className="
+                                font-serif
+                                text-2xl
+                                sm:text-3xl
                                 font-medium
                                 text-[#2B2926]
-                                border-b
-                                border-[#2B2926]
-                                pb-0.5
-                                transition
-                                hover:opacity-60
-                            "
-                        >
-                            Login
-                        </Link>
+                            ">
+                                Create Your Account
+                            </h1>
 
-                    </p>
+                            <p className="
+                                mt-2
+                                text-sm
+                                text-gray-500
+                            ">
+                                Create an account and start exploring our collection.
+                            </p>
+
+                        </div>
+
+                    </ScrollReveal>
+
+
+                    {/* Form */}
+
+                    <ScrollReveal
+                        direction="up"
+                        delay={200}
+                        duration={800}
+                        once={true}
+                    >
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="space-y-5 register-form"
+                        >
+
+                            {/* Name */}
+
+                            <div className="register-field">
+
+                                <label
+                                    htmlFor="name"
+                                    className="
+                                        block
+                                        mb-2
+                                        text-xs
+                                        font-medium
+                                        uppercase
+                                        tracking-[1px]
+                                        text-[#2B2926]
+                                    "
+                                >
+                                    Name
+                                </label>
+
+                                <input
+                                    id="name"
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Enter your name"
+                                    disabled={loading}
+                                    className="
+                                        register-input
+                                        w-full
+                                        h-12
+                                        border
+                                        border-[#DED5C8]
+                                        bg-white
+                                        px-4
+                                        text-sm
+                                        text-[#2B2926]
+                                        outline-none
+                                        transition
+                                        duration-300
+                                        placeholder:text-gray-400
+                                        focus:border-[#2B2926]
+                                        disabled:bg-gray-50
+                                    "
+                                />
+
+                            </div>
+
+
+                            {/* Email */}
+
+                            <div className="register-field">
+
+                                <label
+                                    htmlFor="email"
+                                    className="
+                                        block
+                                        mb-2
+                                        text-xs
+                                        font-medium
+                                        uppercase
+                                        tracking-[1px]
+                                        text-[#2B2926]
+                                    "
+                                >
+                                    Email
+                                </label>
+
+                                <input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Enter your email"
+                                    disabled={loading}
+                                    className="
+                                        register-input
+                                        w-full
+                                        h-12
+                                        border
+                                        border-[#DED5C8]
+                                        bg-white
+                                        px-4
+                                        text-sm
+                                        text-[#2B2926]
+                                        outline-none
+                                        transition
+                                        duration-300
+                                        placeholder:text-gray-400
+                                        focus:border-[#2B2926]
+                                        disabled:bg-gray-50
+                                    "
+                                />
+
+                            </div>
+
+
+                            {/* Password */}
+
+                            <div className="register-field">
+
+                                <label
+                                    htmlFor="password"
+                                    className="
+                                        block
+                                        mb-2
+                                        text-xs
+                                        font-medium
+                                        uppercase
+                                        tracking-[1px]
+                                        text-[#2B2926]
+                                    "
+                                >
+                                    Password
+                                </label>
+
+                                <input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Create a password"
+                                    disabled={loading}
+                                    className="
+                                        register-input
+                                        w-full
+                                        h-12
+                                        border
+                                        border-[#DED5C8]
+                                        bg-white
+                                        px-4
+                                        text-sm
+                                        text-[#2B2926]
+                                        outline-none
+                                        transition
+                                        duration-300
+                                        placeholder:text-gray-400
+                                        focus:border-[#2B2926]
+                                        disabled:bg-gray-50
+                                    "
+                                />
+
+                            </div>
+
+
+                            {/* Create Account Button */}
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="
+                                    register-button
+                                    relative
+                                    overflow-hidden
+                                    w-full
+                                    h-12
+                                    bg-[#2B2926]
+                                    text-white
+                                    text-sm
+                                    font-medium
+                                    transition
+                                    duration-300
+                                    hover:bg-black
+                                    disabled:cursor-not-allowed
+                                    disabled:opacity-60
+                                "
+                            >
+
+                                <span className="relative z-10">
+
+                                    {loading
+                                        ? "Creating Account..."
+                                        : "Create Account"
+                                    }
+
+                                </span>
+
+                            </button>
+
+                        </form>
+
+                    </ScrollReveal>
+
+
+                    {/* Login Link */}
+
+                    <ScrollReveal
+                        direction="fade"
+                        delay={300}
+                        duration={800}
+                        once={true}
+                    >
+
+                        <div className="
+                            register-login
+                            mt-7
+                            pt-6
+                            border-t
+                            border-[#DED5C8]
+                            text-center
+                        ">
+
+                            <p className="text-sm text-gray-500">
+
+                                Already have an account?{" "}
+
+                                <Link
+                                    to="/login"
+                                    className="
+                                        font-medium
+                                        text-[#2B2926]
+                                        border-b
+                                        border-[#2B2926]
+                                        pb-0.5
+                                        transition
+                                        hover:opacity-60
+                                    "
+                                >
+                                    Login
+                                </Link>
+
+                            </p>
+
+                        </div>
+
+                    </ScrollReveal>
 
                 </div>
 
-            </div>
+            </ScrollReveal>
 
 
             {/* Animation CSS */}
 
             <style>{`
 
-                /* Main Card Animation */
+                /* Main Card */
 
                 .register-card {
-                    animation: registerCardEnter 0.9s cubic-bezier(.22,1,.36,1) both;
                     transform-origin: center;
                     transition: box-shadow 0.4s ease;
                 }
@@ -500,24 +544,8 @@ function Register() {
                     box-shadow: 0 25px 65px rgba(43,41,38,0.12);
                 }
 
-                @keyframes registerCardEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(40px) scale(0.96);
-                    }
 
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
-
-
-                /* Logo Animation */
-
-                .register-logo {
-                    animation: fadeDown 0.8s 0.15s both;
-                }
+                /* Logo Hover */
 
                 .register-logo-text {
                     transition: letter-spacing 0.4s ease,
@@ -535,60 +563,6 @@ function Register() {
 
                 .register-logo:hover .register-logo-subtitle {
                     letter-spacing: 7px;
-                }
-
-                @keyframes fadeDown {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-15px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-
-                /* Heading */
-
-                .register-heading {
-                    animation: fadeUp 0.7s 0.25s both;
-                }
-
-
-                /* Form Fields */
-
-                .register-field:nth-child(1) {
-                    animation: fadeUp 0.6s 0.35s both;
-                }
-
-                .register-field:nth-child(2) {
-                    animation: fadeUp 0.6s 0.45s both;
-                }
-
-                .register-field:nth-child(3) {
-                    animation: fadeUp 0.6s 0.55s both;
-                }
-
-                .register-button {
-                    animation: fadeUp 0.6s 0.65s both;
-                }
-
-                .register-login {
-                    animation: fadeUp 0.6s 0.75s both;
-                }
-
-                @keyframes fadeUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
                 }
 
 

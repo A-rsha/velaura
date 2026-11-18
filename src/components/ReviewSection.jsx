@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import API from '../services/axios'
 import { FiStar } from 'react-icons/fi'
+import ScrollReveal from './ScrollReveal'
+
 
 function ReviewSection() {
     const [reviews, setReviews] = useState([])
@@ -80,117 +82,126 @@ function ReviewSection() {
 
                             {reviews.map((review, index) => (
 
-                                <div
+                                <ScrollReveal
                                     key={review._id}
-                                    style={{
-                                        animationDelay: `${index * 120}ms`
-                                    }}
-                                    className="review-card rounded-xl border border-[#E9E1D6] bg-white p-5 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl sm:p-6"
+                                    direction="up"
+                                    delay={index * 150}
+                                    duration={700}
+                                    once={false}
                                 >
 
-                                    {/* Customer details */}
-                                    <div className="mb-4 flex items-center gap-3">
+                                    <div
+                                        key={review._id}
+                                        style={{
+                                            animationDelay: `${index * 120}ms`
+                                        }}
+                                        className="review-card rounded-xl border border-[#E9E1D6] bg-white p-5 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl sm:p-6"
+                                    >
 
-                                        <div className="review-avatar flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F5F0E8] font-serif text-lg text-[#8B6F4E] transition-all duration-300 hover:scale-110 hover:shadow-md">
-                                            {review.userId?.name?.charAt(0)?.toUpperCase() || 'C'}
-                                        </div>
+                                        {/* Customer details */}
+                                        <div className="mb-4 flex items-center gap-3">
 
-                                        <div>
-                                            <h3 className="font-medium text-[#2B2926] transition-colors duration-300 hover:text-[#9A7958]">
-                                                {review.userId?.name || 'Customer'}
-                                            </h3>
+                                            <div className="review-avatar flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F5F0E8] font-serif text-lg text-[#8B6F4E] transition-all duration-300 hover:scale-110 hover:shadow-md">
+                                                {review.userId?.name?.charAt(0)?.toUpperCase() || 'C'}
+                                            </div>
 
-                                            <p className="text-xs text-[#8A8178]">
-                                                {review.createdAt
-                                                    ? new Date(review.createdAt).toLocaleDateString('en-IN', {
-                                                        day: 'numeric',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    })
-                                                    : ''}
-                                            </p>
-                                        </div>
+                                            <div>
+                                                <h3 className="font-medium text-[#2B2926] transition-colors duration-300 hover:text-[#9A7958]">
+                                                    {review.userId?.name || 'Customer'}
+                                                </h3>
 
-                                    </div>
-
-                                    {/* Star rating */}
-                                    <div className="mb-3 flex items-center gap-1">
-
-                                        {[1, 2, 3, 4, 5].map((star) => (
-
-                                            <FiStar
-                                                key={star}
-                                                size={16}
-                                                style={{
-                                                    animationDelay: `${star * 80}ms`
-                                                }}
-                                                className={`review-star transition-all duration-300 ${
-                                                    star <= Number(review.rating)
-                                                        ? 'fill-[#C49A6C] text-[#C49A6C] hover:scale-125'
-                                                        : 'text-[#D8D0C5]'
-                                                }`}
-                                            />
-
-                                        ))}
-
-                                        <span className="ml-1 text-sm text-[#77716A]">
-                                            {review.rating}/5
-                                        </span>
-
-                                    </div>
-
-                                    {/* Review comment */}
-                                    <p className="review-comment mb-5 text-sm leading-6 text-[#655F58]">
-                                        {review.comment}
-                                    </p>
-
-                                    {/* Product details */}
-                                    {review.productId && (
-
-                                        <div className="flex items-center gap-3 border-t border-[#F0EBE4] pt-4">
-
-                                            {review.productId.image && (
-                                                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F5F0E8]">
-
-                                                    <img
-                                                        src={review.productId.image}
-                                                        alt={review.productId.title || 'Product'}
-                                                        className="h-full w-full rounded-lg object-cover transition-transform duration-500 hover:scale-110"
-                                                    />
-
-                                                </div>
-                                            )}
-
-                                            <div className="min-w-0">
-
-                                                <p className="text-xs text-[#9A7958]">
-                                                    Reviewed product
+                                                <p className="text-xs text-[#8A8178]">
+                                                    {review.createdAt
+                                                        ? new Date(review.createdAt).toLocaleDateString('en-IN', {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                        })
+                                                        : ''}
                                                 </p>
-
-                                                <p className="truncate text-sm font-medium text-[#2B2926] transition-colors duration-300 hover:text-[#9A7958]">
-                                                    {review.productId.title || 'Velaura product'}
-                                                </p>
-
                                             </div>
 
                                         </div>
 
-                                    )}
+                                        {/* Star rating */}
+                                        <div className="mb-3 flex items-center gap-1">
 
-                                </div>
+                                            {[1, 2, 3, 4, 5].map((star) => (
+
+                                                <FiStar
+                                                    key={star}
+                                                    size={16}
+                                                    style={{
+                                                        animationDelay: `${star * 80}ms`
+                                                    }}
+                                                    className={`review-star transition-all duration-300 ${star <= Number(review.rating)
+                                                            ? 'fill-[#C49A6C] text-[#C49A6C] hover:scale-125'
+                                                            : 'text-[#D8D0C5]'
+                                                        }`}
+                                                />
+
+                                            ))}
+
+                                            <span className="ml-1 text-sm text-[#77716A]">
+                                                {review.rating}/5
+                                            </span>
+
+                                        </div>
+
+                                        {/* Review comment */}
+                                        <p className="review-comment mb-5 text-sm leading-6 text-[#655F58]">
+                                            {review.comment}
+                                        </p>
+
+                                        {/* Product details */}
+                                        {review.productId && (
+
+                                            <div className="flex items-center gap-3 border-t border-[#F0EBE4] pt-4">
+
+                                                {review.productId.image && (
+                                                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F5F0E8]">
+
+                                                        <img
+                                                            src={review.productId.image}
+                                                            alt={review.productId.title || 'Product'}
+                                                            className="h-full w-full rounded-lg object-cover transition-transform duration-500 hover:scale-110"
+                                                        />
+
+                                                    </div>
+                                                )}
+
+                                                <div className="min-w-0">
+
+                                                    <p className="text-xs text-[#9A7958]">
+                                                        Reviewed product
+                                                    </p>
+
+                                                    <p className="truncate text-sm font-medium text-[#2B2926] transition-colors duration-300 hover:text-[#9A7958]">
+                                                        {review.productId.title || 'Velaura product'}
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        )}
+
+                                    </div>
+
+                                    </ScrollReveal>
 
                             ))}
 
+                                </div>
+
+                            )}
+
                         </div>
-
-                    )}
-
-                </div>
 
             </div>
 
-            {/* Review Animations */}
-            <style>{`
+
+                <style>{`
 
                 @keyframes reviewSectionEntrance {
                     from {

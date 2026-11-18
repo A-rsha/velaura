@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import API from '../services/axios'
 import { useNavigate } from 'react-router-dom'
 import { FiTrash2, FiArrowRight, FiMinus, FiPlus } from 'react-icons/fi'
+import ScrollReveal from '../components/ScrollReveal'
 
 
 function CartPage({ cartCount, setCartCount }) {
@@ -223,129 +224,143 @@ function CartPage({ cartCount, setCartCount }) {
 
                     {/* Page Heading */}
 
-                    <div className="cart-heading mb-10 sm:mb-12">
+                    <ScrollReveal
+                        direction="up"
+                        duration={800}
+                    >
 
-                        <p
-                            className="
-                                cart-subtitle
-                                mb-2
-                                text-[10px]
-                                sm:text-xs
-                                uppercase
-                                tracking-[3px]
-                                text-gray-500
-                            "
-                        >
-                            YOUR SELECTION
-                        </p>
+                        <div className="cart-heading mb-10 sm:mb-12">
 
-                        <h1
-                            className="
-                                cart-title
-                                font-serif
-                                text-3xl
-                                sm:text-4xl
-                                md:text-5xl
-                                font-medium
-                            "
-                        >
-                            Shopping Cart
-                        </h1>
+                            <p
+                                className="
+                                    cart-subtitle
+                                    mb-2
+                                    text-[10px]
+                                    sm:text-xs
+                                    uppercase
+                                    tracking-[3px]
+                                    text-gray-500
+                                "
+                            >
+                                YOUR SELECTION
+                            </p>
 
-                        <p
-                            className="
-                                cart-description
-                                mt-3
-                                text-sm
-                                sm:text-base
-                                text-gray-500
-                            "
-                        >
-                            Review your selected pieces before checkout.
-                        </p>
+                            <h1
+                                className="
+                                    cart-title
+                                    font-serif
+                                    text-3xl
+                                    sm:text-4xl
+                                    md:text-5xl
+                                    font-medium
+                                "
+                            >
+                                Shopping Cart
+                            </h1>
 
-                    </div>
+                            <p
+                                className="
+                                    cart-description
+                                    mt-3
+                                    text-sm
+                                    sm:text-base
+                                    text-gray-500
+                                "
+                            >
+                                Review your selected pieces before checkout.
+                            </p>
+
+                        </div>
+
+                    </ScrollReveal>
 
 
                     {cartItems.length === 0 ? (
 
                         /* Empty Cart */
 
-                        <div
-                            className="
-                                cart-empty
-                                border
-                                border-[#DED5C8]
-                                bg-[#F5F0E8]
-                                px-6
-                                py-20
-                                text-center
-                            "
+                        <ScrollReveal
+                            direction="up"
+                            duration={850}
                         >
 
-                            <div className="empty-cart-icon">
+                            <div
+                                className="
+                                    cart-empty
+                                    border
+                                    border-[#DED5C8]
+                                    bg-[#F5F0E8]
+                                    px-6
+                                    py-20
+                                    text-center
+                                "
+                            >
 
-                                <svg
-                                    width="42"
-                                    height="42"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="1"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="mx-auto text-gray-500"
+                                <div className="empty-cart-icon">
+
+                                    <svg
+                                        width="42"
+                                        height="42"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="mx-auto text-gray-500"
+                                    >
+                                        <path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H6" />
+                                        <circle cx="10" cy="21" r="1" />
+                                        <circle cx="19" cy="21" r="1" />
+                                    </svg>
+
+                                </div>
+
+
+                                <p
+                                    className="
+                                        mt-5
+                                        font-serif
+                                        text-2xl
+                                        sm:text-3xl
+                                    "
                                 >
-                                    <path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H6" />
-                                    <circle cx="10" cy="21" r="1" />
-                                    <circle cx="19" cy="21" r="1" />
-                                </svg>
+                                    Your cart is empty
+                                </p>
+
+                                <p
+                                    className="
+                                        mt-3
+                                        text-sm
+                                        text-gray-500
+                                    "
+                                >
+                                    Discover something beautiful for your collection.
+                                </p>
+
+                                <button
+                                    onClick={() => navigate('/shop')}
+                                    className="
+                                        cart-explore-btn
+                                        mt-6
+                                        border
+                                        border-[#2B2926]
+                                        px-7
+                                        py-3
+                                        text-sm
+                                        font-medium
+                                        transition
+                                        duration-300
+                                        hover:bg-[#2B2926]
+                                        hover:text-white
+                                    "
+                                >
+                                    Explore Collection
+                                </button>
 
                             </div>
 
-
-                            <p
-                                className="
-                                    mt-5
-                                    font-serif
-                                    text-2xl
-                                    sm:text-3xl
-                                "
-                            >
-                                Your cart is empty
-                            </p>
-
-                            <p
-                                className="
-                                    mt-3
-                                    text-sm
-                                    text-gray-500
-                                "
-                            >
-                                Discover something beautiful for your collection.
-                            </p>
-
-                            <button
-                                onClick={() => navigate('/shop')}
-                                className="
-                                    cart-explore-btn
-                                    mt-6
-                                    border
-                                    border-[#2B2926]
-                                    px-7
-                                    py-3
-                                    text-sm
-                                    font-medium
-                                    transition
-                                    duration-300
-                                    hover:bg-[#2B2926]
-                                    hover:text-white
-                                "
-                            >
-                                Explore Collection
-                            </button>
-
-                        </div>
+                        </ScrollReveal>
 
                     ) : (
 
@@ -366,240 +381,256 @@ function CartPage({ cartCount, setCartCount }) {
 
                                 {cartItems.map((item, index) => (
 
-                                    <div
+                                    <ScrollReveal
                                         key={item.productId?._id}
-                                        className="cart-item-card flex flex-col sm:flex-row gap-5 border border-[#DED5C8] bg-white p-4 sm:p-5"
-                                        style={{
-                                            '--cart-index': index
-                                        }}
+                                        direction="up"
+                                        delay={index * 120}
+                                        duration={750}
                                     >
 
-
-                                        {/* Product Image */}
-
                                         <div
                                             className="
-                                                cart-image-wrapper
-                                                shrink-0
-                                                w-full
-                                                sm:w-32
-                                                md:w-36
-                                                aspect-square
-                                                overflow-hidden
-                                                bg-[#F5F0E8]
-                                            "
-                                        >
-
-                                            <img
-                                                src={item.productId?.image}
-                                                alt={item.productId?.title}
-                                                className="
-                                                    cart-product-image
-                                                    h-full
-                                                    w-full
-                                                    object-cover
-                                                    transition
-                                                    duration-500
-                                                    hover:scale-105
-                                                "
-                                            />
-
-                                        </div>
-
-
-                                        {/* Product Details */}
-
-                                        <div
-                                            className="
+                                                cart-item-card
                                                 flex
-                                                flex-1
                                                 flex-col
-                                                justify-between
+                                                sm:flex-row
+                                                gap-5
+                                                border
+                                                border-[#DED5C8]
+                                                bg-white
+                                                p-4
+                                                sm:p-5
                                             "
                                         >
 
-                                            <div>
 
-                                                <p
+                                            {/* Product Image */}
+
+                                            <div
+                                                className="
+                                                    cart-image-wrapper
+                                                    shrink-0
+                                                    w-full
+                                                    sm:w-32
+                                                    md:w-36
+                                                    aspect-square
+                                                    overflow-hidden
+                                                    bg-[#F5F0E8]
+                                                "
+                                            >
+
+                                                <img
+                                                    src={item.productId?.image}
+                                                    alt={item.productId?.title}
                                                     className="
-                                                        cart-category
-                                                        text-[10px]
-                                                        uppercase
-                                                        tracking-[2px]
-                                                        text-gray-400
+                                                        cart-product-image
+                                                        h-full
+                                                        w-full
+                                                        object-cover
+                                                        transition
+                                                        duration-500
+                                                        hover:scale-105
                                                     "
-                                                >
-                                                    {item.productId?.category}
-                                                </p>
-
-                                                <h2
-                                                    className="
-                                                        cart-product-title
-                                                        mt-1
-                                                        text-base
-                                                        sm:text-lg
-                                                        font-medium
-                                                        text-[#2B2926]
-                                                    "
-                                                >
-                                                    {item.productId?.title}
-                                                </h2>
-
-
-                                                {item.productId?.isOffer ? (
-
-                                                    <div className="mt-2">
-
-                                                        <p className="text-sm text-gray-600 line-through">
-                                                            ₹{item.price}
-                                                        </p>
-
-                                                        <p className="text-sm font-semibold text-[#2B2926]">
-                                                            ₹{item.productId?.offerPrice}
-                                                        </p>
-
-                                                        <p className="mt-1 text-xs text-gray-500">
-                                                            {item.productId?.offerPercentage}% OFF
-                                                        </p>
-
-                                                    </div>
-
-                                                ) : (
-
-                                                    <p className="mt-2 text-sm text-gray-500">
-                                                        ₹{item.price}
-                                                    </p>
-
-                                                )}
+                                                />
 
                                             </div>
 
 
-                                            {/* Quantity + Delete */}
+                                            {/* Product Details */}
 
                                             <div
                                                 className="
-                                                    mt-5
                                                     flex
-                                                    items-center
+                                                    flex-1
+                                                    flex-col
                                                     justify-between
                                                 "
                                             >
 
-                                                {/* Quantity */}
+                                                <div>
 
-                                                <div
-                                                    className="
-                                                        cart-quantity
-                                                        flex
-                                                        items-center
-                                                        border
-                                                        border-[#DED5C8]
-                                                    "
-                                                >
-
-                                                    <button
-                                                        onClick={() =>
-                                                            decreaseQuantity(
-                                                                item.productId?._id,
-                                                                item.quantity
-                                                            )
-                                                        }
-                                                        aria-label="Decrease quantity"
+                                                    <p
                                                         className="
-                                                            quantity-btn
-                                                            flex
-                                                            h-9
-                                                            w-9
-                                                            items-center
-                                                            justify-center
-                                                            text-gray-600
-                                                            transition
-                                                            hover:bg-[#F5F0E8]
+                                                            cart-category
+                                                            text-[10px]
+                                                            uppercase
+                                                            tracking-[2px]
+                                                            text-gray-400
                                                         "
                                                     >
-                                                        <FiMinus size={13} />
-                                                    </button>
+                                                        {item.productId?.category}
+                                                    </p>
 
-
-                                                    <span
+                                                    <h2
                                                         className="
-                                                            cart-quantity-value
-                                                            flex
-                                                            h-9
-                                                            min-w-9
-                                                            items-center
-                                                            justify-center
-                                                            border-x
-                                                            border-[#DED5C8]
-                                                            text-sm
+                                                            cart-product-title
+                                                            mt-1
+                                                            text-base
+                                                            sm:text-lg
                                                             font-medium
+                                                            text-[#2B2926]
                                                         "
                                                     >
-                                                        {item.quantity}
-                                                    </span>
+                                                        {item.productId?.title}
+                                                    </h2>
 
 
-                                                    <button
-                                                        onClick={() =>
-                                                            increaseQuantity(
-                                                                item.productId?._id,
-                                                                item.quantity
-                                                            )
-                                                        }
-                                                        aria-label="Increase quantity"
-                                                        className="
-                                                            quantity-btn
-                                                            flex
-                                                            h-9
-                                                            w-9
-                                                            items-center
-                                                            justify-center
-                                                            text-gray-600
-                                                            transition
-                                                            hover:bg-[#F5F0E8]
-                                                        "
-                                                    >
-                                                        <FiPlus size={13} />
-                                                    </button>
+                                                    {item.productId?.isOffer ? (
+
+                                                        <div className="mt-2">
+
+                                                            <p className="text-sm text-gray-600 line-through">
+                                                                ₹{item.price}
+                                                            </p>
+
+                                                            <p className="text-sm font-semibold text-[#2B2926]">
+                                                                ₹{item.productId?.offerPrice}
+                                                            </p>
+
+                                                            <p className="mt-1 text-xs text-gray-500">
+                                                                {item.productId?.offerPercentage}% OFF
+                                                            </p>
+
+                                                        </div>
+
+                                                    ) : (
+
+                                                        <p className="mt-2 text-sm text-gray-500">
+                                                            ₹{item.price}
+                                                        </p>
+
+                                                    )}
 
                                                 </div>
 
 
-                                                {/* Remove */}
+                                                {/* Quantity + Delete */}
 
-                                                <button
-                                                    onClick={() =>
-                                                        deleteProduct(
-                                                            item.productId?._id
-                                                        )
-                                                    }
+                                                <div
                                                     className="
-                                                        cart-remove-btn
+                                                        mt-5
                                                         flex
                                                         items-center
-                                                        gap-1.5
-                                                        text-xs
-                                                        text-gray-500
-                                                        transition
-                                                        hover:text-red-600
+                                                        justify-between
                                                     "
                                                 >
 
-                                                    <FiTrash2
-                                                        className="remove-icon"
-                                                        size={15}
-                                                    />
+                                                    {/* Quantity */}
 
-                                                    Remove
+                                                    <div
+                                                        className="
+                                                            cart-quantity
+                                                            flex
+                                                            items-center
+                                                            border
+                                                            border-[#DED5C8]
+                                                        "
+                                                    >
 
-                                                </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                decreaseQuantity(
+                                                                    item.productId?._id,
+                                                                    item.quantity
+                                                                )
+                                                            }
+                                                            aria-label="Decrease quantity"
+                                                            className="
+                                                                quantity-btn
+                                                                flex
+                                                                h-9
+                                                                w-9
+                                                                items-center
+                                                                justify-center
+                                                                text-gray-600
+                                                                transition
+                                                                hover:bg-[#F5F0E8]
+                                                            "
+                                                        >
+                                                            <FiMinus size={13} />
+                                                        </button>
+
+
+                                                        <span
+                                                            className="
+                                                                cart-quantity-value
+                                                                flex
+                                                                h-9
+                                                                min-w-9
+                                                                items-center
+                                                                justify-center
+                                                                border-x
+                                                                border-[#DED5C8]
+                                                                text-sm
+                                                                font-medium
+                                                            "
+                                                        >
+                                                            {item.quantity}
+                                                        </span>
+
+
+                                                        <button
+                                                            onClick={() =>
+                                                                increaseQuantity(
+                                                                    item.productId?._id,
+                                                                    item.quantity
+                                                                )
+                                                            }
+                                                            aria-label="Increase quantity"
+                                                            className="
+                                                                quantity-btn
+                                                                flex
+                                                                h-9
+                                                                w-9
+                                                                items-center
+                                                                justify-center
+                                                                text-gray-600
+                                                                transition
+                                                                hover:bg-[#F5F0E8]
+                                                            "
+                                                        >
+                                                            <FiPlus size={13} />
+                                                        </button>
+
+                                                    </div>
+
+
+                                                    {/* Remove */}
+
+                                                    <button
+                                                        onClick={() =>
+                                                            deleteProduct(
+                                                                item.productId?._id
+                                                            )
+                                                        }
+                                                        className="
+                                                            cart-remove-btn
+                                                            flex
+                                                            items-center
+                                                            gap-1.5
+                                                            text-xs
+                                                            text-gray-500
+                                                            transition
+                                                            hover:text-red-600
+                                                        "
+                                                    >
+
+                                                        <FiTrash2
+                                                            className="remove-icon"
+                                                            size={15}
+                                                        />
+
+                                                        Remove
+
+                                                    </button>
+
+                                                </div>
 
                                             </div>
 
                                         </div>
 
-                                    </div>
+                                    </ScrollReveal>
 
                                 ))}
 
@@ -608,165 +639,173 @@ function CartPage({ cartCount, setCartCount }) {
 
                             {/* Order Summary */}
 
-                            <div
-                                className="
-                                    cart-summary
-                                    h-fit
-                                    border
-                                    border-[#DED5C8]
-                                    bg-[#F5F0E8]
-                                    p-6
-                                    sm:p-7
-                                    lg:sticky
-                                    lg:top-28
-                                "
+                            <ScrollReveal
+                                direction="right"
+                                delay={200}
+                                duration={850}
                             >
-
-                                <p
-                                    className="
-                                        text-[10px]
-                                        uppercase
-                                        tracking-[3px]
-                                        text-gray-500
-                                    "
-                                >
-                                    ORDER DETAILS
-                                </p>
-
-                                <h2
-                                    className="
-                                        mt-2
-                                        font-serif
-                                        text-2xl
-                                        font-medium
-                                    "
-                                >
-                                    Order Summary
-                                </h2>
-
 
                                 <div
                                     className="
-                                        mt-7
-                                        space-y-4
-                                        text-sm
+                                        cart-summary
+                                        h-fit
+                                        border
+                                        border-[#DED5C8]
+                                        bg-[#F5F0E8]
+                                        p-6
+                                        sm:p-7
+                                        lg:sticky
+                                        lg:top-28
                                     "
                                 >
 
-                                    <div
+                                    <p
                                         className="
-                                            flex
-                                            justify-between
+                                            text-[10px]
+                                            uppercase
+                                            tracking-[3px]
+                                            text-gray-500
                                         "
                                     >
+                                        ORDER DETAILS
+                                    </p>
 
-                                        <span className="text-gray-500">
-                                            Subtotal
-                                        </span>
-
-                                        <span>
-                                            ₹{totalPrice}
-                                        </span>
-
-                                    </div>
-
-
-                                    <div
+                                    <h2
                                         className="
-                                            flex
-                                            justify-between
+                                            mt-2
+                                            font-serif
+                                            text-2xl
+                                            font-medium
                                         "
                                     >
-
-                                        <span className="text-gray-500">
-                                            Shipping
-                                        </span>
-
-                                        <span>
-                                            Free
-                                        </span>
-
-                                    </div>
+                                        Order Summary
+                                    </h2>
 
 
                                     <div
                                         className="
-                                            border-t
-                                            border-[#DCCFBE]
-                                            pt-5
-                                            mt-5
-                                            flex
-                                            justify-between
-                                            items-center
+                                            mt-7
+                                            space-y-4
+                                            text-sm
                                         "
                                     >
 
-                                        <span className="font-medium">
-                                            Total
-                                        </span>
-
-                                        <span
+                                        <div
                                             className="
-                                                cart-total-price
-                                                text-xl
-                                                font-medium
+                                                flex
+                                                justify-between
                                             "
                                         >
-                                            ₹{totalPrice}
-                                        </span>
+
+                                            <span className="text-gray-500">
+                                                Subtotal
+                                            </span>
+
+                                            <span>
+                                                ₹{totalPrice}
+                                            </span>
+
+                                        </div>
+
+
+                                        <div
+                                            className="
+                                                flex
+                                                justify-between
+                                            "
+                                        >
+
+                                            <span className="text-gray-500">
+                                                Shipping
+                                            </span>
+
+                                            <span>
+                                                Free
+                                            </span>
+
+                                        </div>
+
+
+                                        <div
+                                            className="
+                                                border-t
+                                                border-[#DCCFBE]
+                                                pt-5
+                                                mt-5
+                                                flex
+                                                justify-between
+                                                items-center
+                                            "
+                                        >
+
+                                            <span className="font-medium">
+                                                Total
+                                            </span>
+
+                                            <span
+                                                className="
+                                                    cart-total-price
+                                                    text-xl
+                                                    font-medium
+                                                "
+                                            >
+                                                ₹{totalPrice}
+                                            </span>
+
+                                        </div>
 
                                     </div>
+
+
+                                    {/* Checkout Button */}
+
+                                    <button
+                                        onClick={() => navigate('/payment')}
+                                        className="
+                                            cart-checkout-btn
+                                            mt-7
+                                            flex
+                                            w-full
+                                            items-center
+                                            justify-center
+                                            gap-2
+                                            bg-[#2B2926]
+                                            py-3.5
+                                            text-sm
+                                            font-medium
+                                            text-white
+                                            transition
+                                            duration-300
+                                            hover:bg-black
+                                        "
+                                    >
+
+                                        Proceed to Checkout
+
+                                        <FiArrowRight
+                                            className="checkout-arrow"
+                                            size={16}
+                                        />
+
+                                    </button>
+
+
+                                    <p
+                                        className="
+                                            mt-4
+                                            text-center
+                                            text-xs
+                                            leading-relaxed
+                                            text-gray-500
+                                        "
+                                    >
+                                        Secure checkout with multiple
+                                        payment options.
+                                    </p>
 
                                 </div>
 
-
-                                {/* Checkout Button */}
-
-                                <button
-                                    onClick={() => navigate('/payment')}
-                                    className="
-                                        cart-checkout-btn
-                                        mt-7
-                                        flex
-                                        w-full
-                                        items-center
-                                        justify-center
-                                        gap-2
-                                        bg-[#2B2926]
-                                        py-3.5
-                                        text-sm
-                                        font-medium
-                                        text-white
-                                        transition
-                                        duration-300
-                                        hover:bg-black
-                                    "
-                                >
-
-                                    Proceed to Checkout
-
-                                    <FiArrowRight
-                                        className="checkout-arrow"
-                                        size={16}
-                                    />
-
-                                </button>
-
-
-                                <p
-                                    className="
-                                        mt-4
-                                        text-center
-                                        text-xs
-                                        leading-relaxed
-                                        text-gray-500
-                                    "
-                                >
-                                    Secure checkout with multiple
-                                    payment options.
-                                </p>
-
-                            </div>
+                            </ScrollReveal>
 
                         </div>
 
@@ -784,92 +823,13 @@ function CartPage({ cartCount, setCartCount }) {
 
             <style>{`
 
-                /* Page Entrance */
-
-                .cart-page {
-                    animation: cartPageEnter 0.7s ease both;
-                }
-
-                @keyframes cartPageEnter {
-                    from {
-                        opacity: 0;
-                    }
-
-                    to {
-                        opacity: 1;
-                    }
-                }
-
-
-                /* Heading */
-
-                .cart-heading {
-                    animation: cartHeadingEnter 0.8s ease both;
-                }
-
-                .cart-subtitle {
-                    animation: cartTextEnter 0.7s ease both;
-                }
-
-                .cart-title {
-                    animation: cartTextEnter 0.8s ease both;
-                    animation-delay: 0.1s;
-                    animation-fill-mode: both;
-                }
-
-                .cart-description {
-                    animation: cartTextEnter 0.8s ease both;
-                    animation-delay: 0.2s;
-                    animation-fill-mode: both;
-                }
-
-                @keyframes cartHeadingEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                @keyframes cartTextEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(15px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-
                 /* Cart Item Cards */
 
                 .cart-item-card {
-                    opacity: 0;
-                    animation: cartItemEnter 0.65s ease forwards;
-                    animation-delay: calc(var(--cart-index) * 120ms);
                     transition:
                         transform 0.4s ease,
                         box-shadow 0.4s ease,
                         border-color 0.4s ease;
-                }
-
-                @keyframes cartItemEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(30px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
                 }
 
                 .cart-item-card:hover {
@@ -965,8 +925,7 @@ function CartPage({ cartCount, setCartCount }) {
                 }
 
                 .remove-icon {
-                    transition:
-                        transform 0.3s ease;
+                    transition: transform 0.3s ease;
                 }
 
                 .cart-remove-btn:hover .remove-icon {
@@ -977,24 +936,9 @@ function CartPage({ cartCount, setCartCount }) {
                 /* Order Summary */
 
                 .cart-summary {
-                    opacity: 0;
-                    animation: summaryEnter 0.8s ease forwards;
-                    animation-delay: 0.3s;
                     transition:
                         box-shadow 0.4s ease,
                         border-color 0.4s ease;
-                }
-
-                @keyframes summaryEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
                 }
 
                 .cart-summary:hover {
@@ -1067,23 +1011,7 @@ function CartPage({ cartCount, setCartCount }) {
                 }
 
 
-                /* Empty Cart */
-
-                .cart-empty {
-                    animation: emptyCartEnter 0.8s ease both;
-                }
-
-                @keyframes emptyCartEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px) scale(0.98);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
+                /* Empty Cart Icon */
 
                 .empty-cart-icon {
                     animation: emptyCartFloat 2.5s ease-in-out infinite;
@@ -1124,19 +1052,9 @@ function CartPage({ cartCount, setCartCount }) {
 
                 @media (prefers-reduced-motion: reduce) {
 
-                    .cart-page,
-                    .cart-heading,
-                    .cart-subtitle,
-                    .cart-title,
-                    .cart-description,
-                    .cart-item-card,
-                    .cart-summary,
-                    .cart-empty,
                     .empty-cart-icon,
                     .cart-loader {
                         animation: none !important;
-                        opacity: 1 !important;
-                        transform: none !important;
                     }
 
                     .cart-item-card,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import ScrollReveal from '../components/ScrollReveal'
 import { useNavigate, useParams } from 'react-router-dom'
 import API from '../services/axios'
 import { toast } from 'react-toastify'
@@ -343,34 +344,38 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
           {/* Breadcrumb */}
 
-          <nav
-            className="product-breadcrumb mb-7 flex flex-wrap items-center gap-2 text-xs text-[#898278] sm:mb-10 sm:text-sm"
-            aria-label="Breadcrumb"
-          >
+          <ScrollReveal direction="down" duration={700}>
 
-            <button
-              onClick={() => navigate('/')}
-              className="breadcrumb-link transition hover:text-[#292723]"
+            <nav
+              className="product-breadcrumb mb-7 flex flex-wrap items-center gap-2 text-xs text-[#898278] sm:mb-10 sm:text-sm"
+              aria-label="Breadcrumb"
             >
-              Home
-            </button>
 
-            <FiChevronRight className="h-3 w-3" />
+              <button
+                onClick={() => navigate('/')}
+                className="breadcrumb-link transition hover:text-[#292723]"
+              >
+                Home
+              </button>
 
-            <button
-              onClick={() => navigate('/shop')}
-              className="breadcrumb-link transition hover:text-[#292723]"
-            >
-              Shop
-            </button>
+              <FiChevronRight className="h-3 w-3" />
 
-            <FiChevronRight className="h-3 w-3" />
+              <button
+                onClick={() => navigate('/shop')}
+                className="breadcrumb-link transition hover:text-[#292723]"
+              >
+                Shop
+              </button>
 
-            <span className="max-w-[190px] truncate text-[#292723]">
-              {product.title}
-            </span>
+              <FiChevronRight className="h-3 w-3" />
 
-          </nav>
+              <span className="max-w-[190px] truncate text-[#292723]">
+                {product.title}
+              </span>
+
+            </nav>
+
+          </ScrollReveal>
 
 
           {/* Product Overview */}
@@ -380,308 +385,316 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
             {/* Product Gallery */}
 
-            <div className="product-gallery grid grid-cols-1 gap-3 sm:grid-cols-[76px_minmax(0,1fr)] sm:gap-4">
+            <ScrollReveal direction="left" duration={850}>
+
+              <div className="product-gallery grid grid-cols-1 gap-3 sm:grid-cols-[76px_minmax(0,1fr)] sm:gap-4">
 
 
-              {/* Thumbnails */}
-
-              {productImages.length > 1 && (
-
-                <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:flex-col sm:overflow-visible">
-
-                  {productImages.map((image, index) => (
-
-                    <button
-                      key={`${image}-${index}`}
-                      type="button"
-                      onClick={() => setSelectedImage(image)}
-                      aria-label={`View image ${index + 1}`}
-                      aria-pressed={selectedImage === image}
-                      className={`product-thumbnail h-[72px] w-[72px] shrink-0 overflow-hidden rounded-sm border bg-white p-1 transition sm:h-[76px] sm:w-[76px] ${
-                        selectedImage === image
-                          ? 'border-[#292723] ring-1 ring-[#292723]'
-                          : 'border-[#E6E0D7] hover:border-[#9A9083]'
-                      }`}
-                    >
-
-                      <img
-                        src={image}
-                        alt={`${product.title} view ${index + 1}`}
-                        className="h-full w-full object-contain"
-                      />
-
-                    </button>
-
-                  ))}
-
-                </div>
-
-              )}
-
-
-              {/* Main Image */}
-
-              <div className="product-main-image group relative order-1 min-w-0 overflow-hidden rounded-sm bg-[#F0ECE5]">
-
-                <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2">
-
-                  {product.isOffer && (
-
-                    <span className="product-offer-badge bg-[#292723] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[1.5px] text-white">
-
-                      {product.offerPercentage}% off
-
-                    </span>
-
-                  )}
-
-                  <span className="product-edit-badge bg-white/90 px-3 py-1.5 text-[10px] uppercase tracking-[1.5px] text-[#4B463F]">
-
-                    Velaura edit
-
-                  </span>
-
-                </div>
-
-
-                <img
-                  key={selectedImage}
-                  src={selectedImage || product.image}
-                  alt={product.title}
-                  className="product-feature-image aspect-[4/5] w-full object-contain p-3 transition-transform duration-700 group-hover:scale-[1.025] sm:p-5"
-                />
-
+                {/* Thumbnails */}
 
                 {productImages.length > 1 && (
 
-                  <div className="product-image-count absolute bottom-4 right-4 rounded-full bg-white/90 px-3 py-1.5 text-xs text-[#292723]">
+                  <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:flex-col sm:overflow-visible">
 
-                    {Math.max(productImages.indexOf(selectedImage), 0) + 1} / {productImages.length}
+                    {productImages.map((image, index) => (
+
+                      <button
+                        key={`${image}-${index}`}
+                        type="button"
+                        onClick={() => setSelectedImage(image)}
+                        aria-label={`View image ${index + 1}`}
+                        aria-pressed={selectedImage === image}
+                        className={`product-thumbnail h-[72px] w-[72px] shrink-0 overflow-hidden rounded-sm border bg-white p-1 transition sm:h-[76px] sm:w-[76px] ${
+                          selectedImage === image
+                            ? 'border-[#292723] ring-1 ring-[#292723]'
+                            : 'border-[#E6E0D7] hover:border-[#9A9083]'
+                        }`}
+                      >
+
+                        <img
+                          src={image}
+                          alt={`${product.title} view ${index + 1}`}
+                          className="h-full w-full object-contain"
+                        />
+
+                      </button>
+
+                    ))}
 
                   </div>
 
                 )}
 
+
+                {/* Main Image */}
+
+                <div className="product-main-image group relative order-1 min-w-0 overflow-hidden rounded-sm bg-[#F0ECE5]">
+
+                  <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2">
+
+                    {product.isOffer && (
+
+                      <span className="product-offer-badge bg-[#292723] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[1.5px] text-white">
+
+                        {product.offerPercentage}% off
+
+                      </span>
+
+                    )}
+
+                    <span className="product-edit-badge bg-white/90 px-3 py-1.5 text-[10px] uppercase tracking-[1.5px] text-[#4B463F]">
+
+                      Velaura edit
+
+                    </span>
+
+                  </div>
+
+
+                  <img
+                    key={selectedImage}
+                    src={selectedImage || product.image}
+                    alt={product.title}
+                    className="product-feature-image aspect-[4/5] w-full object-contain p-3 transition-transform duration-700 group-hover:scale-[1.025] sm:p-5"
+                  />
+
+
+                  {productImages.length > 1 && (
+
+                    <div className="product-image-count absolute bottom-4 right-4 rounded-full bg-white/90 px-3 py-1.5 text-xs text-[#292723]">
+
+                      {Math.max(productImages.indexOf(selectedImage), 0) + 1} / {productImages.length}
+
+                    </div>
+
+                  )}
+
+                </div>
+
               </div>
 
-            </div>
+            </ScrollReveal>
 
 
             {/* Product Information */}
 
-            <div className="product-information lg:sticky lg:top-28">
+            <ScrollReveal direction="right" delay={150} duration={850}>
 
-              <p className="product-category text-[10px] font-medium uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
+              <div className="product-information lg:sticky lg:top-28">
 
-                {product.category}
+                <p className="product-category text-[10px] font-medium uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
 
-              </p>
+                  {product.category}
 
-
-              <h1 className="product-name mt-3 max-w-xl font-serif text-3xl leading-tight sm:text-4xl xl:text-[42px]">
-
-                {product.title}
-
-              </h1>
+                </p>
 
 
-              {/* Rating */}
+                <h1 className="product-name mt-3 max-w-xl font-serif text-3xl leading-tight sm:text-4xl xl:text-[42px]">
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('reviews')
-                  document.getElementById('product-information')?.scrollIntoView({
-                    behavior: 'smooth'
-                  })
-                }}
-                className="product-rating mt-4 inline-flex items-center gap-2 text-sm text-[#756D63] transition hover:text-[#292723]"
-              >
+                  {product.title}
 
-                <span className="flex items-center gap-0.5 text-[#B18A4B]">
-
-                  {[1, 2, 3, 4, 5].map((star) => (
-
-                    <FiStar
-                      key={star}
-                      className={`product-rating-star h-3.5 w-3.5 ${
-                        star <= Math.round(averageRating)
-                          ? 'fill-current'
-                          : ''
-                      }`}
-                    />
-
-                  ))}
-
-                </span>
-
-                <span>{averageRating.toFixed(1)}</span>
-
-                <span className="text-[#B9B0A5]">|</span>
-
-                <span>
-                  {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
-                </span>
-
-              </button>
+                </h1>
 
 
-              {/* Price */}
+                {/* Rating */}
 
-              <div className="product-price-area mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('reviews')
+                    document.getElementById('product-information')?.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }}
+                  className="product-rating mt-4 inline-flex items-center gap-2 text-sm text-[#756D63] transition hover:text-[#292723]"
+                >
 
-                {product.isOffer && (
+                  <span className="flex items-center gap-0.5 text-[#B18A4B]">
 
-                  <span className="text-base text-[#A59B8F] line-through">
-                    ₹{product.price}
+                    {[1, 2, 3, 4, 5].map((star) => (
+
+                      <FiStar
+                        key={star}
+                        className={`product-rating-star h-3.5 w-3.5 ${
+                          star <= Math.round(averageRating)
+                            ? 'fill-current'
+                            : ''
+                        }`}
+                      />
+
+                    ))}
+
                   </span>
 
-                )}
+                  <span>{averageRating.toFixed(1)}</span>
 
-                <span className="product-price text-2xl font-medium tracking-tight sm:text-3xl">
-                  ₹{displayPrice}
-                </span>
+                  <span className="text-[#B9B0A5]">|</span>
 
-                {product.isOffer && (
-
-                  <span className="product-save-badge rounded-full bg-[#E7EEE4] px-3 py-1 text-xs font-medium text-[#496346]">
-                    Save {product.offerPercentage}%
+                  <span>
+                    {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
                   </span>
 
-                )}
-
-              </div>
+                </button>
 
 
-              {/* Description */}
+                {/* Price */}
 
-              <p className="product-description mt-6 max-w-xl whitespace-pre-line text-sm leading-7 text-[#756D63] sm:text-[15px]">
+                <div className="product-price-area mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
 
-                {product.description}
+                  {product.isOffer && (
 
-              </p>
+                    <span className="text-base text-[#A59B8F] line-through">
+                      ₹{product.price}
+                    </span>
 
+                  )}
 
-              <div className="my-7 border-t border-[#E7E0D6]" />
-
-
-              {/* Product Benefits */}
-
-              <div className="space-y-4">
-
-                <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
-
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
-                    <FiTruck className="h-4 w-4" />
+                  <span className="product-price text-2xl font-medium tracking-tight sm:text-3xl">
+                    ₹{displayPrice}
                   </span>
 
-                  <div>
-                    <p className="font-medium text-[#292723]">
-                      Thoughtful delivery
-                    </p>
+                  {product.isOffer && (
 
-                    <p className="mt-0.5 text-xs text-[#898278]">
-                      Carefully packed for your order
-                    </p>
+                    <span className="product-save-badge rounded-full bg-[#E7EEE4] px-3 py-1 text-xs font-medium text-[#496346]">
+                      Save {product.offerPercentage}%
+                    </span>
+
+                  )}
+
+                </div>
+
+
+                {/* Description */}
+
+                <p className="product-description mt-6 max-w-xl whitespace-pre-line text-sm leading-7 text-[#756D63] sm:text-[15px]">
+
+                  {product.description}
+
+                </p>
+
+
+                <div className="my-7 border-t border-[#E7E0D6]" />
+
+
+                {/* Product Benefits */}
+
+                <div className="space-y-4">
+
+                  <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
+
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
+                      <FiTruck className="h-4 w-4" />
+                    </span>
+
+                    <div>
+                      <p className="font-medium text-[#292723]">
+                        Thoughtful delivery
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-[#898278]">
+                        Carefully packed for your order
+                      </p>
+                    </div>
+
+                  </div>
+
+
+                  <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
+
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
+                      <FiShield className="h-4 w-4" />
+                    </span>
+
+                    <div>
+                      <p className="font-medium text-[#292723]">
+                        Secure checkout
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-[#898278]">
+                        Your shopping experience matters to us
+                      </p>
+                    </div>
+
+                  </div>
+
+
+                  <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
+
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
+                      <FiRotateCcw className="h-4 w-4" />
+                    </span>
+
+                    <div>
+                      <p className="font-medium text-[#292723]">
+                        Easy returns
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-[#898278]">
+                        Shop with added peace of mind
+                      </p>
+                    </div>
+
                   </div>
 
                 </div>
 
 
-                <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
+                {/* Add To Cart */}
 
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
-                    <FiShield className="h-4 w-4" />
-                  </span>
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className="product-add-button mt-8 flex w-full items-center justify-center gap-3 bg-[#292723] px-6 py-4 text-xs font-semibold uppercase tracking-[2px] text-white transition duration-300 hover:bg-[#49443D] focus:outline-none focus:ring-2 focus:ring-[#292723] focus:ring-offset-2"
+                >
 
-                  <div>
-                    <p className="font-medium text-[#292723]">
-                      Secure checkout
-                    </p>
+                  <FiShoppingBag className="h-4 w-4" />
 
-                    <p className="mt-0.5 text-xs text-[#898278]">
-                      Your shopping experience matters to us
-                    </p>
+                  Add to bag
+
+                </button>
+
+
+                <p className="mt-4 text-center text-[11px] uppercase tracking-[1.4px] text-[#948A7D]">
+
+                  A little detail. A lasting impression.
+
+                </p>
+
+
+                {/* Product Info */}
+
+                <div className="mt-7 border-y border-[#E7E0D6] py-4">
+
+                  <div className="flex items-center justify-between gap-4 text-sm">
+
+                    <span className="text-[#898278]">
+                      Category
+                    </span>
+
+                    <span className="capitalize text-[#292723]">
+                      {product.category}
+                    </span>
+
                   </div>
 
-                </div>
 
+                  <div className="mt-3 flex items-center justify-between gap-4 text-sm">
 
-                <div className="product-benefit flex items-center gap-3 text-sm text-[#5E584F]">
+                    <span className="text-[#898278]">
+                      Product code
+                    </span>
 
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F0ECE5]">
-                    <FiRotateCcw className="h-4 w-4" />
-                  </span>
+                    <span className="text-xs tracking-wide text-[#5E584F]">
+                      {String(product._id).slice(-8).toUpperCase()}
+                    </span>
 
-                  <div>
-                    <p className="font-medium text-[#292723]">
-                      Easy returns
-                    </p>
-
-                    <p className="mt-0.5 text-xs text-[#898278]">
-                      Shop with added peace of mind
-                    </p>
                   </div>
 
                 </div>
 
               </div>
 
-
-              {/* Add To Cart */}
-
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="product-add-button mt-8 flex w-full items-center justify-center gap-3 bg-[#292723] px-6 py-4 text-xs font-semibold uppercase tracking-[2px] text-white transition duration-300 hover:bg-[#49443D] focus:outline-none focus:ring-2 focus:ring-[#292723] focus:ring-offset-2"
-              >
-
-                <FiShoppingBag className="h-4 w-4" />
-
-                Add to bag
-
-              </button>
-
-
-              <p className="mt-4 text-center text-[11px] uppercase tracking-[1.4px] text-[#948A7D]">
-
-                A little detail. A lasting impression.
-
-              </p>
-
-
-              {/* Product Info */}
-
-              <div className="mt-7 border-y border-[#E7E0D6] py-4">
-
-                <div className="flex items-center justify-between gap-4 text-sm">
-
-                  <span className="text-[#898278]">
-                    Category
-                  </span>
-
-                  <span className="capitalize text-[#292723]">
-                    {product.category}
-                  </span>
-
-                </div>
-
-
-                <div className="mt-3 flex items-center justify-between gap-4 text-sm">
-
-                  <span className="text-[#898278]">
-                    Product code
-                  </span>
-
-                  <span className="text-xs tracking-wide text-[#5E584F]">
-                    {String(product._id).slice(-8).toUpperCase()}
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
+            </ScrollReveal>
 
           </section>
 
@@ -692,96 +705,105 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
             <section className="related-section mt-20 border-t border-[#E7E0D6] pt-12 sm:mt-24 sm:pt-16">
 
-              <div className="mb-7 flex items-end justify-between gap-4 sm:mb-9">
+              <ScrollReveal direction="up" duration={750}>
 
-                <div>
+                <div className="mb-7 flex items-end justify-between gap-4 sm:mb-9">
 
-                  <p className="text-[10px] uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
-                    Curated for you
-                  </p>
+                  <div>
 
-                  <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
-                    You may also like
-                  </h2>
+                    <p className="text-[10px] uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
+                      Curated for you
+                    </p>
+
+                    <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
+                      You may also like
+                    </h2>
+
+                  </div>
+
+                  <button
+                    onClick={() => navigate('/shop')}
+                    className="shrink-0 text-xs uppercase tracking-[1.5px] text-[#5E584F] underline underline-offset-4 transition hover:text-black"
+                  >
+                    View all
+                  </button>
 
                 </div>
 
-                <button
-                  onClick={() => navigate('/shop')}
-                  className="shrink-0 text-xs uppercase tracking-[1.5px] text-[#5E584F] underline underline-offset-4 transition hover:text-black"
-                >
-                  View all
-                </button>
-
-              </div>
+              </ScrollReveal>
 
 
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
 
                 {relatedProducts.map((item, index) => (
 
-                  <button
+                  <ScrollReveal
                     key={item._id}
-                    type="button"
-                    onClick={() => {
-                      navigate(`/product/${item._id}`)
-                      window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                      })
-                    }}
-                    className="related-product-card group min-w-0 text-left"
-                    style={{
-                      '--related-index': index
-                    }}
+                    direction="up"
+                    delay={index * 120}
+                    duration={700}
                   >
 
-                    <div className="related-product-image relative overflow-hidden bg-[#F0ECE5]">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigate(`/product/${item._id}`)
+                        window.scrollTo({
+                          top: 0,
+                          behavior: 'smooth'
+                        })
+                      }}
+                      className="related-product-card group min-w-0 text-left"
+                    >
 
-                      {item.isOffer && (
-
-                        <span className="absolute left-2 top-2 z-10 bg-[#292723] px-2 py-1 text-[9px] uppercase tracking-wider text-white sm:left-3 sm:top-3">
-
-                          {item.offerPercentage}% off
-
-                        </span>
-
-                      )}
-
-                      <img
-                        src={item.image || item.images?.[0]}
-                        alt={item.title}
-                        className="aspect-[4/5] w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105 sm:p-4"
-                      />
-
-                    </div>
-
-
-                    <div className="pt-3 sm:pt-4">
-
-                      <p className="related-product-title truncate text-sm text-[#292723]">
-                        {item.title}
-                      </p>
-
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                      <div className="related-product-image relative overflow-hidden bg-[#F0ECE5]">
 
                         {item.isOffer && (
 
-                          <span className="text-xs text-[#A59B8F] line-through">
-                            ₹{item.price}
+                          <span className="absolute left-2 top-2 z-10 bg-[#292723] px-2 py-1 text-[9px] uppercase tracking-wider text-white sm:left-3 sm:top-3">
+
+                            {item.offerPercentage}% off
+
                           </span>
 
                         )}
 
-                        <span className="text-sm font-medium">
-                          ₹{item.isOffer ? item.offerPrice : item.price}
-                        </span>
+                        <img
+                          src={item.image || item.images?.[0]}
+                          alt={item.title}
+                          className="aspect-[4/5] w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105 sm:p-4"
+                        />
 
                       </div>
 
-                    </div>
 
-                  </button>
+                      <div className="pt-3 sm:pt-4">
+
+                        <p className="related-product-title truncate text-sm text-[#292723]">
+                          {item.title}
+                        </p>
+
+                        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+
+                          {item.isOffer && (
+
+                            <span className="text-xs text-[#A59B8F] line-through">
+                              ₹{item.price}
+                            </span>
+
+                          )}
+
+                          <span className="text-sm font-medium">
+                            ₹{item.isOffer ? item.offerPrice : item.price}
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    </button>
+
+                  </ScrollReveal>
 
                 ))}
 
@@ -794,200 +816,186 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
           {/* Description and Reviews */}
 
-          <section
-            id="product-information"
-            className="product-tabs-section mt-20 border-t border-[#E7E0D6] sm:mt-24"
-          >
+          <ScrollReveal direction="up" duration={800}>
 
-            <div className="flex gap-7 overflow-x-auto border-b border-[#E7E0D6] sm:gap-10">
+            <section
+              id="product-information"
+              className="product-tabs-section mt-20 border-t border-[#E7E0D6] sm:mt-24"
+            >
 
-              <button
-                type="button"
-                onClick={() => setActiveTab('description')}
-                className={`product-tab shrink-0 border-b-2 py-5 text-xs uppercase tracking-[1.6px] transition sm:text-sm ${
-                  activeTab === 'description'
-                    ? 'border-[#292723] font-semibold text-[#292723]'
-                    : 'border-transparent text-[#92887D] hover:text-[#292723]'
-                }`}
-              >
-                Product details
-              </button>
+              <div className="flex gap-7 overflow-x-auto border-b border-[#E7E0D6] sm:gap-10">
 
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('reviews')}
-                className={`product-tab shrink-0 border-b-2 py-5 text-xs uppercase tracking-[1.6px] transition sm:text-sm ${
-                  activeTab === 'reviews'
-                    ? 'border-[#292723] font-semibold text-[#292723]'
-                    : 'border-transparent text-[#92887D] hover:text-[#292723]'
-                }`}
-              >
-                Reviews ({totalReviews})
-              </button>
-
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('description')}
+                  className={`product-tab shrink-0 border-b-2 py-5 text-xs uppercase tracking-[1.6px] transition sm:text-sm ${
+                    activeTab === 'description'
+                      ? 'border-[#292723] font-semibold text-[#292723]'
+                      : 'border-transparent text-[#92887D] hover:text-[#292723]'
+                  }`}
+                >
+                  Product details
+                </button>
 
 
-            <div key={activeTab} className="product-tab-content py-9 sm:py-12">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('reviews')}
+                  className={`product-tab shrink-0 border-b-2 py-5 text-xs uppercase tracking-[1.6px] transition sm:text-sm ${
+                    activeTab === 'reviews'
+                      ? 'border-[#292723] font-semibold text-[#292723]'
+                      : 'border-transparent text-[#92887D] hover:text-[#292723]'
+                  }`}
+                >
+                  Reviews ({totalReviews})
+                </button>
+
+              </div>
 
 
-              {/* Description Tab */}
-
-              {activeTab === 'description' && (
-
-                <div className="grid gap-8 md:grid-cols-[1fr_280px] md:gap-16">
-
-                  <div className="max-w-3xl">
-
-                    <p className="text-[10px] uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
-                      The details
-                    </p>
-
-                    <h2 className="mt-3 font-serif text-2xl sm:text-3xl">
-                      Made to complement your style.
-                    </h2>
-
-                    <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[#756D63] sm:text-[15px]">
-                      {product.description}
-                    </p>
-
-                  </div>
+              <div key={activeTab} className="product-tab-content py-9 sm:py-12">
 
 
-                  <div className="product-info-card h-fit border border-[#E7E0D6] p-5 sm:p-6">
+                {/* Description Tab */}
 
-                    <div className="flex items-center gap-3">
+                {activeTab === 'description' && (
 
-                      <FiPackage className="h-5 w-5 text-[#8C8174]" />
+                  <div className="grid gap-8 md:grid-cols-[1fr_280px] md:gap-16">
 
-                      <p className="text-sm font-medium">
-                        Product information
-                      </p>
+                    <ScrollReveal direction="left" duration={700}>
 
-                    </div>
+                      <div className="max-w-3xl">
 
+                        <p className="text-[10px] uppercase tracking-[3px] text-[#8C8174] sm:text-xs">
+                          The details
+                        </p>
 
-                    <div className="mt-5 border-t border-[#E7E0D6] pt-4">
+                        <h2 className="mt-3 font-serif text-2xl sm:text-3xl">
+                          Made to complement your style.
+                        </h2>
 
-                      <p className="text-xs text-[#92887D]">
-                        Category
-                      </p>
-
-                      <p className="mt-1 text-sm capitalize">
-                        {product.category}
-                      </p>
-
-                    </div>
-
-
-                    <div className="mt-4 border-t border-[#E7E0D6] pt-4">
-
-                      <p className="text-xs text-[#92887D]">
-                        Availability
-                      </p>
-
-                      <p className="mt-1 text-sm">
-                        Available to order
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              )}
-
-
-              {/* Reviews Tab */}
-
-              {activeTab === 'reviews' && (
-
-                <div>
-
-                  <div className="grid gap-5 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8">
-
-
-                    {/* Rating Summary */}
-
-                    <div className="rating-summary-card border border-[#E7E0D6] bg-white/60 p-6 sm:p-8">
-
-                      <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
-                        Customer rating
-                      </p>
-
-                      <div className="mt-4 flex items-baseline gap-2">
-
-                        <span className="font-serif text-5xl">
-                          {averageRating.toFixed(1)}
-                        </span>
-
-                        <span className="text-sm text-[#A59B8F]">
-                          / 5
-                        </span>
+                        <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[#756D63] sm:text-[15px]">
+                          {product.description}
+                        </p>
 
                       </div>
 
-                      <div className="mt-3 flex gap-1 text-[#B18A4B]">
-
-                        {[1, 2, 3, 4, 5].map((star) => (
-
-                          <FiStar
-                            key={star}
-                            className={`h-4 w-4 ${
-                              star <= Math.round(averageRating)
-                                ? 'fill-current'
-                                : ''
-                            }`}
-                          />
-
-                        ))}
-
-                      </div>
-
-                      <p className="mt-3 text-xs text-[#898278]">
-                        Based on {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
-                      </p>
-
-                    </div>
+                    </ScrollReveal>
 
 
-                    {/* Review Form */}
+                    <ScrollReveal direction="right" delay={150} duration={700}>
 
-                    <div className="review-form-card border border-[#E7E0D6] bg-white/60 p-5 sm:p-7">
+                      <div className="product-info-card h-fit border border-[#E7E0D6] p-5 sm:p-6">
 
-                      {!showReviewForm ? (
+                        <div className="flex items-center gap-3">
 
-                        <div>
+                          <FiPackage className="h-5 w-5 text-[#8C8174]" />
 
-                          <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
-                            Your experience matters
+                          <p className="text-sm font-medium">
+                            Product information
                           </p>
-
-                          <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
-                            Share your thoughts
-                          </h2>
-
-                          <p className="mt-3 max-w-xl text-sm leading-6 text-[#756D63]">
-                            Help other customers discover what makes this piece special.
-                          </p>
-
-                          <button
-                            type="button"
-                            onClick={() => setShowReviewForm(true)}
-                            className="review-action-btn mt-6 bg-[#292723] px-6 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#49443D]"
-                          >
-                            Write a review
-                          </button>
 
                         </div>
 
-                      ) : (
 
-                        <>
+                        <div className="mt-5 border-t border-[#E7E0D6] pt-4">
 
-                          <div className="flex items-start justify-between gap-4">
+                          <p className="text-xs text-[#92887D]">
+                            Category
+                          </p>
+
+                          <p className="mt-1 text-sm capitalize">
+                            {product.category}
+                          </p>
+
+                        </div>
+
+
+                        <div className="mt-4 border-t border-[#E7E0D6] pt-4">
+
+                          <p className="text-xs text-[#92887D]">
+                            Availability
+                          </p>
+
+                          <p className="mt-1 text-sm">
+                            Available to order
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                    </ScrollReveal>
+
+                  </div>
+
+                )}
+
+
+                {/* Reviews Tab */}
+
+                {activeTab === 'reviews' && (
+
+                  <div>
+
+                    <div className="grid gap-5 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8">
+
+
+                      {/* Rating Summary */}
+
+                      <ScrollReveal direction="left" duration={700}>
+
+                        <div className="rating-summary-card border border-[#E7E0D6] bg-white/60 p-6 sm:p-8">
+
+                          <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
+                            Customer rating
+                          </p>
+
+                          <div className="mt-4 flex items-baseline gap-2">
+
+                            <span className="font-serif text-5xl">
+                              {averageRating.toFixed(1)}
+                            </span>
+
+                            <span className="text-sm text-[#A59B8F]">
+                              / 5
+                            </span>
+
+                          </div>
+
+                          <div className="mt-3 flex gap-1 text-[#B18A4B]">
+
+                            {[1, 2, 3, 4, 5].map((star) => (
+
+                              <FiStar
+                                key={star}
+                                className={`h-4 w-4 ${
+                                  star <= Math.round(averageRating)
+                                    ? 'fill-current'
+                                    : ''
+                                }`}
+                              />
+
+                            ))}
+
+                          </div>
+
+                          <p className="mt-3 text-xs text-[#898278]">
+                            Based on {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
+                          </p>
+
+                        </div>
+
+                      </ScrollReveal>
+
+
+                      {/* Review Form */}
+
+                      <ScrollReveal direction="right" delay={150} duration={700}>
+
+                        <div className="review-form-card border border-[#E7E0D6] bg-white/60 p-5 sm:p-7">
+
+                          {!showReviewForm ? (
 
                             <div>
 
@@ -996,100 +1004,276 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
                               </p>
 
                               <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
-                                Write a review
+                                Share your thoughts
                               </h2>
 
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={handleCancelReview}
-                              className="text-xs uppercase tracking-wider text-[#898278] underline underline-offset-4 hover:text-[#292723]"
-                            >
-                              Cancel
-                            </button>
-
-                          </div>
-
-
-                          <form onSubmit={handleSubmitReview} className="mt-6">
-
-                            <label className="block text-sm font-medium">
-                              Your rating
-                            </label>
-
-                            <div className="mt-3 flex gap-2">
-
-                              {[1, 2, 3, 4, 5].map((star) => (
-
-                                <button
-                                  key={star}
-                                  type="button"
-                                  onClick={() => setRating(star)}
-                                  aria-label={`Rate ${star} out of 5 stars`}
-                                  aria-pressed={rating === star}
-                                  className={`review-star text-3xl transition hover:scale-110 ${
-                                    star <= rating
-                                      ? 'text-[#B18A4B]'
-                                      : 'text-[#D8D0C6]'
-                                  }`}
-                                >
-                                  ★
-                                </button>
-
-                              ))}
-
-                            </div>
-
-
-                            <label
-                              htmlFor="reviewComment"
-                              className="mt-6 block text-sm font-medium"
-                            >
-                              Your review
-                            </label>
-
-                            <textarea
-                              id="reviewComment"
-                              value={comment}
-                              onChange={(e) => setComment(e.target.value)}
-                              placeholder="Tell us about your experience with this product..."
-                              rows="4"
-                              maxLength={1000}
-                              required
-                              className="review-textarea mt-3 w-full resize-y border border-[#E0D8CE] bg-[#FFFEFC] px-4 py-3 text-sm outline-none transition placeholder:text-[#B1A79A] focus:border-[#292723]"
-                            />
-
-                            <p className="mt-1 text-right text-xs text-[#A59B8F]">
-                              {comment.length}/1000
-                            </p>
-
-
-                            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-
-                              <button
-                                type="submit"
-                                disabled={submittingReview}
-                                className="review-action-btn bg-[#292723] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.4px] text-white transition hover:bg-[#49443D] disabled:cursor-not-allowed disabled:opacity-60"
-                              >
-                                {submittingReview ? 'Submitting...' : 'Submit review'}
-                              </button>
-
+                              <p className="mt-3 max-w-xl text-sm leading-6 text-[#756D63]">
+                                Help other customers discover what makes this piece special.
+                              </p>
 
                               <button
                                 type="button"
-                                onClick={handleCancelReview}
-                                disabled={submittingReview}
-                                className="review-cancel-btn border border-[#DED5C8] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.4px] transition hover:bg-[#F0ECE5] disabled:opacity-60"
+                                onClick={() => setShowReviewForm(true)}
+                                className="review-action-btn mt-6 bg-[#292723] px-6 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#49443D]"
                               >
-                                Cancel
+                                Write a review
                               </button>
 
                             </div>
 
-                          </form>
+                          ) : (
 
-                        </>
+                            <>
+
+                              <div className="flex items-start justify-between gap-4">
+
+                                <div>
+
+                                  <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
+                                    Your experience matters
+                                  </p>
+
+                                  <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
+                                    Write a review
+                                  </h2>
+
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={handleCancelReview}
+                                  className="text-xs uppercase tracking-wider text-[#898278] underline underline-offset-4 hover:text-[#292723]"
+                                >
+                                  Cancel
+                                </button>
+
+                              </div>
+
+
+                              <form onSubmit={handleSubmitReview} className="mt-6">
+
+                                <label className="block text-sm font-medium">
+                                  Your rating
+                                </label>
+
+                                <div className="mt-3 flex gap-2">
+
+                                  {[1, 2, 3, 4, 5].map((star) => (
+
+                                    <button
+                                      key={star}
+                                      type="button"
+                                      onClick={() => setRating(star)}
+                                      aria-label={`Rate ${star} out of 5 stars`}
+                                      aria-pressed={rating === star}
+                                      className={`review-star text-3xl transition hover:scale-110 ${
+                                        star <= rating
+                                          ? 'text-[#B18A4B]'
+                                          : 'text-[#D8D0C6]'
+                                      }`}
+                                    >
+                                      ★
+                                    </button>
+
+                                  ))}
+
+                                </div>
+
+
+                                <label
+                                  htmlFor="reviewComment"
+                                  className="mt-6 block text-sm font-medium"
+                                >
+                                  Your review
+                                </label>
+
+                                <textarea
+                                  id="reviewComment"
+                                  value={comment}
+                                  onChange={(e) => setComment(e.target.value)}
+                                  placeholder="Tell us about your experience with this product..."
+                                  rows="4"
+                                  maxLength={1000}
+                                  required
+                                  className="review-textarea mt-3 w-full resize-y border border-[#E0D8CE] bg-[#FFFEFC] px-4 py-3 text-sm outline-none transition placeholder:text-[#B1A79A] focus:border-[#292723]"
+                                />
+
+                                <p className="mt-1 text-right text-xs text-[#A59B8F]">
+                                  {comment.length}/1000
+                                </p>
+
+
+                                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+
+                                  <button
+                                    type="submit"
+                                    disabled={submittingReview}
+                                    className="review-action-btn bg-[#292723] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.4px] text-white transition hover:bg-[#49443D] disabled:cursor-not-allowed disabled:opacity-60"
+                                  >
+                                    {submittingReview ? 'Submitting...' : 'Submit review'}
+                                  </button>
+
+
+                                  <button
+                                    type="button"
+                                    onClick={handleCancelReview}
+                                    disabled={submittingReview}
+                                    className="review-cancel-btn border border-[#DED5C8] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.4px] transition hover:bg-[#F0ECE5] disabled:opacity-60"
+                                  >
+                                    Cancel
+                                  </button>
+
+                                </div>
+
+                              </form>
+
+                            </>
+
+                          )}
+
+                        </div>
+
+                      </ScrollReveal>
+
+                    </div>
+
+
+                    {/* Customer Reviews */}
+
+                    <div className="mt-12">
+
+                      <ScrollReveal direction="up" duration={700}>
+
+                        <div className="flex flex-col gap-2 border-b border-[#E7E0D6] pb-5 sm:flex-row sm:items-end sm:justify-between">
+
+                          <div>
+
+                            <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
+                              Customer stories
+                            </p>
+
+                            <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
+                              What customers say
+                            </h2>
+
+                          </div>
+
+                          <p className="text-xs text-[#898278]">
+                            {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
+                          </p>
+
+                        </div>
+
+                      </ScrollReveal>
+
+
+                      {loadingReviews ? (
+
+                        <p className="py-8 text-sm text-[#898278]">
+                          Loading reviews...
+                        </p>
+
+                      ) : reviews.length === 0 ? (
+
+                        <ScrollReveal direction="up" duration={700}>
+
+                          <div className="no-reviews py-14 text-center">
+
+                            <FiHeart className="mx-auto h-7 w-7 text-[#B9B0A5]" />
+
+                            <h3 className="mt-4 font-serif text-xl">
+                              No reviews yet
+                            </h3>
+
+                            <p className="mt-2 text-sm text-[#898278]">
+                              Be the first to share your experience with this product.
+                            </p>
+
+                          </div>
+
+                        </ScrollReveal>
+
+                      ) : (
+
+                        <div className="divide-y divide-[#E7E0D6]">
+
+                          {reviews.map((review, index) => (
+
+                            <ScrollReveal
+                              key={review._id}
+                              direction="up"
+                              delay={index * 100}
+                              duration={650}
+                            >
+
+                              <article className="customer-review-card py-6 sm:py-8">
+
+                                <div className="flex items-start gap-4">
+
+                                  <div className="review-avatar flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EDE6DC] text-sm font-medium uppercase text-[#5E584F]">
+
+                                    {review.userId?.name?.charAt(0) || 'C'}
+
+                                  </div>
+
+
+                                  <div className="min-w-0 flex-1">
+
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+
+                                      <div>
+
+                                        <h3 className="break-words text-sm font-semibold">
+                                          {review.userId?.name || 'Customer'}
+                                        </h3>
+
+                                        <div className="mt-1 flex gap-0.5 text-[#B18A4B]">
+
+                                          {[1, 2, 3, 4, 5].map((star) => (
+
+                                            <FiStar
+                                              key={star}
+                                              className={`h-3.5 w-3.5 ${
+                                                star <= Number(review.rating)
+                                                  ? 'fill-current'
+                                                  : ''
+                                              }`}
+                                            />
+
+                                          ))}
+
+                                        </div>
+
+                                      </div>
+
+                                      <p className="text-xs text-[#A59B8F]">
+
+                                        {review.createdAt
+                                          ? new Date(review.createdAt).toLocaleDateString()
+                                          : ''}
+
+                                      </p>
+
+                                    </div>
+
+
+                                    <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-7 text-[#756D63]">
+
+                                      {review.comment}
+
+                                    </p>
+
+                                  </div>
+
+                                </div>
+
+                              </article>
+
+                            </ScrollReveal>
+
+                          ))}
+
+                        </div>
 
                       )}
 
@@ -1097,144 +1281,13 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
                   </div>
 
+                )}
 
-                  {/* Customer Reviews */}
+              </div>
 
-                  <div className="mt-12">
+            </section>
 
-                    <div className="flex flex-col gap-2 border-b border-[#E7E0D6] pb-5 sm:flex-row sm:items-end sm:justify-between">
-
-                      <div>
-
-                        <p className="text-[10px] uppercase tracking-[2px] text-[#8C8174]">
-                          Customer stories
-                        </p>
-
-                        <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
-                          What customers say
-                        </h2>
-
-                      </div>
-
-                      <p className="text-xs text-[#898278]">
-                        {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
-                      </p>
-
-                    </div>
-
-
-                    {loadingReviews ? (
-
-                      <p className="py-8 text-sm text-[#898278]">
-                        Loading reviews...
-                      </p>
-
-                    ) : reviews.length === 0 ? (
-
-                      <div className="no-reviews py-14 text-center">
-
-                        <FiHeart className="mx-auto h-7 w-7 text-[#B9B0A5]" />
-
-                        <h3 className="mt-4 font-serif text-xl">
-                          No reviews yet
-                        </h3>
-
-                        <p className="mt-2 text-sm text-[#898278]">
-                          Be the first to share your experience with this product.
-                        </p>
-
-                      </div>
-
-                    ) : (
-
-                      <div className="divide-y divide-[#E7E0D6]">
-
-                        {reviews.map((review, index) => (
-
-                          <article
-                            key={review._id}
-                            className="customer-review-card py-6 sm:py-8"
-                            style={{
-                              '--review-index': index
-                            }}
-                          >
-
-                            <div className="flex items-start gap-4">
-
-                              <div className="review-avatar flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EDE6DC] text-sm font-medium uppercase text-[#5E584F]">
-
-                                {review.userId?.name?.charAt(0) || 'C'}
-
-                              </div>
-
-
-                              <div className="min-w-0 flex-1">
-
-                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-
-                                  <div>
-
-                                    <h3 className="break-words text-sm font-semibold">
-                                      {review.userId?.name || 'Customer'}
-                                    </h3>
-
-                                    <div className="mt-1 flex gap-0.5 text-[#B18A4B]">
-
-                                      {[1, 2, 3, 4, 5].map((star) => (
-
-                                        <FiStar
-                                          key={star}
-                                          className={`h-3.5 w-3.5 ${
-                                            star <= Number(review.rating)
-                                              ? 'fill-current'
-                                              : ''
-                                          }`}
-                                        />
-
-                                      ))}
-
-                                    </div>
-
-                                  </div>
-
-                                  <p className="text-xs text-[#A59B8F]">
-
-                                    {review.createdAt
-                                      ? new Date(review.createdAt).toLocaleDateString()
-                                      : ''}
-
-                                  </p>
-
-                                </div>
-
-
-                                <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-7 text-[#756D63]">
-
-                                  {review.comment}
-
-                                </p>
-
-                              </div>
-
-                            </div>
-
-                          </article>
-
-                        ))}
-
-                      </div>
-
-                    )}
-
-                  </div>
-
-                </div>
-
-              )}
-
-            </div>
-
-          </section>
+          </ScrollReveal>
 
         </div>
 
@@ -1248,28 +1301,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
       <style>{`
 
-        /* Main Page */
-
-        .product-details-page {
-          animation: productPageEnter 0.7s ease both;
-        }
-
-        @keyframes productPageEnter {
-          from {
-            opacity: 0;
-          }
-
-          to {
-            opacity: 1;
-          }
-        }
-
-
         /* Breadcrumb */
-
-        .product-breadcrumb {
-          animation: productFadeUp 0.7s ease both;
-        }
 
         .breadcrumb-link {
           position: relative;
@@ -1288,25 +1320,6 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
         .breadcrumb-link:hover::after {
           width: 100%;
-        }
-
-
-        /* Product Gallery */
-
-        .product-gallery {
-          animation: galleryEnter 0.9s ease both;
-        }
-
-        @keyframes galleryEnter {
-          from {
-            opacity: 0;
-            transform: translateX(-25px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
         }
 
 
@@ -1407,23 +1420,6 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
 
         /* Product Information */
-
-        .product-information {
-          animation: informationEnter 0.9s ease both;
-          animation-delay: 0.12s;
-        }
-
-        @keyframes informationEnter {
-          from {
-            opacity: 0;
-            transform: translateX(25px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
 
         .product-category {
           animation: productFadeUp 0.7s ease both;
@@ -1569,29 +1565,10 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         }
 
 
-        /* Related Section */
-
-        .related-section {
-          animation: productFadeUp 0.8s ease both;
-        }
+        /* Related Products */
 
         .related-product-card {
-          opacity: 0;
-          animation: relatedCardEnter 0.65s ease forwards;
-          animation-delay: calc(var(--related-index) * 100ms);
           transition: transform 0.35s ease;
-        }
-
-        @keyframes relatedCardEnter {
-          from {
-            opacity: 0;
-            transform: translateY(25px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
 
         .related-product-card:hover {
@@ -1624,10 +1601,6 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
 
         /* Tabs */
-
-        .product-tabs-section {
-          animation: productFadeUp 0.8s ease both;
-        }
 
         .product-tab {
           position: relative;
@@ -1755,22 +1728,7 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         /* Customer Reviews */
 
         .customer-review-card {
-          opacity: 0;
-          animation: reviewEnter 0.6s ease forwards;
-          animation-delay: calc(var(--review-index) * 100ms);
           transition: padding-left 0.3s ease;
-        }
-
-        @keyframes reviewEnter {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
 
         .customer-review-card:hover {
@@ -1790,10 +1748,6 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
 
 
         /* No Reviews */
-
-        .no-reviews {
-          animation: productFadeUp 0.7s ease both;
-        }
 
         .no-reviews svg {
           animation: emptyReviewFloat 2.5s ease-in-out infinite;
@@ -1815,24 +1769,15 @@ function ProductDetails({ cartCount, setCartCount, setCartItems }) {
         @media (prefers-reduced-motion: reduce) {
 
           .product-details-page,
-          .product-gallery,
-          .product-information,
-          .product-breadcrumb,
           .product-name,
           .product-description,
           .product-category,
           .product-price-area,
-          .related-section,
-          .related-product-card,
-          .product-tabs-section,
           .product-tab-content,
-          .customer-review-card,
           .no-reviews,
           .no-reviews svg,
           .product-feature-image {
             animation: none !important;
-            opacity: 1 !important;
-            transform: none !important;
           }
 
           .product-thumbnail,

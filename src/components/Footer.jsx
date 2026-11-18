@@ -1,149 +1,106 @@
+
 import React from 'react'
+import ScrollReveal from './ScrollReveal'
 
 function Footer() {
   return (
-    <footer className="bg-[#F5F0E8] text-[#2B2926] px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-14 mt-12 animate-footer">
+    <footer className="bg-[#F5F0E8] text-[#2B2926] px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-14 mt-12">
 
       {/* Footer Content */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12">
 
         {/* Brand */}
-        <div className="footer-column">
+        <ScrollReveal direction="up" delay={0} duration={750} once={false}>
+          <div className="footer-column">
 
-          <h1 className="footer-logo font-serif text-2xl sm:text-3xl font-medium tracking-wide">
-            VELAURA
-          </h1>
+            <h1 className="footer-logo font-serif text-2xl sm:text-3xl font-medium tracking-wide">
+              VELAURA
+            </h1>
 
-          <p className="mt-1 text-[9px] tracking-[3px] text-gray-600">
-            ACCESSORIES
-          </p>
+            <p className="mt-1 text-[9px] tracking-[3px] text-gray-600">
+              ACCESSORIES
+            </p>
 
-          <p className="mt-5 max-w-[240px] text-sm leading-relaxed text-gray-600">
-            Thoughtfully chosen accessories to complete your everyday style.
-          </p>
+            <p className="mt-5 max-w-[240px] text-sm leading-relaxed text-gray-600">
+              Thoughtfully chosen accessories to complete your everyday style.
+            </p>
 
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Shop */}
-        <div className="footer-column">
+        <ScrollReveal direction="up" delay={120} duration={750} once={false}>
+          <div className="footer-column">
 
-          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
-            SHOP
-          </h2>
+            <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
+              SHOP
+            </h2>
 
-          <div className="space-y-2.5 text-sm text-gray-600">
-            <p className="footer-link">Jewelry</p>
-            <p className="footer-link">Watches</p>
-            <p className="footer-link">Bags</p>
-            <p className="footer-link">Sunglasses</p>
-            <p className="footer-link">Wallets</p>
-            <p className="footer-link">Hair Accessories</p>
-            <p className="footer-link">Beauty Accessories</p>
+            <div className="space-y-2.5 text-sm text-gray-600">
+              <p className="footer-link">Jewelry</p>
+              <p className="footer-link">Watches</p>
+              <p className="footer-link">Bags</p>
+              <p className="footer-link">Sunglasses</p>
+              <p className="footer-link">Wallets</p>
+              <p className="footer-link">Hair Accessories</p>
+              <p className="footer-link">Beauty Accessories</p>
+            </div>
+
           </div>
-
-        </div>
+        </ScrollReveal>
 
         {/* Quick Links */}
-        <div className="footer-column">
+        <ScrollReveal direction="up" delay={240} duration={750} once={false}>
+          <div className="footer-column">
 
-          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
-            QUICK LINKS
-          </h2>
+            <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
+              QUICK LINKS
+            </h2>
 
-          <div className="space-y-2.5 text-sm text-gray-600">
-            <p className="footer-link">Home</p>
-            <p className="footer-link">Shop</p>
-            <p className="footer-link">About</p>
-            <p className="footer-link">Wishlist</p>
-            <p className="footer-link">Cart</p>
+            <div className="space-y-2.5 text-sm text-gray-600">
+              <p className="footer-link">Home</p>
+              <p className="footer-link">Shop</p>
+              <p className="footer-link">About</p>
+              <p className="footer-link">Wishlist</p>
+              <p className="footer-link">Cart</p>
+            </div>
+
           </div>
-
-        </div>
+        </ScrollReveal>
 
         {/* Help */}
-        <div className="footer-column">
+        <ScrollReveal direction="up" delay={360} duration={750} once={false}>
+          <div className="footer-column">
 
-          <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
-            HELP
-          </h2>
+            <h2 className="footer-heading mb-5 text-xs tracking-[2px] font-medium">
+              HELP
+            </h2>
 
-          <div className="space-y-2.5 text-sm text-gray-600">
-            <p className="footer-link">Contact</p>
-            <p className="footer-link">FAQ</p>
-            <p className="footer-link">Shipping</p>
-            <p className="footer-link">Returns</p>
+            <div className="space-y-2.5 text-sm text-gray-600">
+              <p className="footer-link">Contact</p>
+              <p className="footer-link">FAQ</p>
+              <p className="footer-link">Shipping</p>
+              <p className="footer-link">Returns</p>
+            </div>
+
           </div>
-
-        </div>
+        </ScrollReveal>
 
       </div>
 
       {/* Copyright */}
-      <div className="footer-bottom border-t border-[#DCCFBE] mt-10 pt-6">
+      <ScrollReveal direction="fade" delay={200} duration={900} once={false}>
+        <div className="footer-bottom border-t border-[#DCCFBE] mt-10 pt-6">
 
-        <p className="text-center text-xs sm:text-sm text-gray-500">
-          © 2026 VELAURA. All rights reserved.
-        </p>
+          <p className="text-center text-xs sm:text-sm text-gray-500">
+            © 2026 VELAURA. All rights reserved.
+          </p>
 
-      </div>
+        </div>
+      </ScrollReveal>
 
-      {/* Footer Animations */}
+      {/* Footer Hover Animations */}
       <style>{`
-
-        @keyframes footerEntrance {
-          from {
-            opacity: 0;
-            transform: translateY(25px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes footerColumnEntrance {
-          from {
-            opacity: 0;
-            transform: translateY(18px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes footerBottomEntrance {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        .animate-footer {
-          animation: footerEntrance 0.8s ease-out both;
-        }
-
-        .footer-column {
-          animation: footerColumnEntrance 0.7s ease-out both;
-        }
-
-        .footer-column:nth-child(1) {
-          animation-delay: 0.1s;
-        }
-
-        .footer-column:nth-child(2) {
-          animation-delay: 0.2s;
-        }
-
-        .footer-column:nth-child(3) {
-          animation-delay: 0.3s;
-        }
-
-        .footer-column:nth-child(4) {
-          animation-delay: 0.4s;
-        }
 
         .footer-logo {
           transition: letter-spacing 0.4s ease, color 0.4s ease;
@@ -173,18 +130,7 @@ function Footer() {
           transform: translateX(5px);
         }
 
-        .footer-bottom {
-          animation: footerBottomEntrance 1s ease-out both;
-          animation-delay: 0.5s;
-        }
-
         @media (prefers-reduced-motion: reduce) {
-          .animate-footer,
-          .footer-column,
-          .footer-bottom {
-            animation: none !important;
-          }
-
           .footer-logo,
           .footer-link,
           .footer-heading {

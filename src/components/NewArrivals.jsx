@@ -7,6 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+
 import API from '../services/axios'
 
 import {
@@ -14,6 +15,7 @@ import {
     getWishlist,
     removeWishlist
 } from '../services/api'
+import ScrollReveal from './ScrollReveal'
 
 function NewArrivals() {
 
@@ -181,8 +183,10 @@ function NewArrivals() {
 
                     <div>
 
-                        <h2
-                            className="
+                        <ScrollReveal direction='left' delay={0} once={false} >
+
+                            <h2
+                                className="
                                 new-arrivals-title
                                 font-serif
                                 text-2xl
@@ -191,11 +195,14 @@ function NewArrivals() {
                                 sm:text-3xl
                                 md:text-4xl
                             "
-                        >
-                            NEW ARRIVALS
-                        </h2>
+                            >
+                                NEW ARRIVALS
+                            </h2>
+
+                        </ScrollReveal>
 
                     </div>
+
 
                     {/* View All */}
 
@@ -228,6 +235,8 @@ function NewArrivals() {
                         />
 
                     </button>
+
+
 
                 </div>
 
@@ -315,18 +324,25 @@ function NewArrivals() {
 
                         {products.map((product, index) => (
 
-                            <div
+                            <ScrollReveal
                                 key={product._id}
-                                className="new-arrival-card group min-w-0 cursor-pointer"
-                                style={{
-                                    animationDelay: `${index * 150}ms`
-                                }}
+                                direction="up"
+                                delay={index * 120}
+                                duration={750}
+                                once={false}
                             >
-
-                                {/* Product Image */}
-
                                 <div
-                                    className="
+                                    key={product._id}
+                                    className="new-arrival-card group min-w-0 cursor-pointer"
+                                    style={{
+                                        animationDelay: `${index * 150}ms`
+                                    }}
+                                >
+
+                                    {/* Product Image */}
+
+                                    <div
+                                        className="
                                         new-arrival-image-wrapper
                                         relative
                                         aspect-[4/5]
@@ -335,26 +351,26 @@ function NewArrivals() {
                                         border-[#DED5C8]
                                         bg-[#F5F0E8]
                                     "
-                                >
+                                    >
 
-                                    <img
-                                        src={product.image}
-                                        alt={product.title}
-                                        loading="lazy"
-                                        className="
+                                        <img
+                                            src={product.image}
+                                            alt={product.title}
+                                            loading="lazy"
+                                            className="
                                             new-arrival-image
                                             h-full
                                             w-full
                                             object-cover
                                         "
-                                    />
+                                        />
 
-                                    {/* Offer Badge */}
+                                        {/* Offer Badge */}
 
-                                    {product.isOffer && (
+                                        {product.isOffer && (
 
-                                        <span
-                                            className="
+                                            <span
+                                                className="
                                                 new-arrival-badge
                                                 absolute
                                                 left-2
@@ -371,21 +387,21 @@ function NewArrivals() {
                                                 sm:px-3
                                                 sm:text-xs
                                             "
-                                        >
-                                            {product.offerPercentage}% OFF
-                                        </span>
+                                            >
+                                                {product.offerPercentage}% OFF
+                                            </span>
 
-                                    )}
+                                        )}
 
-                                    {/* Wishlist */}
+                                        {/* Wishlist */}
 
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleWishlist(product._id)
-                                        }
-                                        aria-label="Toggle wishlist"
-                                        className="
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleWishlist(product._id)
+                                            }
+                                            aria-label="Toggle wishlist"
+                                            className="
                                             new-arrival-wishlist
                                             absolute
                                             right-3
@@ -398,26 +414,26 @@ function NewArrivals() {
                                             rounded-full
                                             bg-white/90
                                         "
-                                    >
+                                        >
 
-                                        <FiHeart
-                                            size={16}
-                                            strokeWidth={1.5}
-                                            className={
-                                                wishlistStatus[product._id]
-                                                    ? "new-arrival-heart active-new-heart fill-red-500 text-red-500"
-                                                    : "new-arrival-heart text-[#2B2926]"
-                                            }
-                                        />
+                                            <FiHeart
+                                                size={16}
+                                                strokeWidth={1.5}
+                                                className={
+                                                    wishlistStatus[product._id]
+                                                        ? "new-arrival-heart active-new-heart fill-red-500 text-red-500"
+                                                        : "new-arrival-heart text-[#2B2926]"
+                                                }
+                                            />
 
-                                    </button>
+                                        </button>
 
-                                </div>
+                                    </div>
 
-                                {/* Product Details */}
+                                    {/* Product Details */}
 
-                                <div
-                                    className="
+                                    <div
+                                        className="
                                         new-arrival-details
                                         border-x
                                         border-b
@@ -427,12 +443,12 @@ function NewArrivals() {
                                         sm:px-4
                                         sm:py-4
                                     "
-                                >
+                                    >
 
-                                    {/* Product Name */}
+                                        {/* Product Name */}
 
-                                    <h3
-                                        className="
+                                        <h3
+                                            className="
                                             new-arrival-name
                                             line-clamp-1
                                             text-xs
@@ -440,87 +456,87 @@ function NewArrivals() {
                                             text-[#2B2926]
                                             sm:text-sm
                                         "
-                                    >
-                                        {product.title}
-                                    </h3>
+                                        >
+                                            {product.title}
+                                        </h3>
 
-                                    {/* Product Price */}
+                                        {/* Product Price */}
 
-                                    <div className="mt-1 new-arrival-price">
+                                        <div className="mt-1 new-arrival-price">
 
-                                        {product.isOffer ? (
+                                            {product.isOffer ? (
 
-                                            <>
+                                                <>
 
-                                                <p
-                                                    className="
+                                                    <p
+                                                        className="
                                                         text-xs
                                                         text-gray-500
                                                         line-through
                                                         sm:text-sm
                                                     "
-                                                >
-                                                    ₹{product.price}
-                                                </p>
+                                                    >
+                                                        ₹{product.price}
+                                                    </p>
 
-                                                <p
-                                                    className="
+                                                    <p
+                                                        className="
                                                         text-sm
                                                         font-semibold
                                                         text-[#2B2926]
                                                         sm:text-base
                                                     "
-                                                >
-                                                    ₹{product.offerPrice}
-                                                </p>
+                                                    >
+                                                        ₹{product.offerPrice}
+                                                    </p>
 
-                                            </>
+                                                </>
 
-                                        ) : (
+                                            ) : (
 
-                                            <p
-                                                className="
+                                                <p
+                                                    className="
                                                     text-sm
                                                     font-medium
                                                     text-[#2B2926]
                                                     sm:text-base
                                                 "
-                                            >
-                                                ₹{product.price}
-                                            </p>
+                                                >
+                                                    ₹{product.price}
+                                                </p>
 
-                                        )}
+                                            )}
 
-                                    </div>
+                                        </div>
 
-                                    {/* View Product */}
+                                        {/* View Product */}
 
-                                    <div
-                                        className="
+                                        <div
+                                            className="
                                             mt-1.5
                                             flex
                                             items-center
                                             justify-between
                                             gap-1
                                         "
-                                    >
+                                        >
 
-                                        <span className="new-arrival-rating text-xs tracking-[1px] text-[#B7791F]">
-                                            ★★★★★
-                                        </span>
+                                            <span className="new-arrival-rating text-xs tracking-[1px] text-[#B7791F]">
+                                                ★★★★★
+                                            </span>
 
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
 
-                                                e.stopPropagation()
+                                                    e.stopPropagation()
 
-                                                navigate(
-                                                    `/product/${product._id}`
-                                                )
+                                                    navigate(
+                                                        `/product/${product._id}`
+                                                    )
 
-                                            }}
-                                            className="
+                                                }}
+                                                className="
                                                 new-arrival-view
                                                 inline-flex
                                                 items-center
@@ -536,39 +552,43 @@ function NewArrivals() {
                                                 hover:opacity-60
                                                 sm:text-sm
                                             "
-                                        >
+                                            >
 
-                                            View
+                                                View
 
-                                            <FiArrowUpRight
-                                                className="new-arrivals-arrow"
-                                                size={14}
-                                            />
+                                                <FiArrowUpRight
+                                                    className="new-arrivals-arrow"
+                                                    size={14}
+                                                />
 
-                                        </button>
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
-                                </div>
+                                     </div>
 
-                            </div>
+                            </ScrollReveal>
 
-                        ))}
+                               
 
-                    </div>
+                ))}
 
-                )}
+            </div>
 
-                {/* Mobile View All */}
+                        )}
 
-                {!loading && !error && products.length > 0 && (
+            {/* Mobile View All */}
 
-                    <div className="mt-8 flex justify-center sm:hidden">
+            {!loading && !error && products.length > 0 && (
 
-                        <button
-                            type="button"
-                            onClick={() => navigate('/shop')}
-                            className="
+                <div className="mt-8 flex justify-center sm:hidden">
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('/shop')}
+                        className="
                                 new-arrivals-view-all
                                 flex
                                 items-center
@@ -579,26 +599,26 @@ function NewArrivals() {
                                 text-sm
                                 font-medium
                             "
-                        >
+                    >
 
-                            View All Products
+                        View All Products
 
-                            <FiArrowUpRight
-                                className="new-arrivals-arrow"
-                                size={14}
-                            />
+                        <FiArrowUpRight
+                            className="new-arrivals-arrow"
+                            size={14}
+                        />
 
-                        </button>
+                    </button>
 
-                    </div>
+                </div>
 
-                )}
+            )}
 
-            </div>
+        </div>
 
-            {/* ANIMATION STYLES */}
+            {/* ANIMATION STYLES */ }
 
-            <style>{`
+    <style>{`
 
             
 
@@ -922,7 +942,7 @@ function NewArrivals() {
 
             `}</style>
 
-        </section>
+        </section >
 
     )
 

@@ -2,186 +2,168 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import accesorImg from '../assets/bannere.jpeg'
 import Footer from '../components/Footer'
+import ScrollReveal from '../components/ScrollReveal'
 
 function About() {
     return (
-        <div className="bg-[#F5F0E8] animate-about-page">
+        <div className="bg-[#F5F0E8]">
 
             <Navbar />
 
             {/* About Us Section */}
-            <div className="bg-orange-50 max-w-2xl mx-auto mt-10 p-8 border rounded-2xl shadow-md animate-about-card">
 
-                <h1 className="text-6xl font-extrabold text-red-300 text-center mb-4 animate-about-title">
-                    About Us
-                </h1>
+            <ScrollReveal
+                direction="up"
+                duration={850}
+                once={false}
+            >
 
-                <p className="font-extralight animate-about-text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias quisquam necessitatibus iste omnis eius? Sequi magnam ab sapiente sed asperiores velit voluptate. Rerum voluptatibus aperiam minus? Alias fugit ratione quasi.
-                </p>
+                <div className="bg-orange-50 max-w-2xl mx-auto mt-10 p-8 border rounded-2xl shadow-md about-card">
 
-            </div>
+                    <ScrollReveal
+                        direction="down"
+                        delay={150}
+                        duration={750}
+                        once={false}
+                    >
+
+                        <h1 className="text-6xl font-extrabold text-red-300 text-center mb-4 about-title">
+                            About Us
+                        </h1>
+
+                    </ScrollReveal>
+
+                    <ScrollReveal
+                        direction="up"
+                        delay={300}
+                        duration={850}
+                        once={false}
+                    >
+
+                        <p className="font-extralight about-text">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias quisquam necessitatibus iste omnis eius? Sequi magnam ab sapiente sed asperiores velit voluptate. Rerum voluptatibus aperiam minus? Alias fugit ratione quasi.
+                        </p>
+
+                    </ScrollReveal>
+
+                </div>
+
+            </ScrollReveal>
+
 
             {/* VELAURA Section */}
+
             <div className="lg:grid grid-cols-2 bg-orange-50 p-10 mt-10">
 
-                {/* Image */}
-                <div className="about-image-wrapper mt-10 overflow-hidden rounded-lg">
+                {/* Image - Zoom Reveal */}
 
-                    <img
-                        src={accesorImg}
-                        alt=""
-                        className="max-h-70w-full w-full object-fill rounded-lg animate-about-image"
-                    />
+                <ScrollReveal
+                    direction="left"
+                    duration={1000}
+                    once={false}
+                >
 
-                </div>
+                    <div className="about-image-wrapper mt-10 overflow-hidden rounded-lg">
+
+                        <img
+                            src={accesorImg}
+                            alt="Velaura Accessories"
+                            className="
+                                w-full
+                                object-fill
+                                rounded-lg
+                                about-image
+                            "
+                        />
+
+                    </div>
+
+                </ScrollReveal>
+
 
                 {/* Content */}
-                <div className="ml-4 mb-10 animate-about-content">
 
-                    <h1 className="text-center text-3xl font-extralight mt-10 mb-10 animate-velaura-title">
-                        VELAURA.
-                    </h1>
+                <div className="ml-4 mb-10">
 
-                    <p className="animate-velaura-text">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis, incidunt officia officiis vitae neque facer
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste obcaecati aut neque similique inventore unde necessitatibus recusandae fugit dignissimos asperiores explicabo nesciunt quaerat, temporibus porro alias. Quibusdam exercitationem labore corrupti.
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem assumenda sapiente accusamus vero libero consequuntur aliquam asperiores! Sed voluptatum mollitia enim perspiciatis eos. Itaque eos quasi corrupti totam provident esse.
-                    </p>
+                    {/* VELAURA Heading */}
+
+                    <ScrollReveal
+                        direction="right"
+                        delay={150}
+                        duration={850}
+                        once={false}
+                    >
+
+                        <h1 className="text-center text-3xl font-extralight mt-10 mb-10 about-velaura-title">
+                            VELAURA.
+                        </h1>
+
+                    </ScrollReveal>
+
+
+                    {/* Description */}
+
+                    <ScrollReveal
+                        direction="up"
+                        delay={300}
+                        duration={900}
+                        once={false}
+                    >
+
+                        <p className="about-velaura-text">
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis, incidunt officia officiis vitae neque facer
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste obcaecati aut neque similique inventore unde necessitatibus recusandae fugit dignissimos asperiores explicabo nesciunt quaerat, temporibus porro alias. Quibusdam exercitationem labore corrupti.
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem assumenda sapiente accusamus vero libero consequuntur aliquam asperiores! Sed voluptatum mollitia enim perspiciatis eos. Itaque eos quasi corrupti totam provident esse.
+                        </p>
+
+                    </ScrollReveal>
 
                 </div>
 
             </div>
+
 
             <Footer />
 
-            {/* About Page Animations */}
+
+            {/* About Page Hover Animations */}
+
             <style>{`
 
-                @keyframes aboutPageEntrance {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
+                .about-image {
+                    transition: transform 1s ease;
                 }
 
-                @keyframes aboutCardEntrance {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                .about-image-wrapper:hover .about-image {
+                    transform: scale(1.05);
                 }
 
-                @keyframes aboutTitleEntrance {
-                    from {
-                        opacity: 0;
-                        transform: translateY(15px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                .about-card {
+                    transition: box-shadow 0.4s ease;
                 }
 
-                @keyframes aboutImageEntrance {
-                    from {
-                        opacity: 0;
-                        transform: scale(1.06);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
+                .about-card:hover {
+                    box-shadow: 0 15px 35px rgba(43, 41, 38, 0.10);
                 }
 
-                @keyframes aboutContentEntrance {
-                    from {
-                        opacity: 0;
-                        transform: translateX(25px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
+                .about-title,
+                .about-velaura-title {
+                    transition: color 0.4s ease;
                 }
 
-                @keyframes aboutTextEntrance {
-                    from {
-                        opacity: 0;
-                        transform: translateY(12px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                .animate-about-page {
-                    animation: aboutPageEntrance 0.7s ease-out both;
-                }
-
-                .animate-about-card {
-                    animation: aboutCardEntrance 0.8s ease-out both;
-                }
-
-                .animate-about-title {
-                    animation: aboutTitleEntrance 0.7s ease-out both;
-                    animation-delay: 0.15s;
-                }
-
-                .animate-about-text {
-                    animation: aboutTextEntrance 0.8s ease-out both;
-                    animation-delay: 0.3s;
-                }
-
-                .about-image-wrapper {
-                    animation: aboutCardEntrance 0.9s ease-out both;
-                    animation-delay: 0.2s;
-                }
-
-                .animate-about-image {
-                    animation: aboutImageEntrance 1.2s ease-out both;
-                    transition: transform 0.8s ease;
-                }
-
-                .about-image-wrapper:hover .animate-about-image {
-                    transform: scale(1.04);
-                }
-
-                .animate-about-content {
-                    animation: aboutContentEntrance 0.9s ease-out both;
-                    animation-delay: 0.3s;
-                }
-
-                .animate-velaura-title {
-                    animation: aboutTitleEntrance 0.7s ease-out both;
-                    animation-delay: 0.45s;
-                }
-
-                .animate-velaura-text {
-                    animation: aboutTextEntrance 0.9s ease-out both;
-                    animation-delay: 0.55s;
+                .about-title:hover {
+                    color: #9A7958;
                 }
 
                 @media (prefers-reduced-motion: reduce) {
-                    .animate-about-page,
-                    .animate-about-card,
-                    .animate-about-title,
-                    .animate-about-text,
-                    .about-image-wrapper,
-                    .animate-about-image,
-                    .animate-about-content,
-                    .animate-velaura-title,
-                    .animate-velaura-text {
-                        animation: none !important;
+
+                    .about-image,
+                    .about-card,
+                    .about-title,
+                    .about-velaura-title {
                         transition: none !important;
                     }
+
                 }
 
             `}</style>

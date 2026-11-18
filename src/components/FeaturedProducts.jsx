@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FiHeart, FiArrowUpRight, FiAlertTriangle } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
+import ScrollReveal from './ScrollReveal'
 
 import API from '../services/axios'
 import {
@@ -152,9 +153,10 @@ function FeaturedProducts() {
                 >
 
                     <div>
+                        <ScrollReveal direction='left' delay={0} once={false}>
 
-                        <p
-                            className="
+                            <p
+                                className="
                                 featured-label
                                 text-[10px]
                                 sm:text-xs
@@ -163,12 +165,16 @@ function FeaturedProducts() {
                                 text-gray-500
                                 mb-2
                             "
-                        >
-                            FEATURED PRODUCTS
-                        </p>
+                            >
+                                FEATURED PRODUCTS
+                            </p>
 
-                        <h2
-                            className="
+
+
+
+
+                            <h2
+                                className="
                                 featured-title
                                 font-serif
                                 text-2xl
@@ -177,9 +183,10 @@ function FeaturedProducts() {
                                 font-medium
                                 text-[#2B2926]
                             "
-                        >
-                            Our Best Sellers
-                        </h2>
+                            >
+                                Our Best Sellers
+                            </h2>
+                        </ScrollReveal>
 
                     </div>
 
@@ -232,12 +239,12 @@ function FeaturedProducts() {
 
                     {products.map((product, index) => (
 
-                        <div
+                        <ScrollReveal
                             key={product._id}
-                            className="featured-card group"
-                            style={{
-                                animationDelay: `${index * 150}ms`
-                            }}
+                            direction="up"
+                            delay={index * 120}
+                            duration={750}
+                            once={false}
                         >
 
                             {/* Image */}
@@ -444,7 +451,7 @@ function FeaturedProducts() {
 
                             </div>
 
-                        </div>
+                        </ScrollReveal>
 
                     ))}
 
@@ -543,26 +550,12 @@ function FeaturedProducts() {
 
                 /* Product Card Entrance */
 
-                .featured-card {
-                    opacity: 0;
-                    animation: productReveal 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-                    transition:
-                        transform 0.45s ease,
-                        box-shadow 0.45s ease;
-                }
+               .featured-card {
+    transition:
+        transform 0.45s ease,
+        box-shadow 0.45s ease;
+}
 
-                @keyframes productReveal {
-                    from {
-                        opacity: 0;
-                        transform: translateY(35px) scale(0.97);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
-
-                /* Card Hover */
 
                 .featured-card:hover {
                     transform: translateY(-9px);

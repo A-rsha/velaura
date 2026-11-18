@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import Footer from '../components/Footer'
+import ScrollReveal from '../components/ScrollReveal'
 import { getWishlist, removeWishlist } from '../services/api'
 
 import { FiHeart, FiArrowUpRight } from 'react-icons/fi'
@@ -130,7 +131,7 @@ function Wishlist() {
 
             <Navbar />
 
-            <main className="min-h-screen pt-24 sm:pt-28 pb-16">
+            <main className="min-h-screen pt-24 pb-16 sm:pt-28">
 
                 <div
                     className="
@@ -145,50 +146,54 @@ function Wishlist() {
 
                     {/* Heading */}
 
-                    <div className="wishlist-heading mb-10 sm:mb-12">
+                    <ScrollReveal direction="up" duration={800}>
 
-                        <p
-                            className="
-                                wishlist-subtitle
-                                mb-2
-                                text-[10px]
-                                sm:text-xs
-                                uppercase
-                                tracking-[3px]
-                                text-gray-500
-                            "
-                        >
-                            YOUR SAVED PIECES
-                        </p>
+                        <div className="wishlist-heading mb-10 sm:mb-12">
 
-                        <h1
-                            className="
-                                wishlist-title
-                                font-serif
-                                text-3xl
-                                sm:text-4xl
-                                md:text-5xl
-                                font-medium
-                            "
-                        >
-                            My Wishlist
-                        </h1>
+                            <p
+                                className="
+                                    wishlist-subtitle
+                                    mb-2
+                                    text-[10px]
+                                    sm:text-xs
+                                    uppercase
+                                    tracking-[3px]
+                                    text-gray-500
+                                "
+                            >
+                                YOUR SAVED PIECES
+                            </p>
 
-                        <p
-                            className="
-                                wishlist-description
-                                mt-3
-                                max-w-md
-                                text-sm
-                                sm:text-base
-                                leading-relaxed
-                                text-gray-500
-                            "
-                        >
-                            Your favorite pieces, saved in one place.
-                        </p>
+                            <h1
+                                className="
+                                    wishlist-title
+                                    font-serif
+                                    text-3xl
+                                    sm:text-4xl
+                                    md:text-5xl
+                                    font-medium
+                                "
+                            >
+                                My Wishlist
+                            </h1>
 
-                    </div>
+                            <p
+                                className="
+                                    wishlist-description
+                                    mt-3
+                                    max-w-md
+                                    text-sm
+                                    sm:text-base
+                                    leading-relaxed
+                                    text-gray-500
+                                "
+                            >
+                                Your favorite pieces, saved in one place.
+                            </p>
+
+                        </div>
+
+                    </ScrollReveal>
 
 
                     {/* Loading */}
@@ -216,60 +221,64 @@ function Wishlist() {
 
                     {!loading && products.length === 0 && (
 
-                        <div className="wishlist-empty border border-[#DED5C8] bg-[#F5F0E8] px-6 py-20 text-center">
+                        <ScrollReveal direction="up" duration={850}>
 
-                            <div className="empty-heart-wrapper">
+                            <div className="wishlist-empty border border-[#DED5C8] bg-[#F5F0E8] px-6 py-20 text-center">
 
-                                <FiHeart
-                                    size={28}
-                                    strokeWidth={1}
-                                    className="mx-auto text-gray-500"
-                                />
+                                <div className="empty-heart-wrapper">
+
+                                    <FiHeart
+                                        size={28}
+                                        strokeWidth={1}
+                                        className="mx-auto text-gray-500"
+                                    />
+
+                                </div>
+
+                                <h2
+                                    className="
+                                        mt-5
+                                        font-serif
+                                        text-xl
+                                        sm:text-2xl
+                                    "
+                                >
+                                    Your wishlist is empty
+                                </h2>
+
+                                <p
+                                    className="
+                                        mt-2
+                                        text-sm
+                                        text-gray-500
+                                    "
+                                >
+                                    Save your favorite accessories here.
+                                </p>
+
+                                <button
+                                    onClick={() => navigate('/shop')}
+                                    className="
+                                        wishlist-explore-btn
+                                        mt-6
+                                        border
+                                        border-[#2B2926]
+                                        px-6
+                                        py-2.5
+                                        text-sm
+                                        font-medium
+                                        transition
+                                        duration-300
+                                        hover:bg-[#2B2926]
+                                        hover:text-white
+                                    "
+                                >
+                                    Explore Collection
+                                </button>
 
                             </div>
 
-                            <h2
-                                className="
-                                    mt-5
-                                    font-serif
-                                    text-xl
-                                    sm:text-2xl
-                                "
-                            >
-                                Your wishlist is empty
-                            </h2>
-
-                            <p
-                                className="
-                                    mt-2
-                                    text-sm
-                                    text-gray-500
-                                "
-                            >
-                                Save your favorite accessories here.
-                            </p>
-
-                            <button
-                                onClick={() => navigate('/shop')}
-                                className="
-                                    wishlist-explore-btn
-                                    mt-6
-                                    border
-                                    border-[#2B2926]
-                                    px-6
-                                    py-2.5
-                                    text-sm
-                                    font-medium
-                                    transition
-                                    duration-300
-                                    hover:bg-[#2B2926]
-                                    hover:text-white
-                                "
-                            >
-                                Explore Collection
-                            </button>
-
-                        </div>
+                        </ScrollReveal>
 
                     )}
 
@@ -295,244 +304,247 @@ function Wishlist() {
 
                             {products.map((product, index) => (
 
-                                <div
+                                <ScrollReveal
                                     key={product._id}
-                                    className="wishlist-product group"
-                                    style={{
-                                        '--card-index': index
-                                    }}
+                                    direction="up"
+                                    delay={index * 120}
+                                    duration={750}
                                 >
 
-                                    {/* Product Image */}
+                                    <div className="wishlist-product group">
 
-                                    <div
-                                        className="
-                                            wishlist-image-wrapper
-                                            relative
-                                            aspect-[4/5]
-                                            overflow-hidden
-                                            border
-                                            border-[#DED5C8]
-                                            bg-[#F5F0E8]
-                                        "
-                                    >
-
-                                        {product.image ? (
-
-                                            <img
-                                                src={product.image}
-                                                alt={product.title}
-                                                className="
-                                                    wishlist-product-image
-                                                    h-full
-                                                    w-full
-                                                    object-cover
-                                                    transition
-                                                    duration-500
-                                                    group-hover:scale-105
-                                                "
-                                            />
-
-                                        ) : (
-
-                                            <div
-                                                className="
-                                                    flex
-                                                    h-full
-                                                    items-center
-                                                    justify-center
-                                                    text-sm
-                                                    text-gray-400
-                                                "
-                                            >
-                                                No Image
-                                            </div>
-
-                                        )}
-
-
-                                        {/* Offer Badge */}
-
-                                        {product.isOffer && (
-
-                                            <span
-                                                className="
-                                                    wishlist-offer
-                                                    absolute
-                                                    left-3
-                                                    top-3
-                                                    rounded-full
-                                                    bg-[#2B2926]
-                                                    px-3
-                                                    py-1
-                                                    text-xs
-                                                    font-medium
-                                                    text-white
-                                                "
-                                            >
-                                                {product.offerPercentage}% OFF
-                                            </span>
-
-                                        )}
-
-
-                                        {/* Wishlist Button */}
-
-                                        <button
-                                            onClick={() =>
-                                                handleWishlist(product._id)
-                                            }
-                                            aria-label="Remove from wishlist"
-                                            className="
-                                                wishlist-heart-btn
-                                                absolute
-                                                right-3
-                                                top-3
-                                                flex
-                                                h-9
-                                                w-9
-                                                items-center
-                                                justify-center
-                                                rounded-full
-                                                bg-white/95
-                                                transition
-                                                duration-300
-                                                hover:scale-105
-                                            "
-                                        >
-
-                                            <FiHeart
-                                                size={18}
-                                                strokeWidth={1.5}
-                                                className={
-                                                    wishlistStatus[product._id]
-                                                        ? "fill-red-500 text-red-500"
-                                                        : "text-[#2B2926]"
-                                                }
-                                            />
-
-                                        </button>
-
-                                    </div>
-
-
-                                    {/* Product Details */}
-
-                                    <div
-                                        className="
-                                            wishlist-details
-                                            border-x
-                                            border-b
-                                            border-[#DED5C8]
-                                            p-4
-                                            sm:p-5
-                                        "
-                                    >
-
-                                        <h2
-                                            className="
-                                                wishlist-product-title
-                                                line-clamp-1
-                                                text-sm
-                                                sm:text-base
-                                                font-medium
-                                                text-[#2B2926]
-                                            "
-                                        >
-                                            {product.title}
-                                        </h2>
-
-
-                                        <p
-                                            className="
-                                                mt-1.5
-                                                line-clamp-2
-                                                text-xs
-                                                sm:text-sm
-                                                leading-relaxed
-                                                text-gray-500
-                                            "
-                                        >
-                                            {product.description}
-                                        </p>
-
-
-                                        {/* Price + View */}
+                                        {/* Product Image */}
 
                                         <div
                                             className="
-                                                mt-4
-                                                flex
-                                                items-center
-                                                justify-between
-                                                gap-2
+                                                wishlist-image-wrapper
+                                                relative
+                                                aspect-[4/5]
+                                                overflow-hidden
+                                                border
+                                                border-[#DED5C8]
+                                                bg-[#F5F0E8]
                                             "
                                         >
 
-                                            <div className="wishlist-price">
+                                            {product.image ? (
 
-                                                {product.isOffer ? (
+                                                <img
+                                                    src={product.image}
+                                                    alt={product.title}
+                                                    className="
+                                                        wishlist-product-image
+                                                        h-full
+                                                        w-full
+                                                        object-cover
+                                                        transition
+                                                        duration-500
+                                                        group-hover:scale-105
+                                                    "
+                                                />
 
-                                                    <>
+                                            ) : (
 
-                                                        <p className="text-sm text-gray-600 line-through">
-                                                            ₹{product.price}
-                                                        </p>
+                                                <div
+                                                    className="
+                                                        flex
+                                                        h-full
+                                                        items-center
+                                                        justify-center
+                                                        text-sm
+                                                        text-gray-400
+                                                    "
+                                                >
+                                                    No Image
+                                                </div>
 
-                                                        <p className="text-sm sm:text-base font-semibold text-[#2B2926]">
-                                                            ₹{product.offerPrice}
-                                                        </p>
+                                            )}
 
-                                                    </>
 
-                                                ) : (
+                                            {/* Offer Badge */}
 
-                                                    <p className="text-sm sm:text-base font-medium text-[#2B2926]">
-                                                        ₹{product.price}
-                                                    </p>
+                                            {product.isOffer && (
 
-                                                )}
+                                                <span
+                                                    className="
+                                                        wishlist-offer
+                                                        absolute
+                                                        left-3
+                                                        top-3
+                                                        rounded-full
+                                                        bg-[#2B2926]
+                                                        px-3
+                                                        py-1
+                                                        text-xs
+                                                        font-medium
+                                                        text-white
+                                                    "
+                                                >
+                                                    {product.offerPercentage}% OFF
+                                                </span>
 
-                                            </div>
+                                            )}
 
+
+                                            {/* Wishlist Button */}
 
                                             <button
                                                 onClick={() =>
-                                                    navigate(
-                                                        `/product/${product._id}`
-                                                    )
+                                                    handleWishlist(product._id)
                                                 }
+                                                aria-label="Remove from wishlist"
                                                 className="
-                                                    wishlist-view-btn
+                                                    wishlist-heart-btn
+                                                    absolute
+                                                    right-3
+                                                    top-3
                                                     flex
+                                                    h-9
+                                                    w-9
                                                     items-center
-                                                    gap-1
-                                                    border-b
-                                                    border-[#2B2926]
-                                                    pb-0.5
-                                                    text-xs
-                                                    sm:text-sm
-                                                    font-medium
-                                                    text-[#2B2926]
+                                                    justify-center
+                                                    rounded-full
+                                                    bg-white/95
                                                     transition
                                                     duration-300
-                                                    hover:opacity-60
+                                                    hover:scale-105
                                                 "
                                             >
-                                                View
 
-                                                <FiArrowUpRight
-                                                    className="wishlist-view-arrow"
-                                                    size={14}
+                                                <FiHeart
+                                                    size={18}
+                                                    strokeWidth={1.5}
+                                                    className={
+                                                        wishlistStatus[product._id]
+                                                            ? "fill-red-500 text-red-500"
+                                                            : "text-[#2B2926]"
+                                                    }
                                                 />
 
                                             </button>
 
                                         </div>
 
+
+                                        {/* Product Details */}
+
+                                        <div
+                                            className="
+                                                wishlist-details
+                                                border-x
+                                                border-b
+                                                border-[#DED5C8]
+                                                p-4
+                                                sm:p-5
+                                            "
+                                        >
+
+                                            <h2
+                                                className="
+                                                    wishlist-product-title
+                                                    line-clamp-1
+                                                    text-sm
+                                                    sm:text-base
+                                                    font-medium
+                                                    text-[#2B2926]
+                                                "
+                                            >
+                                                {product.title}
+                                            </h2>
+
+
+                                            <p
+                                                className="
+                                                    mt-1.5
+                                                    line-clamp-2
+                                                    text-xs
+                                                    sm:text-sm
+                                                    leading-relaxed
+                                                    text-gray-500
+                                                "
+                                            >
+                                                {product.description}
+                                            </p>
+
+
+                                            {/* Price + View */}
+
+                                            <div
+                                                className="
+                                                    mt-4
+                                                    flex
+                                                    items-center
+                                                    justify-between
+                                                    gap-2
+                                                "
+                                            >
+
+                                                <div className="wishlist-price">
+
+                                                    {product.isOffer ? (
+
+                                                        <>
+
+                                                            <p className="text-sm text-gray-600 line-through">
+                                                                ₹{product.price}
+                                                            </p>
+
+                                                            <p className="text-sm sm:text-base font-semibold text-[#2B2926]">
+                                                                ₹{product.offerPrice}
+                                                            </p>
+
+                                                        </>
+
+                                                    ) : (
+
+                                                        <p className="text-sm sm:text-base font-medium text-[#2B2926]">
+                                                            ₹{product.price}
+                                                        </p>
+
+                                                    )}
+
+                                                </div>
+
+
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/product/${product._id}`
+                                                        )
+                                                    }
+                                                    className="
+                                                        wishlist-view-btn
+                                                        flex
+                                                        items-center
+                                                        gap-1
+                                                        border-b
+                                                        border-[#2B2926]
+                                                        pb-0.5
+                                                        text-xs
+                                                        sm:text-sm
+                                                        font-medium
+                                                        text-[#2B2926]
+                                                        transition
+                                                        duration-300
+                                                        hover:opacity-60
+                                                    "
+                                                >
+                                                    View
+
+                                                    <FiArrowUpRight
+                                                        className="wishlist-view-arrow"
+                                                        size={14}
+                                                    />
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
-                                </div>
+                                </ScrollReveal>
 
                             ))}
 
@@ -552,91 +564,32 @@ function Wishlist() {
 
             <style>{`
 
-                /* Main Page */
-
-                .wishlist-page {
-                    animation: wishlistPageEnter 0.7s ease both;
-                }
-
-                @keyframes wishlistPageEnter {
-                    from {
-                        opacity: 0;
-                    }
-
-                    to {
-                        opacity: 1;
-                    }
-                }
-
-
                 /* Heading */
 
                 .wishlist-heading {
-                    animation: wishlistHeadingEnter 0.8s ease both;
+                    position: relative;
                 }
 
                 .wishlist-subtitle {
-                    animation: wishlistTextEnter 0.7s ease both;
+                    letter-spacing: 3px;
                 }
 
                 .wishlist-title {
-                    animation: wishlistTextEnter 0.8s ease both;
-                    animation-delay: 0.1s;
-                    animation-fill-mode: both;
+                    transition: letter-spacing 0.4s ease;
                 }
 
-                .wishlist-description {
-                    animation: wishlistTextEnter 0.8s ease both;
-                    animation-delay: 0.2s;
-                    animation-fill-mode: both;
-                }
-
-                @keyframes wishlistHeadingEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                @keyframes wishlistTextEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(15px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                .wishlist-heading:hover .wishlist-title {
+                    letter-spacing: 0.5px;
                 }
 
 
                 /* Product Cards */
 
                 .wishlist-product {
-                    opacity: 0;
-                    animation: wishlistCardEnter 0.65s ease forwards;
-                    animation-delay: calc(var(--card-index) * 100ms);
+                    position: relative;
                     transition:
                         transform 0.4s ease,
                         box-shadow 0.4s ease;
-                }
-
-                @keyframes wishlistCardEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(35px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
                 }
 
                 .wishlist-product:hover {
@@ -784,19 +737,14 @@ function Wishlist() {
                 /* Empty Wishlist */
 
                 .wishlist-empty {
-                    animation: emptyWishlistEnter 0.8s ease both;
+                    transition:
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease;
                 }
 
-                @keyframes emptyWishlistEnter {
-                    from {
-                        opacity: 0;
-                        transform: translateY(25px) scale(0.98);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
+                .wishlist-empty:hover {
+                    border-color: #c8bba9;
+                    box-shadow: 0 12px 30px rgba(43, 41, 38, 0.06);
                 }
 
                 .empty-heart-wrapper {
@@ -852,7 +800,19 @@ function Wishlist() {
                 }
 
                 .wishlist-loading {
-                    animation: wishlistTextEnter 0.5s ease both;
+                    animation: wishlistLoadingEnter 0.5s ease both;
+                }
+
+                @keyframes wishlistLoadingEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
                 }
 
 
@@ -860,27 +820,19 @@ function Wishlist() {
 
                 @media (prefers-reduced-motion: reduce) {
 
-                    .wishlist-page,
-                    .wishlist-heading,
-                    .wishlist-subtitle,
-                    .wishlist-title,
-                    .wishlist-description,
-                    .wishlist-product,
-                    .wishlist-empty,
                     .empty-heart-wrapper,
                     .wishlist-offer,
                     .wishlist-loading,
                     .wishlist-loader {
                         animation: none !important;
-                        opacity: 1 !important;
-                        transform: none !important;
                     }
 
                     .wishlist-product,
                     .wishlist-product-image,
                     .wishlist-details,
                     .wishlist-heart-btn,
-                    .wishlist-view-btn {
+                    .wishlist-view-btn,
+                    .wishlist-empty {
                         transition: none !important;
                     }
 

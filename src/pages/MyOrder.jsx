@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../services/axios";
 import { toast } from "react-toastify";
 import { FiArrowRight, FiRotateCcw } from "react-icons/fi";
+import ScrollReveal from "../components/ScrollReveal";
 
 const trackingSteps = [
     { status: "placed", label: "Order Placed", icon: "📦" },
@@ -281,37 +282,12 @@ function MyOrder() {
 
             {/* Premium Animations */}
             <style>{`
-                @keyframes myOrdersFadeUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(22px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
                 @keyframes myOrdersFadeIn {
                     from {
                         opacity: 0;
                     }
                     to {
                         opacity: 1;
-                    }
-                }
-
-                @keyframes myOrdersPop {
-                    0% {
-                        opacity: 0;
-                        transform: scale(.86);
-                    }
-                    70% {
-                        transform: scale(1.04);
-                    }
-                    100% {
-                        opacity: 1;
-                        transform: scale(1);
                     }
                 }
 
@@ -326,12 +302,7 @@ function MyOrder() {
                     }
                 }
 
-                .my-orders-page .my-orders-heading {
-                    animation: myOrdersFadeUp .7s cubic-bezier(.2,.7,.2,1) both;
-                }
-
                 .my-orders-page .my-order-card {
-                    animation: myOrdersFadeUp .65s cubic-bezier(.2,.7,.2,1) both;
                     transition:
                         transform .35s ease,
                         box-shadow .35s ease,
@@ -346,7 +317,6 @@ function MyOrder() {
                 }
 
                 .my-orders-page .my-tracking-step {
-                    animation: myOrdersPop .55s ease both;
                     transition: transform .25s ease;
                 }
 
@@ -438,15 +408,17 @@ function MyOrder() {
             <div className="mx-auto max-w-5xl">
 
                 {/* Page Header */}
-                <div className="my-orders-heading mb-8">
-                    <h1 className="font-serif text-3xl text-[#2B2926]">
-                        My Orders
-                    </h1>
+                <ScrollReveal direction="up" duration={750} once={false}>
+                    <div className="my-orders-heading mb-8">
+                        <h1 className="font-serif text-3xl text-[#2B2926]">
+                            My Orders
+                        </h1>
 
-                    <p className="mt-2 text-sm text-gray-500">
-                        View your orders and track your deliveries.
-                    </p>
-                </div>
+                        <p className="mt-2 text-sm text-gray-500">
+                            View your orders and track your deliveries.
+                        </p>
+                    </div>
+                </ScrollReveal>
 
                 {/* Loading */}
                 {loading ? (
@@ -488,353 +460,374 @@ function MyOrder() {
                                 order.orderStatus === "cancelled";
 
                             return (
-                                <div
+                                <ScrollReveal
                                     key={order._id}
-                                    className="my-order-card overflow-hidden rounded-xl border border-[#DED7CC] bg-white"
-                                    style={{
-                                        animationDelay: `${orderIndex * 110}ms`,
-                                    }}
+                                    direction="up"
+                                    delay={orderIndex * 110}
+                                    duration={750}
+                                    once={false}
                                 >
-                                    {/* Order Header */}
-                                    <div className="flex flex-col gap-3 border-b border-[#E5DED4] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                                        <div>
-                                            <p className="text-xs text-gray-500">
-                                                Order ID
-                                            </p>
+                                    <div className="my-order-card overflow-hidden rounded-xl border border-[#DED7CC] bg-white">
 
-                                            <p className="mt-1 break-all text-sm font-medium text-[#2B2926]">
-                                                {order._id}
-                                            </p>
-
-                                            <p className="mt-2 text-xs text-gray-500">
-                                                Order placed
-                                            </p>
-
-                                            <p className="mt-1 text-sm text-[#2B2926]">
-                                                {order.createdAt
-                                                    ? new Date(
-                                                        order.createdAt
-                                                    ).toLocaleDateString(
-                                                        "en-IN"
-                                                    )
-                                                    : "N/A"}
-                                            </p>
-                                        </div>
-
-                                        <div className="sm:text-right">
-                                            <p className="text-xs text-gray-500">
-                                                Total Amount
-                                            </p>
-
-                                            <p className="mt-1 text-xl font-semibold text-[#2B2926]">
-                                                ₹{order.totalAmount}
-                                            </p>
-
-                                            <span
-                                                className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
-                                                    order.paymentStatus === "success"
-                                                        ? "bg-green-100 text-green-700"
-                                                        : order.paymentStatus === "failed"
-                                                            ? "bg-red-100 text-red-700"
-                                                            : "bg-yellow-100 text-yellow-700"
-                                                }`}
-                                            >
-                                                Payment:{" "}
-                                                {formatStatus(order.paymentStatus)}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Order Tracking */}
-                                    <div className="border-b border-[#E5DED4] px-5 py-6 sm:px-6">
-                                        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                            <h2 className="font-serif text-xl text-[#2B2926]">
-                                                Order Tracking
-                                            </h2>
-
-                                            <span
-                                                className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
-                                                    isCancelled
-                                                        ? "bg-red-100 text-red-700"
-                                                        : "bg-[#F5F0E8] text-[#806347]"
-                                                }`}
-                                            >
-                                                {formatStatus(order.orderStatus)}
-                                            </span>
-                                        </div>
-
-                                        {isCancelled ? (
-                                            <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">
-                                                This order has been cancelled.
-                                            </div>
-                                        ) : (
-                                            <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-5">
-                                                {trackingSteps.map((step, index) => {
-                                                    const completed =
-                                                        currentStep >= index;
-
-                                                    const date = getStatusDate(
-                                                        order,
-                                                        step.status
-                                                    );
-
-                                                    return (
-                                                        <div
-                                                            key={step.status}
-                                                            className="my-tracking-step relative flex flex-col items-center text-center"
-                                                            style={{
-                                                                animationDelay: `${index * 90}ms`,
-                                                            }}
-                                                        >
-                                                            <div
-                                                                className={`flex h-10 w-10 items-center justify-center rounded-full text-lg ${
-                                                                    completed
-                                                                        ? "bg-[#9A7958] text-white"
-                                                                        : "bg-gray-100 text-gray-400"
-                                                                }`}
-                                                            >
-                                                                {completed
-                                                                    ? "✓"
-                                                                    : step.icon}
-                                                            </div>
-
-                                                            <p
-                                                                className={`mt-2 text-xs font-medium ${
-                                                                    completed
-                                                                        ? "text-[#2B2926]"
-                                                                        : "text-gray-400"
-                                                                }`}
-                                                            >
-                                                                {step.label}
-                                                            </p>
-
-                                                            {date && (
-                                                                <p className="mt-1 text-xs text-gray-500">
-                                                                    {date}
-                                                                </p>
-                                                            )}
-
-                                                            {index <
-                                                                trackingSteps.length - 1 && (
-                                                                <div
-                                                                    className={`absolute left-[calc(50%+24px)] top-5 hidden h-[2px] w-[calc(100%-28px)] sm:block ${
-                                                                        currentStep > index
-                                                                            ? "bg-[#9A7958]"
-                                                                            : "bg-gray-200"
-                                                                    }`}
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        {order.trackingNumber && (
-                                            <div className="mt-6 rounded-lg bg-[#FAF7F2] p-4">
+                                        {/* Order Header */}
+                                        <div className="flex flex-col gap-3 border-b border-[#E5DED4] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div>
                                                 <p className="text-xs text-gray-500">
-                                                    Tracking Number
+                                                    Order ID
                                                 </p>
 
-                                                <p className="mt-1 font-semibold text-[#2B2926]">
-                                                    {order.trackingNumber}
+                                                <p className="mt-1 break-all text-sm font-medium text-[#2B2926]">
+                                                    {order._id}
+                                                </p>
+
+                                                <p className="mt-2 text-xs text-gray-500">
+                                                    Order placed
+                                                </p>
+
+                                                <p className="mt-1 text-sm text-[#2B2926]">
+                                                    {order.createdAt
+                                                        ? new Date(
+                                                            order.createdAt
+                                                        ).toLocaleDateString(
+                                                            "en-IN"
+                                                        )
+                                                        : "N/A"}
                                                 </p>
                                             </div>
-                                        )}
 
-                                        <div className="mt-5 rounded-lg bg-[#FAF7F2] p-4">
-                                            <p className="text-xs text-gray-500">
-                                                Estimated Delivery
-                                            </p>
+                                            <div className="sm:text-right">
+                                                <p className="text-xs text-gray-500">
+                                                    Total Amount
+                                                </p>
 
-                                            <p className="mt-1 text-sm font-semibold text-[#2B2926]">
-                                                {estimatedDelivery
-                                                    ? estimatedDelivery.toLocaleDateString(
-                                                        "en-IN",
-                                                        {
-                                                            day: "numeric",
-                                                            month: "short",
-                                                            year: "numeric",
-                                                        }
-                                                    )
-                                                    : "Not available yet"}
-                                            </p>
-                                        </div>
-                                    </div>
+                                                <p className="mt-1 text-xl font-semibold text-[#2B2926]">
+                                                    ₹{order.totalAmount}
+                                                </p>
 
-                                    {/* Ordered Products */}
-                                    <div className="divide-y divide-[#E5DED4]">
-                                        {order.items?.map((item) => {
-                                            const returnRequest =
-                                                getItemReturnRequest(order, item);
-
-                                            return (
-                                                <div
-                                                    key={item._id}
-                                                    className="my-order-product-row flex flex-col gap-4 p-5 sm:flex-row sm:items-center"
+                                                <span
+                                                    className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
+                                                        order.paymentStatus === "success"
+                                                            ? "bg-green-100 text-green-700"
+                                                            : order.paymentStatus === "failed"
+                                                                ? "bg-red-100 text-red-700"
+                                                                : "bg-yellow-100 text-yellow-700"
+                                                    }`}
                                                 >
-                                                    <Link
-                                                        to={`/product/${item.productId?._id}`}
-                                                        className="my-order-product-link flex min-w-0 flex-1 gap-4 transition hover:bg-[#FAF7F2]"
-                                                    >
-                                                        <img
-                                                            src={item.productId?.image}
-                                                            alt={
-                                                                item.productId?.title ||
-                                                                "Product"
-                                                            }
-                                                            className="my-order-product-image h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
-                                                        />
+                                                    Payment:{" "}
+                                                    {formatStatus(order.paymentStatus)}
+                                                </span>
+                                            </div>
+                                        </div>
 
-                                                        <div className="flex flex-col justify-center">
-                                                            <h3 className="text-sm font-medium text-[#2B2926] sm:text-base">
-                                                                {item.productId?.title ||
-                                                                    "Product"}
-                                                            </h3>
+                                        {/* Order Tracking */}
+                                        <div className="border-b border-[#E5DED4] px-5 py-6 sm:px-6">
+                                            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                                <h2 className="font-serif text-xl text-[#2B2926]">
+                                                    Order Tracking
+                                                </h2>
 
-                                                            <p className="mt-1 text-sm text-gray-600">
-                                                                ₹{item.price}
-                                                            </p>
+                                                <span
+                                                    className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${
+                                                        isCancelled
+                                                            ? "bg-red-100 text-red-700"
+                                                            : "bg-[#F5F0E8] text-[#806347]"
+                                                    }`}
+                                                >
+                                                    {formatStatus(order.orderStatus)}
+                                                </span>
+                                            </div>
 
-                                                            <p className="mt-1 text-xs text-gray-500">
-                                                                Quantity:{" "}
-                                                                {item.quantity}
-                                                            </p>
-                                                        </div>
-                                                    </Link>
+                                            {isCancelled ? (
+                                                <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+                                                    This order has been cancelled.
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-5">
+                                                    {trackingSteps.map((step, index) => {
+                                                        const completed =
+                                                            currentStep >= index;
 
-                                                    {/* Returned item actions */}
-                                                    {returnRequest && (
-                                                        <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
-                                                            <span
-                                                                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${getReturnBadgeClass(
-                                                                    returnRequest.status
-                                                                )}`}
+                                                        const date = getStatusDate(
+                                                            order,
+                                                            step.status
+                                                        );
+
+                                                        return (
+                                                            <ScrollReveal
+                                                                key={step.status}
+                                                                direction="up"
+                                                                delay={index * 90}
+                                                                duration={600}
+                                                                once={false}
                                                             >
-                                                                Return: {formatStatus(returnRequest.status)}
-                                                            </span>
+                                                                <div className="my-tracking-step relative flex flex-col items-center text-center">
+                                                                    <div
+                                                                        className={`flex h-10 w-10 items-center justify-center rounded-full text-lg ${
+                                                                            completed
+                                                                                ? "bg-[#9A7958] text-white"
+                                                                                : "bg-gray-100 text-gray-400"
+                                                                        }`}
+                                                                    >
+                                                                        {completed
+                                                                            ? "✓"
+                                                                            : step.icon}
+                                                                    </div>
 
-                                                            {returnRequest.status === "approved" &&
-                                                                returnRequest.pickupEstimatedDate && (
-                                                                    <p className="text-xs text-[#806347]">
-                                                                        Estimated Pickup:{" "}
-                                                                        {new Date(
-                                                                            returnRequest.pickupEstimatedDate
-                                                                        ).toLocaleDateString("en-IN", {
-                                                                            day: "numeric",
-                                                                            month: "short",
-                                                                            year: "numeric",
-                                                                        })}
+                                                                    <p
+                                                                        className={`mt-2 text-xs font-medium ${
+                                                                            completed
+                                                                                ? "text-[#2B2926]"
+                                                                                : "text-gray-400"
+                                                                        }`}
+                                                                    >
+                                                                        {step.label}
                                                                     </p>
-                                                                )}
 
-                                                            {returnRequest.status === "approved" && (
-                                                                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
-                                                                    <p className="text-xs font-semibold text-amber-800">
-                                                                        Refund Information
+                                                                    {date && (
+                                                                        <p className="mt-1 text-xs text-gray-500">
+                                                                            {date}
+                                                                        </p>
+                                                                    )}
+
+                                                                    {index <
+                                                                        trackingSteps.length - 1 && (
+                                                                        <div
+                                                                            className={`absolute left-[calc(50%+24px)] top-5 hidden h-[2px] w-[calc(100%-28px)] sm:block ${
+                                                                                currentStep > index
+                                                                                    ? "bg-[#9A7958]"
+                                                                                    : "bg-gray-200"
+                                                                            }`}
+                                                                        />
+                                                                    )}
+                                                                </div>
+                                                            </ScrollReveal>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+
+                                            {order.trackingNumber && (
+                                                <div className="mt-6 rounded-lg bg-[#FAF7F2] p-4">
+                                                    <p className="text-xs text-gray-500">
+                                                        Tracking Number
+                                                    </p>
+
+                                                    <p className="mt-1 font-semibold text-[#2B2926]">
+                                                        {order.trackingNumber}
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            <div className="mt-5 rounded-lg bg-[#FAF7F2] p-4">
+                                                <p className="text-xs text-gray-500">
+                                                    Estimated Delivery
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-semibold text-[#2B2926]">
+                                                    {estimatedDelivery
+                                                        ? estimatedDelivery.toLocaleDateString(
+                                                            "en-IN",
+                                                            {
+                                                                day: "numeric",
+                                                                month: "short",
+                                                                year: "numeric",
+                                                            }
+                                                        )
+                                                        : "Not available yet"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Ordered Products */}
+                                        <div className="divide-y divide-[#E5DED4]">
+                                            {order.items?.map((item) => {
+                                                const returnRequest =
+                                                    getItemReturnRequest(order, item);
+
+                                                return (
+                                                    <ScrollReveal
+                                                        key={item._id}
+                                                        direction="left"
+                                                        duration={650}
+                                                        once={false}
+                                                    >
+                                                        <div className="my-order-product-row flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+                                                            <Link
+                                                                to={`/product/${item.productId?._id}`}
+                                                                className="my-order-product-link flex min-w-0 flex-1 gap-4 transition hover:bg-[#FAF7F2]"
+                                                            >
+                                                                <img
+                                                                    src={item.productId?.image}
+                                                                    alt={
+                                                                        item.productId?.title ||
+                                                                        "Product"
+                                                                    }
+                                                                    className="my-order-product-image h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
+                                                                />
+
+                                                                <div className="flex flex-col justify-center">
+                                                                    <h3 className="text-sm font-medium text-[#2B2926] sm:text-base">
+                                                                        {item.productId?.title ||
+                                                                            "Product"}
+                                                                    </h3>
+
+                                                                    <p className="mt-1 text-sm text-gray-600">
+                                                                        ₹{item.price}
                                                                     </p>
 
-                                                                    <p className="mt-1 text-xs text-amber-700">
-                                                                        Refund is expected to be credited within 2 hours after product pickup.
+                                                                    <p className="mt-1 text-xs text-gray-500">
+                                                                        Quantity:{" "}
+                                                                        {item.quantity}
                                                                     </p>
                                                                 </div>
+                                                            </Link>
+
+                                                            {/* Returned item actions */}
+                                                            {returnRequest && (
+                                                                <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
+                                                                    <span
+                                                                        className={`rounded-full px-3 py-1.5 text-xs font-semibold ${getReturnBadgeClass(
+                                                                            returnRequest.status
+                                                                        )}`}
+                                                                    >
+                                                                        Return: {formatStatus(returnRequest.status)}
+                                                                    </span>
+
+                                                                    {returnRequest.status === "approved" &&
+                                                                        returnRequest.pickupEstimatedDate && (
+                                                                            <p className="text-xs text-[#806347]">
+                                                                                Estimated Pickup:{" "}
+                                                                                {new Date(
+                                                                                    returnRequest.pickupEstimatedDate
+                                                                                ).toLocaleDateString("en-IN", {
+                                                                                    day: "numeric",
+                                                                                    month: "short",
+                                                                                    year: "numeric",
+                                                                                })}
+                                                                            </p>
+                                                                        )}
+
+                                                                    {returnRequest.status === "approved" && (
+                                                                        <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
+                                                                            <p className="text-xs font-semibold text-amber-800">
+                                                                                Refund Information
+                                                                            </p>
+
+                                                                            <p className="mt-1 text-xs text-amber-700">
+                                                                                Refund is expected to be credited within 2 hours after product pickup.
+                                                                            </p>
+                                                                        </div>
+                                                                    )}
+
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            navigate(
+                                                                                `/product/${item.productId?._id}`
+                                                                            )
+                                                                        }
+                                                                        className="rounded-lg bg-[#2B2926] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#51473D]"
+                                                                    >
+                                                                        Buy Again
+                                                                    </button>
+                                                                </div>
                                                             )}
+                                                        </div>
+                                                    </ScrollReveal>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Return Items */}
+                                        {canReturnOrder(order) &&
+                                            order.items?.some(
+                                                (item) =>
+                                                    !getItemReturnRequest(order, item)
+                                            ) && (
+                                                <ScrollReveal
+                                                    direction="up"
+                                                    duration={700}
+                                                    once={false}
+                                                >
+                                                    <div className="border-t border-[#E5DED4] bg-[#F5E8D2] px-5 py-5">
+                                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                            <div>
+                                                                <h3 className="text-base font-semibold text-[#2B2926]">
+                                                                    Need to return an item?
+                                                                </h3>
+
+                                                                <p className="mt-1 text-sm text-[#71665A]">
+                                                                    Request a return for items in this order.
+                                                                </p>
+
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        toast.info(
+                                                                            "Return policy will be available soon."
+                                                                        )
+                                                                    }
+                                                                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[#806347] underline underline-offset-4 transition hover:text-[#51473D]"
+                                                                >
+                                                                    View Return Policy
+                                                                    <FiArrowRight size={16} />
+                                                                </button>
+                                                            </div>
 
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
-                                                                    navigate(
-                                                                        `/product/${item.productId?._id}`
-                                                                    )
+                                                                    openReturnModal({
+                                                                        ...order,
+                                                                        items: order.items.filter(
+                                                                            (item) =>
+                                                                                !getItemReturnRequest(
+                                                                                    order,
+                                                                                    item
+                                                                                )
+                                                                        ),
+                                                                    })
                                                                 }
-                                                                className="rounded-lg bg-[#2B2926] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#51473D]"
+                                                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#806347] px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-200 hover:bg-[#51473D] active:scale-[0.98]"
                                                             >
-                                                                Buy Again
+                                                                <FiRotateCcw size={17} />
+                                                                Return Items
                                                             </button>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Return Items */}
-                                    {canReturnOrder(order) &&
-                                        order.items?.some(
-                                            (item) =>
-                                                !getItemReturnRequest(order, item)
-                                        ) && (
-                                            <div className="border-t border-[#E5DED4] bg-[#F5E8D2] px-5 py-5">
-                                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                                    <div>
-                                                        <h3 className="text-base font-semibold text-[#2B2926]">
-                                                            Need to return an item?
-                                                        </h3>
-
-                                                        <p className="mt-1 text-sm text-[#71665A]">
-                                                            Request a return for items in this order.
-                                                        </p>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                toast.info(
-                                                                    "Return policy will be available soon."
-                                                                )
-                                                            }
-                                                            className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[#806347] underline underline-offset-4 transition hover:text-[#51473D]"
-                                                        >
-                                                            View Return Policy
-                                                            <FiArrowRight size={16} />
-                                                        </button>
                                                     </div>
+                                                </ScrollReveal>
+                                            )}
 
-                                                    <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                            openReturnModal({
-                                                                ...order,
-                                                                items: order.items.filter(
-                                                                    (item) =>
-                                                                        !getItemReturnRequest(
-                                                                            order,
-                                                                            item
-                                                                        )
-                                                                ),
-                                                            })
-                                                        }
-                                                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#806347] px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-200 hover:bg-[#51473D] active:scale-[0.98]"
-                                                    >
-                                                        <FiRotateCcw size={17} />
-                                                        Return Items
-                                                    </button>
+                                        {/* Shipping and Payment */}
+                                        <ScrollReveal
+                                            direction="fade"
+                                            duration={750}
+                                            once={false}
+                                        >
+                                            <div className="grid gap-5 border-t border-[#E5DED4] px-5 py-5 sm:grid-cols-2">
+                                                <div>
+                                                    <p className="text-xs text-gray-500">
+                                                        Shipping Address
+                                                    </p>
+
+                                                    <p className="mt-1 text-sm text-[#2B2926]">
+                                                        {order.shippingAddress}
+                                                    </p>
+                                                </div>
+
+                                                <div className="sm:text-right">
+                                                    <p className="text-xs text-gray-500">
+                                                        Payment Method
+                                                    </p>
+
+                                                    <p className="mt-1 text-sm font-medium text-[#2B2926]">
+                                                        {order.paymentMethod || "N/A"}
+                                                    </p>
                                                 </div>
                                             </div>
-                                        )}
-
-                                    {/* Shipping and Payment */}
-                                    <div className="grid gap-5 border-t border-[#E5DED4] px-5 py-5 sm:grid-cols-2">
-                                        <div>
-                                            <p className="text-xs text-gray-500">
-                                                Shipping Address
-                                            </p>
-
-                                            <p className="mt-1 text-sm text-[#2B2926]">
-                                                {order.shippingAddress}
-                                            </p>
-                                        </div>
-
-                                        <div className="sm:text-right">
-                                            <p className="text-xs text-gray-500">
-                                                Payment Method
-                                            </p>
-
-                                            <p className="mt-1 text-sm font-medium text-[#2B2926]">
-                                                {order.paymentMethod || "N/A"}
-                                            </p>
-                                        </div>
+                                        </ScrollReveal>
                                     </div>
-                                </div>
+                                </ScrollReveal>
                             );
                         })}
                     </div>

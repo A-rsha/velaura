@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import API from '../services/axios'
+import ScrollReveal from './ScrollReveal'
+
 
 function Category() {
 
@@ -99,9 +101,10 @@ function Category() {
                 >
 
                     <div>
+                        <ScrollReveal direction='right' once={false}>
 
-                        <p
-                            className="
+                            <p
+                                className="
                                 mb-2
                                 text-[10px]
                                 sm:text-xs
@@ -110,12 +113,12 @@ function Category() {
                                 text-gray-500
                                 category-heading-animation
                             "
-                        >
-                            SHOP BY CATEGORY
-                        </p>
+                            >
+                                SHOP BY CATEGORY
+                            </p>
 
-                        <h2
-                            className="
+                            <h2
+                                className="
                                 font-serif
                                 text-2xl
                                 sm:text-3xl
@@ -124,10 +127,12 @@ function Category() {
                                 text-[#2B2926]
                                 category-heading-animation
                             "
-                            style={{ animationDelay: '0.15s' }}
-                        >
-                            Find Your Perfect Match
-                        </h2>
+                                style={{ animationDelay: '0.15s' }}
+                            >
+                                Find Your Perfect Match
+                            </h2>
+
+                        </ScrollReveal>
 
                     </div>
 
@@ -186,13 +191,19 @@ function Category() {
                 >
 
                     {categories.map((category, index) => (
+                        <ScrollReveal
+                            key={category._id}
+                            direction="up"
+                            delay={index * 120}
+                            duration={750}
+                        >
 
-                        <div
-                            key={category.name}
-                            onClick={() =>
-                                handleCategoryClick(category.name)
-                            }
-                            className="
+                            <div
+                                key={category.name}
+                                onClick={() =>
+                                    handleCategoryClick(category.name)
+                                }
+                                className="
                                 group
                                 flex
                                 cursor-pointer
@@ -207,15 +218,15 @@ function Category() {
                                 active:scale-95
                                 category-card-animation
                             "
-                            style={{
-                                animationDelay: `${0.2 + index * 0.12}s`
-                            }}
-                        >
+                                style={{
+                                    animationDelay: `${0.2 + index * 0.12}s`
+                                }}
+                            >
 
-                            {/* Image */}
+                                {/* Image */}
 
-                            <div
-                                className="
+                                <div
+                                    className="
                                     w-[88px]
                                     h-[88px]
                                     sm:w-[100px]
@@ -232,12 +243,12 @@ function Category() {
                                     ease-out
                                     group-hover:shadow-md
                                 "
-                            >
+                                >
 
-                                <img
-                                    src={category.image}
-                                    alt={category.name}
-                                    className="
+                                    <img
+                                        src={category.image}
+                                        alt={category.name}
+                                        className="
                                         h-full
                                         w-full
                                         object-cover
@@ -246,14 +257,14 @@ function Category() {
                                         ease-out
                                         group-hover:scale-110
                                     "
-                                />
+                                    />
 
-                            </div>
+                                </div>
 
-                            {/* Category Name */}
+                                {/* Category Name */}
 
-                            <p
-                                className="
+                                <p
+                                    className="
                                     mt-3
                                     text-xs
                                     sm:text-sm
@@ -263,23 +274,25 @@ function Category() {
                                     duration-300
                                     group-hover:opacity-60
                                 "
-                            >
-                                {category.name}
-                            </p>
+                                >
+                                    {category.name}
+                                </p>
 
-                        </div>
+                            </div>
+
+                            </ScrollReveal>
 
                     ))}
 
-                </div>
+                        </div>
 
-                {/* Mobile View All */}
+                {/* Mobile View All */ }
 
-                <div className="flex justify-center mt-8 sm:hidden">
+                        < div className = "flex justify-center mt-8 sm:hidden" >
 
-                    <button
-                        onClick={() => navigate('/shop')}
-                        className="
+                        <button
+                            onClick={() => navigate('/shop')}
+                            className="
                             flex
                             items-center
                             gap-1
@@ -295,20 +308,20 @@ function Category() {
                             active:scale-95
                             group
                         "
-                    >
-                        View All
+                        >
+                            View All
 
-                        <FiArrowUpRight
-                            size={14}
-                            className="
+                            <FiArrowUpRight
+                                size={14}
+                                className="
                                 transition-transform
                                 duration-300
                                 group-hover:translate-x-1
                                 group-hover:-translate-y-1
                             "
-                        />
+                            />
 
-                    </button>
+                        </button>
 
                 </div>
 
